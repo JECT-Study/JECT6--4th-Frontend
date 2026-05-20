@@ -1,4 +1,4 @@
-import { BlogCard, Button, Dropdown, Input } from '@/shared/ui'
+import { AccordionButton, BlogCard, Button, Dropdown, Input } from '@/shared/ui'
 
 export default function ComponentsPage() {
   return (
@@ -53,6 +53,14 @@ export default function ComponentsPage() {
               ]}
               placeholder="옵션 제목"
             />
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-5">
+          <h2 className="m-0 text-20 font-bold leading-28">AccordionButton</h2>
+          <div className="flex flex-wrap items-center gap-4">
+            <AccordionButton />
+            <AccordionButton defaultOpen />
           </div>
         </section>
       </div>
