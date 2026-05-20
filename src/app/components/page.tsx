@@ -1,4 +1,4 @@
-import { Button } from '@/shared/ui'
+import { Button, Input } from '@/shared/ui'
 
 export default function ComponentsPage() {
   return (
@@ -14,6 +14,20 @@ export default function ComponentsPage() {
             <Button variant="tertiary">버튼</Button>
             <Button variant="navy">버튼</Button>
             <Button disabled>버튼</Button>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-5">
+          <h2 className="m-0 text-20 font-bold leading-28">Input</h2>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4">
+            <Input placeholder="닉네임을 입력해주세요" rightAddon={<Button>랜덤 생성</Button>} />
+            <Input variant="search" placeholder="원하는 공고를 입력해주세요" />
+            <Input
+              variant="url"
+              label="URL을 입력해주세요"
+              defaultValue="https://blog.naver.com/example"
+            />
+            <Input placeholder="URL을 입력해주세요" errorMessage="올바른 URL을 입력해주세요." />
           </div>
         </section>
       </div>
