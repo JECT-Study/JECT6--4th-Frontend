@@ -1,3 +1,5 @@
+export { BlogCard } from './blog-card'
+export type { BlogCardVariant } from './blog-card'
 export { Button } from './button'
 export type { ButtonSize, ButtonVariant } from './button'
 export { Input } from './input'
