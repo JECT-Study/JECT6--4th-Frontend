@@ -1,3 +1,4 @@
+export { AccordionButton } from './accordion-button'
 export { BlogCard } from './blog-card'
 export type { BlogCardVariant } from './blog-card'
 export { Button } from './button'
