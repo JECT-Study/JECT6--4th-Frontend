@@ -1,4 +1,4 @@
-import { BlogCard, Button, Input } from '@/shared/ui'
+import { BlogCard, Button, Dropdown, Input } from '@/shared/ui'
 
 export default function ComponentsPage() {
   return (
@@ -39,6 +39,20 @@ export default function ComponentsPage() {
             <BlogCard variant="ai" />
             <BlogCard variant="horizontal" />
             <BlogCard variant="thumbnail" />
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-5">
+          <h2 className="m-0 text-20 font-bold leading-28">Dropdown</h2>
+          <div className="flex flex-wrap items-center gap-4">
+            <Dropdown
+              options={[
+                { label: 'list', value: 'list-1' },
+                { label: 'list', value: 'list-2' },
+                { label: 'list', value: 'list-3' },
+              ]}
+              placeholder="옵션 제목"
+            />
           </div>
         </section>
       </div>
