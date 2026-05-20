@@ -1,4 +1,4 @@
-import { Button, Input } from '@/shared/ui'
+import { BlogCard, Button, Input } from '@/shared/ui'
 
 export default function ComponentsPage() {
   return (
@@ -28,6 +28,17 @@ export default function ComponentsPage() {
               defaultValue="https://blog.naver.com/example"
             />
             <Input placeholder="URL을 입력해주세요" errorMessage="올바른 URL을 입력해주세요." />
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-5">
+          <h2 className="m-0 text-20 font-bold leading-28">BlogCard</h2>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] items-start gap-4">
+            <BlogCard variant="creator" />
+            <BlogCard variant="vertical" />
+            <BlogCard variant="ai" />
+            <BlogCard variant="horizontal" />
+            <BlogCard variant="thumbnail" />
           </div>
         </section>
       </div>
