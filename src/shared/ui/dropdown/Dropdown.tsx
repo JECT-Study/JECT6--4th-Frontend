@@ -1,7 +1,15 @@
 'use client'
 
-import { useId, useState } from 'react'
 import type { ButtonHTMLAttributes } from 'react'
+
+import { ChevronDownIcon } from 'lucide-react'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 interface DropdownOption {
   label: string
@@ -18,6 +26,7 @@ interface DropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'o
 
 export function Dropdown({
   className = '',
+  disabled,
   label,
   onChange,
   options,
@@ -25,62 +34,45 @@ export function Dropdown({
   value,
   ...props
 }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const generatedId = useId()
   const selectedOption = options.find(option => option.value === value)
 
-  const handleSelect = (nextValue: string) => {
-    onChange?.(nextValue)
-    setIsOpen(false)
-  }
-
   return (
-    <div
-      className={['relative inline-flex min-w-[220px] flex-col gap-2', className]
-        .filter(Boolean)
-        .join(' ')}
-    >
+    <div className={['inline-flex min-w-55 flex-col gap-2', className].filter(Boolean).join(' ')}>
       {label && <span className="text-14 font-semibold leading-20 text-neutral_20">{label}</span>}
-      <button
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        aria-controls={isOpen ? generatedId : undefined}
-        className="inline-flex h-10 w-full cursor-pointer items-center justify-between rounded-[10px] border border-neutral_50 bg-white px-3 font-pretendard text-14 font-semibold leading-20 text-neutral_20 disabled:cursor-not-allowed disabled:bg-neutral_99 disabled:text-neutral_70"
-        type="button"
-        onClick={() => setIsOpen(current => !current)}
-        {...props}
-      >
-        <span>{selectedOption?.label ?? placeholder}</span>
-        <span className="ml-3 text-neutral_50" aria-hidden>
-          {isOpen ? '▲' : '▼'}
-        </span>
-      </button>
-
-      {isOpen && (
-        <div
-          className="absolute left-0 right-0 top-[calc(100%+4px)] z-20 m-0 flex flex-col rounded-[10px] border border-neutral_95 bg-white p-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
-          id={generatedId}
-          role="listbox"
-        >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            className="group inline-flex h-10 w-full cursor-pointer items-center justify-between rounded-[10px] border border-neutral_50 bg-white px-3 font-pretendard text-14 font-semibold leading-20 text-neutral_20 disabled:cursor-not-allowed disabled:bg-neutral_99 disabled:text-neutral_70"
+            disabled={disabled}
+            type="button"
+            {...props}
+          >
+            <span>{selectedOption?.label ?? placeholder}</span>
+            <ChevronDownIcon
+              className="ml-3 size-4 text-neutral_50 transition-transform group-data-[state=open]:rotate-180"
+              aria-hidden
+            />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="rounded-[10px] border-neutral_95 bg-white p-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
           {options.map(option => (
-            <button
+            <DropdownMenuItem
+              key={option.value}
               className={[
-                'cursor-pointer rounded-lg border-0 bg-transparent px-3 py-2.5 text-left font-pretendard text-14 font-medium leading-20 text-neutral_30 hover:bg-neutral_99',
-                option.value === value ? 'bg-blue_95 font-bold text-blue_40' : '',
+                'cursor-pointer rounded-lg px-3 py-2.5 font-pretendard text-14 font-medium leading-20 text-neutral_30 focus:bg-neutral_99 focus:text-neutral_30',
+                option.value === value
+                  ? 'bg-blue_95 font-bold text-blue_40 focus:bg-blue_95 focus:text-blue_40'
+                  : '',
               ]
                 .filter(Boolean)
                 .join(' ')}
-              key={option.value}
-              role="option"
-              type="button"
-              aria-selected={option.value === value}
-              onClick={() => handleSelect(option.value)}
+              onSelect={() => onChange?.(option.value)}
             >
               {option.label}
-            </button>
+            </DropdownMenuItem>
           ))}
-        </div>
-      )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }
