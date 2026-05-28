@@ -14,26 +14,23 @@ interface InputProps extends React.ComponentProps<'input'> {
   variant?: InputVariant
 }
 
-const wrapVariants = cva(
-  'flex items-center border transition-colors focus-within:border-violet_80',
-  {
-    variants: {
-      variant: {
-        default: 'h-12 rounded-[10px] border-neutral_95 bg-white px-3',
-        search: 'h-12 rounded-xl border-transparent bg-neutral_99 px-4',
-        url: 'h-14 rounded-[18px] border-violet_80 bg-white px-5',
-      },
-      error: {
-        true: 'border-red_50',
-        false: '',
-      },
+const wrapVariants = cva('flex items-center border transition-colors', {
+  variants: {
+    variant: {
+      default: 'h-12 rounded-[10px] border-neutral_95 bg-white px-3',
+      search: 'h-12 rounded-xl border-transparent bg-neutral_99 px-4',
+      url: 'h-14 rounded-[18px] border-violet_80 bg-white px-5',
     },
-    defaultVariants: {
-      variant: 'default',
-      error: false,
+    error: {
+      true: 'border-red_50',
+      false: 'focus-within:border-violet_80',
     },
-  }
-)
+  },
+  defaultVariants: {
+    variant: 'default',
+    error: false,
+  },
+})
 
 const messageVariants = cva('text-12 font-normal leading-16', {
   variants: {
