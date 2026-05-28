@@ -4,7 +4,8 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import nextPlugin from "@next/eslint-plugin-next";
 import prettier from "eslint-plugin-prettier/recommended";
-import pluginImportX from "eslint-plugin-import-x";
+import pluginImportX, { createNodeResolver } from "eslint-plugin-import-x";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 
 export default tseslint.config(
   {
@@ -47,18 +48,13 @@ export default tseslint.config(
       react: {
         version: "detect",
       },
-      "import-x/resolver": {
-        typescript: {
+      "import-x/resolver-next": [
+        createTypeScriptImportResolver({
           alwaysTryTypes: true,
           project: "./tsconfig.json",
-        },
-        node: {
-          extensions: [".js", ".jsx", ".ts", ".tsx"],
-        },
-      },
-      "import-x/parsers": {
-        "@typescript-eslint/parser": [".ts", ".tsx"],
-      },
+        }),
+        createNodeResolver(),
+      ],
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
