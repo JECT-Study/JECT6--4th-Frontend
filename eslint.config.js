@@ -4,11 +4,8 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import nextPlugin from "@next/eslint-plugin-next";
 import prettier from "eslint-plugin-prettier/recommended";
-import pluginImport from "eslint-plugin-import";
-
-// Merge import plugin's recommended rules and settings manually
-const importRecommendedRules = pluginImport.configs.recommended.rules;
-const importRecommendedSettings = pluginImport.configs.recommended.settings;
+import pluginImportX, { createNodeResolver } from "eslint-plugin-import-x";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 
 export default tseslint.config(
   {
@@ -33,7 +30,7 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "@next/next": nextPlugin,
-      import: pluginImport, // Register the import plugin
+      "import-x": pluginImportX,
     },
     languageOptions: {
       parser: tseslint.parser,
@@ -51,27 +48,17 @@ export default tseslint.config(
       react: {
         version: "detect",
       },
-      // Merged settings from pluginImport.configs.recommended
-      ...importRecommendedSettings,
-      // Configure import resolver for path aliases (might override or merge existing settings)
-      "import/resolver": {
-        typescript: {
+      "import-x/resolver-next": [
+        createTypeScriptImportResolver({
           alwaysTryTypes: true,
           project: "./tsconfig.json",
-        },
-        node: {
-          extensions: [".js", ".jsx", ".ts", ".tsx"],
-        },
-      },
-      "import/parsers": {
-        "@typescript-eslint/parser": [".ts", ".tsx"],
-      },
+        }),
+        createNodeResolver(),
+      ],
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...nextPlugin.configs.recommended.rules,
-      // Merged rules from pluginImport.configs.recommended
-      ...importRecommendedRules,
 
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -85,13 +72,12 @@ export default tseslint.config(
       "react/react-in-jsx-scope": "off",
       "@next/next/no-img-element": "warn",
 
-      // FSD-specific import rules (these will override or extend importRecommendedRules if present)
-      "import/no-unresolved": "error",
-      "import/named": "error",
-      "import/namespace": "error",
-      "import/default": "error",
-      "import/export": "error",
-      "import/order": [
+      "import-x/no-unresolved": "error",
+      "import-x/named": "error",
+      "import-x/namespace": "error",
+      "import-x/default": "error",
+      "import-x/export": "error",
+      "import-x/order": [
         "error",
         {
           "groups": [
@@ -122,9 +108,9 @@ export default tseslint.config(
           }
         }
       ],
-      "import/no-duplicates": "error",
-      "import/no-cycle": ["error", { "maxDepth": "∞" }],
-      "import/no-relative-parent-imports": "off",
+      "import-x/no-duplicates": "error",
+      "import-x/no-cycle": ["error", { "maxDepth": "∞" }],
+      "import-x/no-relative-parent-imports": "off",
     },
   },
 

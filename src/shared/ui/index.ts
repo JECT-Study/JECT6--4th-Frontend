@@ -1,7 +1,6 @@
 export { BlogCard } from './blog-card'
 export type { BlogCardVariant } from './blog-card'
 export { Button } from './button'
-export type { ButtonSize, ButtonVariant } from './button'
 export { Dropdown } from './dropdown'
 export { Input } from './input'
 export type { InputVariant } from './input'

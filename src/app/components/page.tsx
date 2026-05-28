@@ -23,7 +23,7 @@ export default function ComponentsPage() {
             <Input
               placeholder="닉네임을 입력해주세요"
               rightAddon={
-                <Button className="!h-9 w-[67px] !rounded-[10px] !bg-neutral_99 !p-0 !text-14 !leading-20 !text-neutral_40 hover:!bg-neutral_95">
+                <Button className="h-9 w-[67px] rounded-[10px] bg-neutral_99 p-0 text-14 leading-20 text-neutral_40 hover:bg-neutral_95">
                   랜덤 생성
                 </Button>
               }
