@@ -1,0 +1,110 @@
+import { z } from 'zod'
+
+import { PlanType } from '@/entities/subscription'
+
+import { AnalysisStatus, ReasonType } from './blog-analysis.enums'
+
+// POST /blog/analyze 요청
+export const analyzeRequestSchema = z.object({
+  blogId: z.number(),
+  documentId: z.number(),
+})
+export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>
+
+// POST /blog/analyze 응답 (202 Accepted)
+export const analyzeJobResponseSchema = z.object({
+  jobId: z.string(),
+  documentId: z.number(),
+  status: AnalysisStatus,
+  message: z.string(),
+  aiCreditRemaining: z.number(),
+})
+export type AnalyzeJobResponse = z.infer<typeof analyzeJobResponseSchema>
+
+// LLM 분석 결과
+export const analysisResultSchema = z.object({
+  summary: z.string(),
+  keyTopics: z.array(z.string()),
+  tone: z.string(),
+  targetAudience: z.string(),
+  suggestions: z.array(z.string()),
+})
+export type AnalysisResult = z.infer<typeof analysisResultSchema>
+
+// GET /blog/analysis/{id} 응답
+export const blogAnalysisResponseSchema = z.object({
+  documentId: z.number(),
+  status: AnalysisStatus,
+  analysis: analysisResultSchema.nullable(),
+  analyzedAt: z.string().nullable(),
+})
+export type BlogAnalysisResponse = z.infer<typeof blogAnalysisResponseSchema>
+
+// GET /blog/analysis/history 아이템
+export const analysisHistoryItemSchema = z.object({
+  documentId: z.number(),
+  title: z.string(),
+  status: AnalysisStatus,
+  analyzedAt: z.string(),
+  isLocked: z.boolean(),
+})
+export type AnalysisHistoryItem = z.infer<typeof analysisHistoryItemSchema>
+
+// GET /blog/analysis/history 응답
+export const analysisHistoryResponseSchema = z.object({
+  content: z.array(analysisHistoryItemSchema),
+  planType: PlanType,
+  totalElements: z.number(),
+  visibleCount: z.number(),
+})
+export type AnalysisHistoryResponse = z.infer<typeof analysisHistoryResponseSchema>
+
+// GET /blog/analysis/{id}/recommendations 공고 아이템
+export const recommendedCampaignSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  fitnessScore: z.number(),
+  selectionScore: z.number(),
+  reasonType: ReasonType,
+  reasonMessage: z.string(),
+})
+export type RecommendedCampaign = z.infer<typeof recommendedCampaignSchema>
+
+// GET /blog/analysis/{id}/recommendations 응답
+export const analysisRecommendationsResponseSchema = z.object({
+  analysisId: z.number(),
+  campaigns: z.array(recommendedCampaignSchema),
+})
+export type AnalysisRecommendationsResponse = z.infer<typeof analysisRecommendationsResponseSchema>
+
+// GET /blog/analysis/{id}/bloggers 아이템
+export const popularBloggerSchema = z.object({
+  nickname: z.string(),
+  overallScore: z.number(),
+  thumbnailUrl: z.string().nullable(),
+})
+export type PopularBlogger = z.infer<typeof popularBloggerSchema>
+
+// GET /blog/analysis/{id}/bloggers 응답
+export const popularBloggersResponseSchema = z.object({
+  category: z.string(),
+  bloggers: z.array(popularBloggerSchema),
+})
+export type PopularBloggersResponse = z.infer<typeof popularBloggersResponseSchema>
+
+// POST /blog/chat 요청
+export const chatRequestSchema = z.object({
+  sessionId: z.string(),
+  documentId: z.number(),
+  message: z.string(),
+})
+export type ChatRequest = z.infer<typeof chatRequestSchema>
+
+// POST /blog/chat 응답
+export const chatResponseSchema = z.object({
+  sessionId: z.string(),
+  reply: z.string(),
+  tokensUsed: z.number(),
+  tokensRemaining: z.number(),
+})
+export type ChatResponse = z.infer<typeof chatResponseSchema>

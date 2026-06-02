@@ -1,0 +1,18 @@
+export {
+  HeroType,
+  feedHeroSchema,
+  FeedSectionType,
+  feedSectionSchema,
+  feedBodySchema,
+  aiRecommendedCampaignSchema,
+  aiRecommendationsSchema,
+  bloggerStorySchema,
+  bloggerStoriesSchema,
+  type FeedHero,
+  type FeedSection,
+  type FeedBody,
+  type AiRecommendedCampaign,
+  type AiRecommendations,
+  type BloggerStory,
+  type BloggerStories,
+} from './model/feed.schema'
