@@ -7,7 +7,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="font-pretendard">
         <Header />
-        {children}
+        <div className="w-full flex items-center justify-center">{children}</div>
         <Footer />
       </body>
     </html>
