@@ -9,7 +9,9 @@ export type InputVariant = 'default' | 'search' | 'url'
 interface InputProps extends React.ComponentProps<'input'> {
   errorMessage?: string
   helperText?: string
+  inputClassName?: string
   label?: string
+  leftAddon?: ReactNode
   rightAddon?: ReactNode
   variant?: InputVariant
 }
@@ -48,7 +50,9 @@ export function Input({
   className = '',
   errorMessage,
   helperText,
+  inputClassName,
   label,
+  leftAddon,
   rightAddon,
   variant = 'default',
   ...props
@@ -60,8 +64,12 @@ export function Input({
     <label className={cn('flex w-full flex-col gap-2', className)}>
       {label && <span className="text-14 font-semibold leading-20 text-neutral_20">{label}</span>}
       <span className={wrapVariants({ variant, error: hasError })}>
+        {leftAddon && <span className="mr-2 inline-flex shrink-0 items-center">{leftAddon}</span>}
         <input
-          className="min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 font-pretendard text-16 font-medium leading-24 text-neutral_20 shadow-none outline-0 ring-0 placeholder:text-neutral_70 focus-visible:border-0 focus-visible:ring-0 disabled:cursor-not-allowed disabled:text-neutral_70"
+          className={cn(
+            'min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 font-pretendard text-16 font-medium leading-24 text-neutral_20 shadow-none outline-0 ring-0 placeholder:text-neutral_70 focus-visible:border-0 focus-visible:ring-0 disabled:cursor-not-allowed disabled:text-neutral_70',
+            inputClassName
+          )}
           aria-invalid={hasError || undefined}
           {...props}
         />
