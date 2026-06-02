@@ -1,4 +1,5 @@
 export {
+  paginatedSchema,
   campaignSchema,
   campaignDetailSchema,
   campaignListParamsSchema,
