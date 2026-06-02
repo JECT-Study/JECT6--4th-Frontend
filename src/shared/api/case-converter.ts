@@ -5,17 +5,21 @@ const toCamel = (key: string): string =>
 
 const toSnake = (key: string): string => key.replace(/[A-Z]/g, char => `_${char.toLowerCase()}`)
 
+const isPlainObject = (value: unknown): value is Record<string, unknown> => {
+  if (value === null || typeof value !== 'object') return false
+
+  const proto = Reflect.getPrototypeOf(value)
+  return proto === Object.prototype || proto === null
+}
+
 function convertKeys(input: unknown, mapper: (key: string) => string): unknown {
   if (Array.isArray(input)) {
     return input.map(item => convertKeys(item, mapper))
   }
 
-  if (input !== null && typeof input === 'object' && !(input instanceof Date)) {
+  if (isPlainObject(input)) {
     return Object.fromEntries(
-      Object.entries(input as Record<string, unknown>).map(([key, value]) => [
-        mapper(key),
-        convertKeys(value, mapper),
-      ])
+      Object.entries(input).map(([key, value]) => [mapper(key), convertKeys(value, mapper)])
     )
   }
 

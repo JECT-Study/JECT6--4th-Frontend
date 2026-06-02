@@ -21,7 +21,15 @@ http.interceptors.request.use(config => {
 })
 
 // 응답 데이터를 camelCase로 변환해 프론트로 전달한다.
-http.interceptors.response.use(response => {
-  response.data = keysToCamel(response.data)
-  return response
-})
+http.interceptors.response.use(
+  response => {
+    response.data = keysToCamel(response.data)
+    return response
+  },
+  (error: unknown) => {
+    if (axios.isAxiosError<unknown>(error) && error.response?.data) {
+      error.response.data = keysToCamel(error.response.data)
+    }
+    throw error
+  }
+)
