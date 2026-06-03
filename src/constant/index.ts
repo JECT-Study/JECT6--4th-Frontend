@@ -234,7 +234,7 @@ export const REGION_DATA: Record<string, string[]> = {
   제주: ['서귀포시', '제주시'],
 }
 
-export type SelectableCategory = InterestCategory | 'other'
+export type SelectableCategory = InterestCategory | 'OTHER'
 
 export const INTEREST_CATEGORY_LABEL: Record<SelectableCategory, string> = {
   FOOD: '음식',
@@ -245,12 +245,15 @@ export const INTEREST_CATEGORY_LABEL: Record<SelectableCategory, string> = {
   IT: '테크/IT',
   SPORTS: '스포츠',
   CULTURE: '문화',
-  other: '기타(도서/취미/기타)',
+  OTHER: '기타(도서/취미/기타)',
 }
 
-export const CHANNEL_LABEL: Record<UserChannel, string> = {
+export type SelectableChannel = UserChannel | 'OTHER'
+
+export const CHANNEL_LABEL: Record<SelectableChannel, string> = {
   BLOG: '블로그',
   YOUTUBE: '유튜브',
   INSTAGRAM: '인스타그램',
   TIKTOK: '틱톡',
+  OTHER: '기타',
 }

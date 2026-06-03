@@ -45,7 +45,7 @@ export default function RegionSelector({
               key={city}
               onClick={() => setSelectedCity(city)}
               className={cn(
-                'cursor-pointer shrink-0',
+                'cursor-pointer shrink-0 hover:text-red_40 transition',
                 selectedCity === city ? 'text-red_50 font-bold' : 'text-neutral_70'
               )}
             >
@@ -68,8 +68,10 @@ export default function RegionSelector({
                 key={district}
                 onClick={() => !disabled && toggleDistrict(district)}
                 className={cn(
-                  'cursor-pointer shrink-0 flex justify-between items-center',
-                  disabled ? 'text-[#C0C0C0] cursor-not-allowed' : 'text-neutral_70'
+                  'cursor-pointer shrink-0 flex justify-between items-center transition',
+                  disabled
+                    ? 'text-[#C0C0C0] cursor-not-allowed'
+                    : 'text-neutral_70 hover:text-neutral_50'
                 )}
               >
                 {district}
