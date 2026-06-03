@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { SelectableCategory, INTEREST_CATEGORY_LABEL, CHANNEL_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 
 import { InterestCategory, UserChannel } from '@/entities/user'
@@ -12,27 +13,6 @@ import XIcon from '@/shared/assets/icons/x.svg'
 import { Button, Input } from '@/shared/ui'
 
 import RegionSelector from './_components/RegionSelector'
-
-type SelectableCategory = InterestCategory | 'other'
-
-const INTEREST_CATEGORY_LABEL: Record<SelectableCategory, string> = {
-  FOOD: '음식',
-  BEAUTY: '뷰티',
-  FASHION: '패션',
-  TRAVEL: '여행',
-  LIFESTYLE: '문화',
-  IT: '테크/IT',
-  SPORTS: '스포츠',
-  CULTURE: '문화',
-  other: '기타(도서/취미/기타)',
-}
-
-const CHANNEL_LABEL: Record<UserChannel, string> = {
-  BLOG: '블로그',
-  YOUTUBE: '유튜브',
-  INSTAGRAM: '인스타그램',
-  TIKTOK: '틱톡',
-}
 
 export default function Page() {
   const [categoryList, setCategoryList] = useState<SelectableCategory[]>([])
