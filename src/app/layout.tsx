@@ -7,7 +7,7 @@ import './globals.css'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className="font-pretendard">
         <Providers>
           <Header />
