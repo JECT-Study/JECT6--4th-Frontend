@@ -1,4 +1,4 @@
-import type { Campaign, CreatorPost } from './home.types'
+import type { Campaign, CreatorPost, HeroSlide } from './home.types'
 
 export const aiCampaigns: Campaign[] = [
   {
@@ -148,6 +148,39 @@ export const popularCampaigns: Campaign[] = [
     dday: 'D-11',
     offerTitle: '[부산] 파스타 다이닝 체험단',
     region: '부산',
+  },
+]
+
+export const heroSlides: HeroSlide[] = [
+  {
+    title: '내 블로그 진단하고 더 정확한 공고 추천받기',
+    description: 'AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.',
+    cta: 'AI 맞춤 체험단 보기 >',
+    href: '#ai-campaigns',
+  },
+  {
+    title: '지금 가장 인기 있는 체험단을 확인해보세요',
+    description: '수백 개의 체험단 중 지금 가장 많이 신청받고 있는 공고를 모았어요.',
+    cta: '인기 체험단 보기 >',
+    href: '#popular-campaigns',
+  },
+  {
+    title: '내 근처 체험단, 한눈에 찾아보기',
+    description: '지역별로 분류된 체험단을 통해 가까운 공고를 빠르게 찾아보세요.',
+    cta: '지역별 체험단 보기 >',
+    href: '#region-popular-campaigns',
+  },
+  {
+    title: '인기 블로거들의 생생한 체험 후기',
+    description: '실제 체험단에 참여한 블로거들의 솔직한 후기를 확인해보세요.',
+    cta: '후기 보러가기 >',
+    href: '#creator-posts',
+  },
+  {
+    title: '오늘 새로 올라온 체험단 놓치지 마세요',
+    description: '매일 업데이트되는 신규 공고를 가장 먼저 확인하고 선정 확률을 높여보세요.',
+    cta: '신규 공고 보기 >',
+    href: '#popular-campaigns',
   },
 ]
 

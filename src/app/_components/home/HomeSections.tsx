@@ -1,7 +1,6 @@
 import { Heart, LockKeyhole } from 'lucide-react'
 
-import { Button } from '@/shared/ui'
-
+import { HeroCarousel } from './HeroCarousel'
 import { aiCampaigns, creatorPosts, popularCampaigns, regionPopularCampaigns } from './home.mock'
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
@@ -14,35 +13,7 @@ export function HeroSection() {
       id="home-hero"
       className="mx-auto w-full max-w-300 px-5 pt-10 md:px-8 lg:px-0 xl:pt-14"
     >
-      <div className="relative flex min-h-[344px] overflow-hidden rounded-none bg-neutral_95 px-8 py-12 md:px-12 xl:items-center xl:py-0">
-        <div className="relative z-10 flex max-w-150 flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <h1 className="m-0 text-20 font-semibold leading-32 text-neutral_30">
-              내 블로그 진단하고 더 정확한 공고 추천받기
-            </h1>
-            <p className="m-0 text-16 font-medium leading-24 text-neutral_50">
-              AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.
-            </p>
-          </div>
-          <Button
-            asChild
-            variant="primary"
-            className="h-10 w-fit rounded-md px-4 text-14 leading-20"
-          >
-            <a href="#ai-campaigns">AI 맞춤 체험단 보기 &gt;</a>
-          </Button>
-        </div>
-        <div
-          className="absolute bottom-12 left-1/2 hidden -translate-x-1/2 items-center gap-3 xl:flex"
-          aria-hidden
-        >
-          <span className="size-2 rounded-full bg-white" />
-          <span className="size-2 rounded-full bg-white" />
-          <span className="size-2 rounded-full bg-red_50" />
-          <span className="size-2 rounded-full bg-white" />
-          <span className="size-2 rounded-full bg-white" />
-        </div>
-      </div>
+      <HeroCarousel />
     </section>
   )
 }
@@ -59,9 +30,9 @@ export function LockedAiSection() {
           AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.
         </p>
       </div>
-      <div className="relative min-h-[322px] overflow-hidden rounded-none bg-white">
+      <div className="relative min-h-80.5 overflow-hidden rounded-none bg-white">
         <div
-          className="grid max-h-[322px] gap-6 overflow-hidden opacity-45 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid max-h-80.5 gap-6 overflow-hidden opacity-45 sm:grid-cols-2 lg:grid-cols-4"
           aria-hidden="true"
         >
           {aiCampaigns.map(campaign => (
@@ -170,10 +141,10 @@ export function RegionPopularCampaignsSection() {
 
 function HomeCreatorPostCard({ handle, likeCount, title }: CreatorPost) {
   return (
-    <article className="flex h-[346px] max-w-none flex-col gap-4 bg-transparent p-5 font-pretendard text-neutral_20">
+    <article className="flex h-86.5 max-w-none flex-col gap-4 bg-transparent p-5 font-pretendard text-neutral_20">
       <header className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
-          <span className="size-[59px] shrink-0 rounded-full bg-neutral_95" aria-hidden />
+          <span className="size-14.75 shrink-0 rounded-full bg-neutral_95" aria-hidden />
           <div className="min-w-0">
             <h3 className="m-0 truncate text-16 font-bold leading-24">블로그명 &gt;</h3>
             <span className="text-14 font-medium leading-20 text-neutral_60">{handle}</span>
@@ -183,7 +154,7 @@ function HomeCreatorPostCard({ handle, likeCount, title }: CreatorPost) {
           맛집 블로거
         </span>
       </header>
-      <div className="h-[158px] rounded-md bg-neutral_95" aria-hidden />
+      <div className="h-39.5 rounded-md bg-neutral_95" aria-hidden />
       <h3 className="m-0 line-clamp-2 text-18 font-semibold leading-28 text-neutral_20">{title}</h3>
       <div className="mt-auto flex items-center gap-2 text-14 font-semibold leading-20 text-neutral_20">
         <Heart className="size-4 text-red_50" aria-hidden />
