@@ -108,6 +108,57 @@ const recentCampaigns = aiCampaigns.map((campaign, index) => ({
   fitLabel: undefined,
 }))
 
+const regionPopularCampaigns: Campaign[] = [
+  {
+    brandName: '한남테이블',
+    category: '맛집',
+    competitionLabel: '10명 / 30명',
+    dday: 'D-4',
+    offerTitle: '[한남] 와인 다이닝 방문 체험단',
+    region: '서울',
+  },
+  {
+    brandName: '연남라운지',
+    category: '카페',
+    competitionLabel: '14명 / 40명',
+    dday: 'D-6',
+    offerTitle: '[연남] 디저트 카페 체험단',
+    region: '서울',
+  },
+  {
+    brandName: '광안스테이',
+    category: '여행',
+    competitionLabel: '5명 / 16명',
+    dday: 'D-8',
+    offerTitle: '[부산] 광안리 숙소 리뷰어',
+    region: '부산',
+  },
+  {
+    brandName: '제주오름',
+    category: '액티비티',
+    competitionLabel: '7명 / 20명',
+    dday: 'D-5',
+    offerTitle: '[제주] 오름 투어 체험단',
+    region: '제주',
+  },
+  {
+    brandName: '대구브루어리',
+    category: '맛집',
+    competitionLabel: '8명 / 24명',
+    dday: 'D-7',
+    offerTitle: '[대구] 수제맥주 펍 방문 체험단',
+    region: '대구',
+  },
+  {
+    brandName: '인천포레스트',
+    category: '뷰티',
+    competitionLabel: '11명 / 32명',
+    dday: 'D-10',
+    offerTitle: '[인천] 스파 케어 프로그램',
+    region: '인천',
+  },
+]
+
 const popularCampaigns: Campaign[] = [
   ...highChanceCampaigns,
   {
@@ -343,6 +394,34 @@ function PopularCampaignsSection({ showHeader = true }: { showHeader?: boolean }
   )
 }
 
+function RegionPopularCampaignsSection() {
+  return (
+    <section
+      id="region-popular-campaigns"
+      className="mx-auto mt-18 flex w-full max-w-300 flex-col gap-8 px-5 md:px-8 lg:px-0"
+    >
+      <SectionHeader title="지역별 인기 체험" filterLabel="서울" />
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+        {[0, 1].map(column => (
+          <div key={column} className="flex flex-col gap-6">
+            {regionPopularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+              <HomeCampaignCard
+                key={`region-${campaign.offerTitle}`}
+                variant="horizontal"
+                className="max-w-none"
+                {...campaign}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      <p className="m-0 flex h-14 w-full items-center justify-center bg-neutral_95 text-14 font-semibold leading-20 text-neutral_50">
+        지역별 체험 전체보기 예정
+      </p>
+    </section>
+  )
+}
+
 function HomeCreatorPostCard({ handle, likeCount, title }: CreatorPost) {
   return (
     <article className="flex h-[346px] max-w-none flex-col gap-4 bg-transparent p-5 font-pretendard text-neutral_20">
@@ -513,6 +592,7 @@ export default function Page() {
       />
       <CreatorPostsSection />
       <PopularCampaignsSection />
+      <RegionPopularCampaignsSection />
     </main>
   )
 }
