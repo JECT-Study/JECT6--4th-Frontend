@@ -127,8 +127,8 @@ export default function Page() {
 
   return (
     <form onSubmit={e => void handleSubmit(onSubmit)(e)} className="flex w-full max-w-360 mx-auto">
-      <div className="bg-[#FAFAFA] w-1/2">이미지</div>
-      <div className="px-13 pt-21.25">
+      <div className="bg-[#FAFAFA] w-10/19">이미지</div>
+      <div className="px-13 pt-21.25 flex-1">
         <div className="flex flex-col gap-4.5 mb-13.75">
           <h1 className="text-36 leading-7.5 font-medium">[회원가입]</h1>
           <div className="text-16 leading-24">
