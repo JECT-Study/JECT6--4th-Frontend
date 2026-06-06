@@ -13,3 +13,10 @@ export interface CreatorPost {
   likeCount: number
   title: string
 }
+
+export interface HeroSlide {
+  title: string
+  description: string
+  cta: string
+  href: string
+}
