@@ -1,3 +1,4 @@
+import { CampaignType } from '@/entities/campaign'
 import { InterestCategory, UserChannel } from '@/entities/user'
 
 export const REGION_DATA: Record<string, string[]> = {
@@ -241,7 +242,7 @@ export const INTEREST_CATEGORY_LABEL: Record<SelectableCategory, string> = {
   BEAUTY: '뷰티',
   FASHION: '패션',
   TRAVEL: '여행',
-  LIFESTYLE: '문화',
+  LIFESTYLE: '라이프스타일',
   IT: '테크/IT',
   SPORTS: '스포츠',
   CULTURE: '문화',
@@ -256,4 +257,12 @@ export const CHANNEL_LABEL: Record<SelectableChannel, string> = {
   INSTAGRAM: '인스타그램',
   TIKTOK: '틱톡',
   OTHER: '기타',
+}
+
+export const TYPE_LABEL: Record<CampaignType, string> = {
+  VISIT: '방문형',
+  DELIVERY: '배송형',
+  REPORTER: '리포터',
+  REVIEW: '리뷰',
+  PAYBACK: '페이백',
 }
