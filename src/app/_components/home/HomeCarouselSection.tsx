@@ -2,13 +2,16 @@
 
 import { useState } from 'react'
 
+import { cn } from '@/lib/utils'
+
+import type { Campaign } from '@/entities/campaign'
+
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
 
-import type { Campaign } from './home.types'
-
 interface HomeCarouselSectionProps {
   campaigns: Campaign[]
+  columns?: 4 | 5
   marginTop?: string
   pageSize?: number
   title: string
@@ -16,6 +19,7 @@ interface HomeCarouselSectionProps {
 
 export function HomeCarouselSection({
   campaigns,
+  columns = 4,
   marginTop = 'mt-12',
   pageSize = 4,
   title,
@@ -42,13 +46,14 @@ export function HomeCarouselSection({
             : undefined
         }
       />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className={cn(
+          'grid gap-6 sm:grid-cols-2',
+          columns === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4'
+        )}
+      >
         {visibleCampaigns.map(campaign => (
-          <HomeCampaignCard
-            key={`${title}-${campaign.offerTitle}`}
-            className="max-w-none"
-            {...campaign}
-          />
+          <HomeCampaignCard key={`${title}-${campaign.id}`} className="max-w-none" {...campaign} />
         ))}
       </div>
     </section>

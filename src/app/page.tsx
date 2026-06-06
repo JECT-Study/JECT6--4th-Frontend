@@ -13,7 +13,12 @@ export default function Page() {
     <main className="bg-white pb-16">
       <HeroSection />
       <LockedAiSection />
-      <HomeCarouselSection title="당첨확률이 높은 공고" campaigns={highChanceCampaigns} />
+      <HomeCarouselSection
+        title="당첨확률이 높은 공고"
+        campaigns={highChanceCampaigns}
+        columns={5}
+        pageSize={5}
+      />
       <HomeCarouselSection
         title="최근에 내가 본 공고"
         campaigns={recentCampaigns}

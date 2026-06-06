@@ -36,12 +36,7 @@ export function LockedAiSection() {
           aria-hidden="true"
         >
           {aiCampaigns.map(campaign => (
-            <HomeCampaignCard
-              key={campaign.offerTitle}
-              variant="ai"
-              className="max-w-none"
-              {...campaign}
-            />
+            <HomeCampaignCard key={campaign.id} variant="ai" className="max-w-none" {...campaign} />
           ))}
         </div>
         <div className="absolute inset-0 flex items-center justify-center bg-white/60 px-5 shadow-[0_0_50px_rgba(0,0,0,0.18)] backdrop-blur-sm">
@@ -95,7 +90,7 @@ export function PopularCampaignsSection({ showHeader = true }: { showHeader?: bo
           <div key={column} className="flex flex-col gap-6">
             {popularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
               <HomeCampaignCard
-                key={`popular-${campaign.offerTitle}`}
+                key={`popular-${campaign.id}`}
                 variant="horizontal"
                 className="max-w-none"
                 {...campaign}
@@ -123,7 +118,7 @@ export function RegionPopularCampaignsSection() {
           <div key={column} className="flex flex-col gap-6">
             {regionPopularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
               <HomeCampaignCard
-                key={`region-${campaign.offerTitle}`}
+                key={`region-${campaign.id}`}
                 variant="horizontal"
                 className="max-w-none"
                 {...campaign}
