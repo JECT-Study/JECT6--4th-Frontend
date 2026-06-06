@@ -40,7 +40,7 @@ export function HomeCampaignCard({
   const competitionLabel = `${applyCount}명 / ${recruitCount}명`
 
   return (
-    <Link href={`/campaigns/${variant}/${id}`}>
+    <Link href={`/campaigns/${id}`}>
       <article
         className={cn(
           'flex bg-transparent font-pretendard text-neutral_20',
