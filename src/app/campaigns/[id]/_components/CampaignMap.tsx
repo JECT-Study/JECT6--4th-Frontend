@@ -5,6 +5,8 @@ import Script from 'next/script'
 
 import { useEffect, useRef } from 'react'
 
+import LocationIcon from '@/shared/assets/icons/location.svg'
+
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,8 +57,11 @@ export function CampaignMap({ regionDepth1, regionDepth2 }: CampaignMapProps) {
   if (!address) return null
 
   return (
-    <div className="p-5 flex flex-col gap-3 rounded-[8px] border border-neutral_95">
-      <span className="">위치 정보</span>
+    <div className="p-5 flex flex-col gap-5 rounded-[8px] border border-neutral_95">
+      <div className="flex gap-2.5 items-center">
+        <LocationIcon />
+        <span className="text-24 leading-32 font-medium">위치 정보</span>
+      </div>
       <Script
         src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${CLIENT_ID}&submodules=geocoder`}
         strategy="afterInteractive"

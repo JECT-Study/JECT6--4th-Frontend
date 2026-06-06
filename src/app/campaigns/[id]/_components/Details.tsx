@@ -18,11 +18,11 @@ export default function Details({ id }: Props) {
         <div className="flex flex-col gap-4">
           <div className="flex gap-4">
             <div>{data.channel}</div>
-            <div>{data.brandName}</div>
+            <div className="text-22 leading-6.5">{data.brandName}</div>
           </div>
-          <h1>{data.title}</h1>
+          <h1 className="text-[32px] leading-40 font-medium">{data.title}</h1>
         </div>
-        <p>{data.description}</p>
+        <p className="text-20 text-[#666666] font-normal">{data.description}</p>
       </div>
       <CampaignImageCarousel
         images={[

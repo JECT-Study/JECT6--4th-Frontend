@@ -168,7 +168,7 @@ function CarouselPrevious({ className, ...props }: React.ComponentProps<'button'
       type="button"
       data-slot="carousel-previous"
       className={cn(
-        'absolute flex size-12 touch-manipulation items-center justify-center rounded-full bg-red_50 text-white hover:bg-red_40 disabled:cursor-not-allowed disabled:bg-neutral_95 disabled:text-neutral_60',
+        'absolute flex size-12 touch-manipulation items-center justify-center cursor-pointer rounded-full bg-red_50 text-white hover:bg-red_40 disabled:cursor-not-allowed disabled:bg-neutral_95 disabled:text-neutral_60',
         orientation === 'horizontal'
           ? 'top-1/2 -left-12 -translate-y-1/2'
           : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -192,7 +192,7 @@ function CarouselNext({ className, ...props }: React.ComponentProps<'button'>) {
       type="button"
       data-slot="carousel-next"
       className={cn(
-        'absolute flex size-12 touch-manipulation items-center justify-center rounded-full bg-red_50 text-white hover:bg-red_40 disabled:cursor-not-allowed disabled:bg-neutral_95 disabled:text-neutral_60',
+        'absolute flex size-12 touch-manipulation items-center justify-center cursor-pointer rounded-full bg-red_50 text-white hover:bg-red_40 disabled:cursor-not-allowed disabled:bg-neutral_95 disabled:text-neutral_60',
         orientation === 'horizontal'
           ? 'top-1/2 -right-12 -translate-y-1/2'
           : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
