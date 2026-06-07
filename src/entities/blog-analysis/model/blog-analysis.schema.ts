@@ -1,13 +1,14 @@
 import { z } from 'zod'
 
+import { campaignSchema } from '@/entities/campaign'
+import { CampaignCategory } from '@/entities/campaign/model/campaign.enums'
 import { PlanType } from '@/entities/subscription'
 
-import { AnalysisStatus, ReasonType } from './blog-analysis.enums'
+import { AnalysisStatus, BlogMetricKey, InsightType, ReasonType } from './blog-analysis.enums'
 
 // POST /blog/analyze 요청
 export const analyzeRequestSchema = z.object({
-  blogId: z.number(),
-  documentId: z.number(),
+  blogUrl: z.string().url(),
 })
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>
 
@@ -21,6 +22,34 @@ export const analyzeJobResponseSchema = z.object({
 })
 export type AnalyzeJobResponse = z.infer<typeof analyzeJobResponseSchema>
 
+export const analysisMetricSchema = z.object({
+  key: BlogMetricKey,
+  label: z.string(),
+  score: z.number().min(0).max(100),
+  color: z.string(),
+})
+export type AnalysisMetric = z.infer<typeof analysisMetricSchema>
+
+export const categoryFitSchema = z.object({
+  category: CampaignCategory,
+  keyword: z.string(),
+  activityScore: z.number().int().min(0),
+  fitnessScore: z.number().min(0).max(100),
+  message: z.string(),
+})
+export type CategoryFit = z.infer<typeof categoryFitSchema>
+
+export const analysisInsightCardSchema = z.object({
+  id: z.string(),
+  type: InsightType,
+  label: z.string(),
+  title: z.string(),
+  description: z.string(),
+  actionLabel: z.string(),
+  metricKey: BlogMetricKey,
+})
+export type AnalysisInsightCard = z.infer<typeof analysisInsightCardSchema>
+
 // LLM 분석 결과
 export const analysisResultSchema = z.object({
   summary: z.string(),
@@ -28,12 +57,22 @@ export const analysisResultSchema = z.object({
   tone: z.string(),
   targetAudience: z.string(),
   suggestions: z.array(z.string()),
+  metrics: z.array(analysisMetricSchema),
+  categoryFits: z.array(categoryFitSchema),
+  strengthCard: analysisInsightCardSchema,
+  weaknessCard: analysisInsightCardSchema,
 })
 export type AnalysisResult = z.infer<typeof analysisResultSchema>
 
 // GET /blog/analysis/{id} 응답
 export const blogAnalysisResponseSchema = z.object({
+  analysisId: z.number(),
   documentId: z.number(),
+  userNickname: z.string(),
+  blogName: z.string(),
+  blogType: z.string(),
+  primaryCategory: CampaignCategory,
+  percentile: z.number().int().min(0).max(100),
   status: AnalysisStatus,
   analysis: analysisResultSchema.nullable(),
   analyzedAt: z.string().nullable(),
@@ -60,9 +99,7 @@ export const analysisHistoryResponseSchema = z.object({
 export type AnalysisHistoryResponse = z.infer<typeof analysisHistoryResponseSchema>
 
 // GET /blog/analysis/{id}/recommendations 공고 아이템
-export const recommendedCampaignSchema = z.object({
-  id: z.number(),
-  title: z.string(),
+export const recommendedCampaignSchema = campaignSchema.extend({
   fitnessScore: z.number(),
   selectionScore: z.number(),
   reasonType: ReasonType,
@@ -79,7 +116,15 @@ export type AnalysisRecommendationsResponse = z.infer<typeof analysisRecommendat
 
 // GET /blog/analysis/{id}/bloggers 아이템
 export const popularBloggerSchema = z.object({
+  id: z.number(),
   nickname: z.string(),
+  blogName: z.string(),
+  handle: z.string(),
+  badge: z.string(),
+  postTitle: z.string(),
+  postUrl: z.string().url(),
+  blogUrl: z.string().url(),
+  likeCount: z.number(),
   overallScore: z.number(),
   thumbnailUrl: z.string().nullable(),
 })

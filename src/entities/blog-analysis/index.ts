@@ -1,6 +1,9 @@
 export {
   analyzeRequestSchema,
   analyzeJobResponseSchema,
+  analysisMetricSchema,
+  categoryFitSchema,
+  analysisInsightCardSchema,
   analysisResultSchema,
   blogAnalysisResponseSchema,
   analysisHistoryItemSchema,
@@ -13,6 +16,9 @@ export {
   chatResponseSchema,
   type AnalyzeRequest,
   type AnalyzeJobResponse,
+  type AnalysisMetric,
+  type CategoryFit,
+  type AnalysisInsightCard,
   type AnalysisResult,
   type BlogAnalysisResponse,
   type AnalysisHistoryItem,
@@ -24,4 +30,4 @@ export {
   type ChatRequest,
   type ChatResponse,
 } from './model/blog-analysis.schema'
-export { AnalysisStatus, ReasonType } from './model/blog-analysis.enums'
+export { AnalysisStatus, BlogMetricKey, InsightType, ReasonType } from './model/blog-analysis.enums'
