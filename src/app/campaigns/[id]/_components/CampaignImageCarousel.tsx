@@ -32,11 +32,11 @@ export function CampaignImageCarousel({ images = [] }: CampaignImageCarouselProp
   }, [api])
 
   if (images.length === 0) {
-    return <div className="h-100 w-full bg-neutral_95 mt-13.75 mb-7.5 rounded-lg" />
+    return <div className="h-100 w-full bg-neutral_95 mb-7.5 rounded-lg" />
   }
 
   return (
-    <div className="relative mt-13.75 mb-7.5">
+    <div className="relative mb-7.5">
       <Carousel setApi={setApi} opts={{ loop: true }}>
         <CarouselContent className="ml-0">
           {images.map((src, i) => (
