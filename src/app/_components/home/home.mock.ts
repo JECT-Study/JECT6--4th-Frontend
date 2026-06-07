@@ -1,38 +1,10 @@
 import type { Campaign } from '@/entities/campaign'
+import type { FeedHero, BloggerStories } from '@/entities/feed'
 
-import type { CreatorPost, HeroSlide } from './home.types'
-
-export const heroSlides: HeroSlide[] = [
-  {
-    title: '내 블로그 진단하고 더 정확한 공고 추천받기',
-    description: 'AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.',
-    cta: 'AI 맞춤 체험단 보기 >',
-    href: '#ai-campaigns',
-  },
-  {
-    title: '지금 가장 인기 있는 체험단을 확인해보세요',
-    description: '수백 개의 체험단 중 지금 가장 많이 신청받고 있는 공고를 모았어요.',
-    cta: '인기 체험단 보기 >',
-    href: '#popular-campaigns',
-  },
-  {
-    title: '내 근처 체험단, 한눈에 찾아보기',
-    description: '지역별로 분류된 체험단을 통해 가까운 공고를 빠르게 찾아보세요.',
-    cta: '지역별 체험단 보기 >',
-    href: '#region-popular-campaigns',
-  },
-  {
-    title: '인기 블로거들의 생생한 체험 후기',
-    description: '실제 체험단에 참여한 블로거들의 솔직한 후기를 확인해보세요.',
-    cta: '후기 보러가기 >',
-    href: '#creator-posts',
-  },
-  {
-    title: '오늘 새로 올라온 체험단 놓치지 마세요',
-    description: '매일 업데이트되는 신규 공고를 가장 먼저 확인하고 선정 확률을 높여보세요.',
-    cta: '신규 공고 보기 >',
-    href: '#popular-campaigns',
-  },
+export const heroSlides: FeedHero[] = [
+  { type: 'AI_MATCHED', campaigns: [] },
+  { type: 'POPULAR', campaigns: [] },
+  { type: 'ACTIVITY_BASED', campaigns: [] },
 ]
 
 export const aiCampaigns: (Campaign & { fitLabel: string })[] = [
@@ -283,7 +255,17 @@ export const popularCampaigns: Campaign[] = [
   },
 ]
 
-export const creatorPosts: CreatorPost[] = [
-  { handle: '@dailyplate', likeCount: 120, title: '성수에서 발견한 조용한 브런치 맛집' },
-  { handle: '@moodlog', likeCount: 98, title: '작은 방 분위기를 바꾸는 조명 리뷰' },
-]
+export const creatorPosts: BloggerStories = {
+  stories: [
+    {
+      bloggerNickname: '@dailyplate',
+      campaignTitle: '성수에서 발견한 조용한 브런치 맛집',
+      story: '성수동 골목에서 발견한 조용하고 아늑한 브런치 카페 솔직 후기',
+    },
+    {
+      bloggerNickname: '@moodlog',
+      campaignTitle: '작은 방 분위기를 바꾸는 조명 리뷰',
+      story: '방 분위기를 180도 바꿔준 무드 조명 한 달 사용 후기',
+    },
+  ],
+}
