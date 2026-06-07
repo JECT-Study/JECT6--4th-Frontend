@@ -7,18 +7,18 @@ import { Button, Input } from '@/shared/ui'
 export function Header() {
   return (
     <header className="w-full">
-      <div className="max-w-360 px-30 py-6 flex items-center justify-between mx-auto">
+      <div className="mx-auto flex max-w-360 items-center justify-between px-5 py-6 md:px-8 lg:px-30">
         <div className="flex gap-4 items-center">
           <Button className="bg-[#F5F5F5] p-2 hover:bg-neutral_95">
             <Hamburger className="size-8" />
           </Button>
           <Link href="/">LOGO</Link>
         </div>
-        <div className="flex gap-6">
+        <div className="hidden gap-6 md:flex">
           <Input
             variant="search"
             placeholder="원하는 공고를 입력해주세요"
-            className="w-93.5"
+            className="w-70 lg:w-93.5"
             inputClassName="text-14 leading-4.5"
             leftAddon={<SearchIcon className="size-6" />}
           />
