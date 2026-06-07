@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
           <h1 className="text-[32px] leading-40 font-medium">{data.title}</h1>
         </div>
-        <p className="text-20 text-[#666666] font-normal">{data.description}</p>
+        {/* <p className="text-20 text-[#666666] font-normal">{data.description}</p> */}
       </div>
       <div className="flex gap-11.25">
         <Details id={id} />

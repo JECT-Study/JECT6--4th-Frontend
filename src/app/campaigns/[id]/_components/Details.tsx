@@ -14,16 +14,11 @@ export default function Details({ id }: Props) {
 
   return (
     <div className="max-w-167.5 w-full flex flex-col">
-      <CampaignImageCarousel
-        images={[
-          'https://media.bunjang.co.kr/product/410221229_2_1779701101_w360.jpg',
-          'https://media.bunjang.co.kr/product/410221229_2_1779701101_w360.jpg',
-        ]}
-      />
+      <CampaignImageCarousel images={data.images.map(img => img.imageUrl)} />
       <div className="flex flex-col gap-7.5 pb-17">
         <CampaignInfo data={data} />
         <CampaignDetailInfo data={data} />
-        <CampaignMap regionDepth1={data.regionDepth1} regionDepth2={data.regionDepth2} />
+        <CampaignMap location={data.location} />
       </div>
     </div>
   )

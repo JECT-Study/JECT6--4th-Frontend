@@ -4,10 +4,10 @@ import type { ReactNode } from 'react'
 
 import { Heart, User } from 'lucide-react'
 
-import { INTEREST_CATEGORY_LABEL, TYPE_LABEL } from '@/constant'
+import { TYPE_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 
-import type { Campaign } from '@/entities/campaign'
+import type { Campaign, CampaignType } from '@/entities/campaign'
 
 function formatDday(applyEndDate: string) {
   const diff = Math.ceil((new Date(applyEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -20,19 +20,19 @@ interface HomeCampaignCardProps extends Campaign {
   className?: string
   fitLabel?: string
   variant?: 'ai' | 'horizontal' | 'vertical'
+  campaignType: CampaignType
 }
 
 export function HomeCampaignCard({
   applyCount,
   applyEndDate,
   brandName,
-  category,
   className = '',
   fitLabel,
   id,
   recruitCount,
   title,
-  type,
+  campaignType,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
   const isHorizontal = variant === 'horizontal'
@@ -51,13 +51,9 @@ export function HomeCampaignCard({
         )}
       >
         {isHorizontal ? (
-          <HomeCardImage className="min-h-43 w-full sm:w-[45%]" showChips={false} />
+          <HomeCardImage className="min-h-43 w-full sm:w-[45%]" />
         ) : (
-          <HomeCardImage
-            categoryLabel={INTEREST_CATEGORY_LABEL[category]}
-            className="h-43 w-full"
-            typeLabel={TYPE_LABEL[type]}
-          >
+          <HomeCardImage className="h-43 w-full">
             {variant === 'ai' && fitLabel && (
               <span className="absolute left-3 top-4 rounded-sm bg-red_95 px-3 py-1 text-12 font-semibold leading-16 text-red_40">
                 {fitLabel}
@@ -86,7 +82,7 @@ export function HomeCampaignCard({
 
             <div className="flex flex-wrap gap-1.5">
               <span className="rounded-md border border-neutral_90 bg-white px-3 py-1 text-14 font-medium leading-20 text-neutral_50">
-                {TYPE_LABEL[type]}
+                {TYPE_LABEL[campaignType]}
               </span>
               <span className="py-1 text-14 font-medium leading-20 text-neutral_50">
                 {brandName}
@@ -110,35 +106,13 @@ export function HomeCampaignCard({
   )
 }
 
-function HomeCardImage({
-  categoryLabel,
-  children,
-  className = '',
-  showChips = true,
-  typeLabel,
-}: {
-  categoryLabel?: string
-  children?: ReactNode
-  className?: string
-  showChips?: boolean
-  typeLabel?: string
-}) {
+function HomeCardImage({ children, className = '' }: { children?: ReactNode; className?: string }) {
   return (
     <div className={cn('relative shrink-0 rounded-md bg-neutral_99', className)} aria-hidden>
       {children}
       <span className="absolute right-4 top-4 flex size-8.5 items-center justify-center rounded-full bg-white text-neutral_20">
         <Heart className="size-5" />
       </span>
-      {showChips && (
-        <div className="absolute bottom-4 left-4 flex gap-3">
-          <span className="rounded-md bg-neutral_60 px-3 py-1 text-14 font-medium leading-20 text-white shadow-sm">
-            {categoryLabel}
-          </span>
-          <span className="rounded-md bg-red_80 px-3 py-1 text-14 font-medium leading-20 text-white shadow-sm">
-            {typeLabel}
-          </span>
-        </div>
-      )}
     </div>
   )
 }

@@ -5,6 +5,8 @@ import Script from 'next/script'
 
 import { useEffect, useRef } from 'react'
 
+import { CampaignLocation } from '@/entities/campaign'
+
 import LocationIcon from '@/shared/assets/icons/location.svg'
 
 declare global {
@@ -14,17 +16,19 @@ declare global {
   }
 }
 
-interface CampaignMapProps {
-  regionDepth1: string | null
-  regionDepth2: string | null
+interface Props {
+  location?: CampaignLocation | null
 }
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID ?? ''
 
-export function CampaignMap({ regionDepth1, regionDepth2 }: CampaignMapProps) {
+export function CampaignMap({ location }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
 
-  const address = [regionDepth1, regionDepth2].filter(Boolean).join(' ')
+  const address =
+    location?.address ??
+    [location?.regionDepth1, location?.regionDepth2].filter(Boolean).join(' ') ??
+    ''
 
   function initMap() {
     if (!mapRef.current || !window.naver?.maps) return
@@ -33,6 +37,13 @@ export function CampaignMap({ regionDepth1, regionDepth2 }: CampaignMapProps) {
       zoom: 15,
       mapTypeControl: false,
     })
+
+    if (location?.latitude && location?.longitude) {
+      const position = new window.naver.maps.LatLng(location.latitude, location.longitude)
+      map.setCenter(position)
+      new window.naver.maps.Marker({ map, position })
+      return
+    }
 
     if (!address || !window.naver.maps.Service) return
 
