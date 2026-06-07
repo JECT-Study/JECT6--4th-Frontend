@@ -27,31 +27,65 @@ export type Paginated<T> = {
   hasNext: boolean
 }
 
+// 이미지
+export const campaignImageSchema = z.object({
+  imageUrl: z.string(),
+  sortOrder: z.number().optional(),
+})
+export type CampaignImage = z.infer<typeof campaignImageSchema>
+
+// 위치 정보
+export const campaignLocationSchema = z.object({
+  regionDepth1: z.string().nullable(),
+  regionDepth2: z.string().nullable(),
+  address: z.string().nullable(),
+  latitude: z.number().nullable(),
+  longitude: z.number().nullable(),
+})
+
+export type CampaignLocation = z.infer<typeof campaignLocationSchema>
+
+// 링크
+export const campaignLinkSchema = z.object({
+  title: z.string().optional(),
+  url: z.string(),
+})
+
+// 체험단 상세 정보
+export const campaignDetailInfoSchema = z.object({
+  titleKeywords: z.array(z.string()),
+  bodyKeywords: z.array(z.string()),
+  links: z.array(campaignLinkSchema),
+  additionalNotice: z.string().nullable(),
+  caution: z.string().nullable(),
+  mission: z.string().nullable(),
+})
+export type CampaignDetailInfo = z.infer<typeof campaignDetailInfoSchema>
+
 // 공고 목록 아이템
 export const campaignSchema = z.object({
   id: z.number(),
   title: z.string(),
-  brandName: z.string(),
-  category: CampaignCategory,
-  type: CampaignType,
+  brandName: z.string().optional(),
+  category: CampaignCategory.optional(),
+  campaignType: CampaignType,
   channel: CampaignChannel,
-  providedContent: z.string(),
-  recruitCount: z.number(),
-  applyCount: z.number(),
-  applyEndDate: z.string(),
+  images: z.array(campaignImageSchema),
+  providedContent: z.string().optional(),
+  recruitCount: z.number().optional(),
+  applyCount: z.number().optional(),
+  applyEndDate: z.string().optional(),
   isGuaranteed: z.boolean(),
-  thumbnailUrl: z.string().nullable(),
 })
 export type Campaign = z.infer<typeof campaignSchema>
 
 // 공고 상세
 export const campaignDetailSchema = campaignSchema.extend({
-  description: z.string().nullable(),
-  regionDepth1: z.string().nullable(),
-  regionDepth2: z.string().nullable(),
-  applyStartDate: z.string(),
-  announceDate: z.string(),
-  reviewDeadline: z.string(),
+  applyStartDate: z.string().optional(),
+  announceDate: z.string().optional(),
+  reviewDeadline: z.string().optional(),
+  location: campaignLocationSchema.nullable(),
+  campaignDetail: campaignDetailInfoSchema.nullable(),
   status: CampaignStatus,
   sourcePlatform: CampaignPlatform.optional(),
   isLiked: z.boolean(),
