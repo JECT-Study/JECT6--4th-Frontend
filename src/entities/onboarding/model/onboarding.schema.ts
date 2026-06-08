@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
-import { campaignSchema } from '@/entities/campaign'
+import { CampaignCategory } from '@/entities/campaign'
 
 // POST /onboarding/response 요청
 export const onboardingResponseRequestSchema = z.object({
-  sessionId: z.string(),
+  sessionId: z.string().optional(),
   step: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
   answer: z.string(),
 })
@@ -19,9 +19,19 @@ export const onboardingResponseResultSchema = z.object({
 })
 export type OnboardingResponseResult = z.infer<typeof onboardingResponseResultSchema>
 
+// GET /onboarding/recommendations 응답 캠페인 요약
+export const onboardingCampaignSummarySchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  category: CampaignCategory,
+  thumbnailUrl: z.string().nullable(),
+  applyEndDate: z.string(),
+})
+export type OnboardingCampaignSummary = z.infer<typeof onboardingCampaignSummarySchema>
+
 // GET /onboarding/recommendations 응답
 export const onboardingRecommendationsSchema = z.object({
   sessionId: z.string(),
-  campaigns: z.array(campaignSchema),
+  campaigns: z.array(onboardingCampaignSummarySchema),
 })
 export type OnboardingRecommendations = z.infer<typeof onboardingRecommendationsSchema>

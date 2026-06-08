@@ -15,16 +15,17 @@ export type SubscriptionType = z.infer<typeof SubscriptionType>
 export const InterestCategory = z.enum([
   'FOOD',
   'BEAUTY',
-  'FASHION',
-  'TRAVEL',
-  'LIFESTYLE',
-  'IT',
-  'SPORTS',
   'CULTURE',
+  'TRAVEL',
+  'TECH_IT',
+  'PET',
+  'LIVING',
+  'FASHION',
+  'ETC',
 ])
 export type InterestCategory = z.infer<typeof InterestCategory>
 
-export const UserChannel = z.enum(['BLOG', 'INSTAGRAM', 'YOUTUBE', 'TIKTOK'])
+export const UserChannel = z.enum(['BLOG', 'INSTAGRAM', 'YOUTUBE', 'TIKTOK', 'ETC'])
 export type UserChannel = z.infer<typeof UserChannel>
 
 export const BlogPlatform = z.enum(['NAVER', 'TISTORY', 'VELOG', 'OTHER'])
