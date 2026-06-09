@@ -1,10 +1,14 @@
 'use client'
 
+import Link from 'next/link'
+
 import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
 
 import type { Campaign } from '@/entities/campaign'
+
+import { Button } from '@/shared/ui'
 
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
@@ -56,6 +60,11 @@ export function HomeCarouselSection({
           <HomeCampaignCard key={`${title}-${campaign.id}`} className="max-w-none" {...campaign} />
         ))}
       </div>
+      <Link href="/campaigns">
+        <Button variant="tertiary" className="w-full border-[#8A8A8A] py-6">
+          전체 보기
+        </Button>
+      </Link>
     </section>
   )
 }

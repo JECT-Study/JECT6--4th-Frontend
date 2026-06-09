@@ -1,6 +1,16 @@
+'use client'
+
+import Link from 'next/link'
+
+import { useState } from 'react'
+
 import { Heart, LockKeyhole } from 'lucide-react'
 
+import { LocationDropdown } from '@/app/campaigns/_components/LocationDropdown'
+
 import type { BloggerStory } from '@/entities/feed'
+
+import { Button } from '@/shared/ui'
 
 import { HeroCarousel } from './HeroCarousel'
 import { aiCampaigns, creatorPosts, popularCampaigns, regionPopularCampaigns } from './home.mock'
@@ -62,15 +72,28 @@ export function LockedAiSection() {
   )
 }
 
+const CATEGORY_OPTIONS = [
+  { label: '음식', value: 'FOOD' },
+  { label: '뷰티', value: 'BEAUTY' },
+  { label: '패션', value: 'FASHION' },
+  { label: '여행', value: 'TRAVEL' },
+  { label: '라이프스타일', value: 'LIFESTYLE' },
+  { label: '테크/IT', value: 'IT' },
+  { label: '스포츠', value: 'SPORTS' },
+  { label: '문화', value: 'CULTURE' },
+]
+
 export function CreatorPostsSection() {
+  const creatorStories = creatorPosts.stories
+
   return (
     <section
       id="creator-posts"
       className="mx-auto mt-18 flex w-full max-w-300 flex-col gap-8 px-5 md:px-8 lg:px-0"
     >
-      <SectionHeader title="인기있는 블로거들의 포스팅 엿보기" filterLabel="랭킹" />
+      <SectionHeader title="인기있는 블로거들의 포스팅 엿보기" />
       <div className="grid gap-6 lg:grid-cols-2">
-        {creatorPosts.stories.map(post => (
+        {creatorStories.map(post => (
           <HomeCreatorPostCard key={post.bloggerNickname} {...post} />
         ))}
       </div>
@@ -79,12 +102,19 @@ export function CreatorPostsSection() {
 }
 
 export function PopularCampaignsSection({ showHeader = true }: { showHeader?: boolean }) {
+  const [category, setCategory] = useState('FOOD')
+
   return (
     <section
       id="popular-campaigns"
       className="mx-auto mt-18 flex w-full max-w-300 flex-col gap-8 px-5 md:px-8 lg:px-0"
     >
-      {showHeader && <SectionHeader title="인기 체험단" filterLabel="음식" />}
+      {showHeader && (
+        <SectionHeader
+          title="인기 체험단"
+          filter={{ value: category, options: CATEGORY_OPTIONS, onChange: setCategory }}
+        />
+      )}
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {[0, 1].map(column => (
           <div key={column} className="flex flex-col gap-6">
@@ -99,20 +129,35 @@ export function PopularCampaignsSection({ showHeader = true }: { showHeader?: bo
           </div>
         ))}
       </div>
-      <p className="m-0 flex h-14 w-full items-center justify-center bg-neutral_95 text-14 font-semibold leading-20 text-neutral_50">
-        전체 공고 목록 페이지 연동 예정
-      </p>
+      <Link href="/campaigns">
+        <Button variant="tertiary" className="w-full border-[#8A8A8A] py-6">
+          전체 보기
+        </Button>
+      </Link>
     </section>
   )
 }
 
 export function RegionPopularCampaignsSection() {
+  const [region, setRegion] = useState('')
+
   return (
     <section
       id="region-popular-campaigns"
       className="mx-auto mt-18 flex w-full max-w-300 flex-col gap-8 px-5 md:px-8 lg:px-0"
     >
-      <SectionHeader title="지역별 인기 체험" filterLabel="서울" />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <LocationDropdown
+            location={region}
+            setLocation={setRegion}
+            triggerClassName="gap-1 text-[20px] leading-6 font-medium border py-[9px] pl-4 pr-2.5 rounded-[8px] h-12"
+          />
+          <h2 className="m-0 text-[25px] font-semibold leading-12 text-neutral_20">
+            지역별 인기 체험
+          </h2>
+        </div>
+      </div>
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {[0, 1].map(column => (
           <div key={column} className="flex flex-col gap-6">
@@ -127,9 +172,11 @@ export function RegionPopularCampaignsSection() {
           </div>
         ))}
       </div>
-      <p className="m-0 flex h-14 w-full items-center justify-center bg-neutral_95 text-14 font-semibold leading-20 text-neutral_50">
-        지역별 체험 전체보기 예정
-      </p>
+      <Link href="/campaigns">
+        <Button variant="tertiary" className="w-full border-[#8A8A8A] py-6">
+          전체 보기
+        </Button>
+      </Link>
     </section>
   )
 }

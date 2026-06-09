@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 import { campaignSchema } from '@/entities/campaign'
 import { CampaignCategory } from '@/entities/campaign/model/campaign.enums'
-import { PlanType } from '@/entities/subscription'
 
 import { AnalysisStatus, BlogMetricKey, InsightType, ReasonType } from './blog-analysis.enums'
 
