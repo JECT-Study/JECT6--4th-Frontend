@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Sparkles, Zap } from 'lucide-react'
 
-import { INTEREST_CATEGORY_LABEL } from '@/constant'
+import { CAMPAIGN_CATEGORY_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 
 import { HomeCampaignCard } from '@/app/_components/home/HomeCampaignCard'
@@ -134,7 +134,7 @@ function MetricDonut({ metrics }: { metrics: AnalysisMetric[] }) {
 
   return (
     <div
-      className="relative size-[220px] rounded-full"
+      className="relative size-55 rounded-full"
       style={{ background: `conic-gradient(${segments.join(', ')})` }}
       aria-label="블로그 종합 분석 도넛 차트"
       role="img"
@@ -193,7 +193,7 @@ function CategoryFitTable({ rows }: { rows: CategoryFit[] }) {
     >
       <h3 className="text-18 font-bold leading-28">카테고리 적합도</h3>
       <div className="mt-8 overflow-x-auto">
-        <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
+        <table className="w-full min-w-160 table-fixed border-collapse text-left">
           <thead>
             <tr className="border-b border-neutral_95 text-14 font-bold leading-20 text-neutral_30">
               <th className="w-1/4 px-4 py-3">순위</th>
@@ -202,7 +202,7 @@ function CategoryFitTable({ rows }: { rows: CategoryFit[] }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows.map((row: CategoryFit) => (
               <tr key={row.category} className="border-b border-neutral_99 last:border-b-0">
                 <td className="px-4 py-4 text-14 leading-20 text-neutral_30">{row.keyword}</td>
                 <td className="px-4 py-4">
@@ -222,7 +222,7 @@ function CategoryFitTable({ rows }: { rows: CategoryFit[] }) {
                       />
                     </span>
                     <span className="truncate text-14 leading-20 text-neutral_50">
-                      {INTEREST_CATEGORY_LABEL[row.category]}
+                      {CAMPAIGN_CATEGORY_LABEL[row.category]}
                     </span>
                   </div>
                 </td>
@@ -306,7 +306,7 @@ function PopularBloggerCard({ blogger }: { blogger: PopularBlogger }) {
           {blogger.blogName}
           <ChevronRight className="size-5 transition-transform group-hover:translate-x-0.5" />
         </h3>
-        <div className="mt-4 h-[168px] rounded-sm bg-neutral_95" aria-hidden />
+        <div className="mt-4 h-42 rounded-sm bg-neutral_95" aria-hidden />
       </Link>
       <Link className="mt-4 block text-14 leading-20 text-neutral_20" href={blogger.postUrl}>
         {blogger.postTitle}

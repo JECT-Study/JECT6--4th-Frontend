@@ -17,9 +17,10 @@ const CITIES = Object.keys(REGION_DATA)
 interface Props {
   location: string
   setLocation: Dispatch<SetStateAction<string>>
+  triggerClassName?: string
 }
 
-export function LocationDropdown({ location, setLocation }: Props) {
+export function LocationDropdown({ location, setLocation, triggerClassName }: Props) {
   const [selectedCity, setSelectedCity] = useState<string>(CITIES[0])
 
   const districts = REGION_DATA[selectedCity] ?? []
@@ -32,7 +33,10 @@ export function LocationDropdown({ location, setLocation }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="group flex gap-3 h-10 w-fit cursor-pointer items-center justify-between bg-white px-3 font-pretendard text-[25px] leading-48 font-semibold text-neutral_20 outline-none disabled:cursor-not-allowed disabled:bg-neutral_99 disabled:text-neutral_70"
+          className={cn(
+            'group flex gap-3 h-10 w-fit cursor-pointer items-center justify-between bg-white px-3 font-pretendard text-[25px] leading-48 font-semibold text-neutral_20 outline-none disabled:cursor-not-allowed disabled:bg-neutral_99 disabled:text-neutral_70',
+            triggerClassName
+          )}
           type="button"
         >
           <span>{location || '지역 선택'}</span>
