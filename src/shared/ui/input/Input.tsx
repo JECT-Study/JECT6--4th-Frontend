@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
-export type InputVariant = 'default' | 'search' | 'url'
+export type InputVariant = 'default' | 'search' | 'url' | 'analyze'
 
 interface InputProps extends React.ComponentProps<'input'> {
   errorMessage?: string
@@ -22,6 +22,8 @@ const wrapVariants = cva('flex items-center border transition-colors', {
       default: 'h-12 rounded-[10px] border-neutral_95 bg-white px-3',
       search: 'h-12 rounded-xl border-transparent bg-neutral_99 px-4',
       url: 'h-14 rounded-[18px] border-violet_80 bg-white px-5',
+      analyze:
+        'h-[110px] border-[2.5px] border-[#DAB2FF] shadow-[0px_31.52px_63.04px_-15.13px_#00000040] bg-white rounded-[20px] px-[30px] py-[37px] w-210',
     },
     error: {
       true: 'border-red_50',

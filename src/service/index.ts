@@ -44,9 +44,10 @@ import {
   type UpgradeSubscriptionRequest,
 } from '@/entities/subscription'
 import {
-  blogSchema,
+  activityChannelSchema,
   userProfileSchema,
-  type BlogLinkRequest,
+  nicknameCheckSchema,
+  type ActivityChannelRequest,
   type Provider,
   type UpdateUserProfileRequest,
 } from '@/entities/user'
@@ -78,18 +79,23 @@ export const userService = {
   updateMe: (data: UpdateUserProfileRequest) =>
     http.patch('/users/me', data).then(res => userProfileSchema.parse(res.data)),
 
-  /** POST /users/me/blog — 블로그 연동 */
-  linkBlog: (data: BlogLinkRequest) =>
-    http.post('/users/me/blog', data).then(res => blogSchema.parse(res.data)),
+  /** POST /users/me/activity-channel — 활동 채널 연동 */
+  linkActivityChannel: (data: ActivityChannelRequest) =>
+    http
+      .post('/users/me/activity-channel', data)
+      .then(res => activityChannelSchema.parse(res.data)),
 
-  /** DELETE /users/me/blog — 블로그 연동 해제 */
-  unlinkBlog: () => http.delete<void>('/users/me/blog').then(res => res.data),
+  /** DELETE /users/me/activity-channel — 활동 채널 연동 해제 */
+  unlinkActivityChannel: (activityType: string) =>
+    http
+      .delete<void>('/users/me/activity-channel', { params: { activityType } })
+      .then(res => res.data),
 
   /** GET /users/nickname/check — 닉네임 중복 확인 */
   checkNickname: (nickname: string) =>
     http
       .get('/users/nickname/check', { params: { nickname } })
-      .then(res => z.object({ available: z.boolean() }).parse(res.data)),
+      .then(res => nicknameCheckSchema.parse(res.data)),
 
   /** GET /users/nickname/random — 랜덤 닉네임 생성 */
   randomNickname: () =>

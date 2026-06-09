@@ -1,6 +1,6 @@
 'use client'
 
-import { CHANNEL_LABEL, INTEREST_CATEGORY_LABEL, TYPE_LABEL } from '@/constant'
+import { CAMPAIGN_CATEGORY_LABEL, CHANNEL_LABEL, TYPE_LABEL } from '@/constant'
 
 import type { CampaignListParams } from '@/entities/campaign'
 import { CampaignCategory, CampaignChannel, CampaignSort, CampaignType } from '@/entities/campaign'
@@ -14,7 +14,7 @@ const SORT_OPTIONS = CampaignSort.options.map(value => ({
 
 const CATEGORY_OPTIONS = CampaignCategory.options.map(value => ({
   value,
-  label: INTEREST_CATEGORY_LABEL[value],
+  label: CAMPAIGN_CATEGORY_LABEL[value],
 }))
 
 const TYPE_OPTIONS = CampaignType.options.map(value => ({
