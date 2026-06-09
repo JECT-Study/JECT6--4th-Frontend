@@ -13,17 +13,12 @@ export const myCampaignSchema = z.object({
   reviewDeadline: z.string().nullable(),
   dDay: z.number().nullable(),
   rewardAmount: z.number(),
-  rewardStatus: z.string(),
+  isUrgent: z.boolean(),
 })
 export type MyCampaign = z.infer<typeof myCampaignSchema>
 
 // GET /my/campaigns/{id} 상세
-export const myCampaignDetailSchema = myCampaignSchema.extend({
-  thumbnailUrl: z.string().nullable(),
-  reviewUrl: z.string().nullable(),
-  selectedAt: z.string().nullable(),
-  completedAt: z.string().nullable(),
-})
+export const myCampaignDetailSchema = myCampaignSchema
 export type MyCampaignDetail = z.infer<typeof myCampaignDetailSchema>
 
 // 포인트 거래 내역 아이템
@@ -41,7 +36,6 @@ export type PointTransaction = z.infer<typeof pointTransactionSchema>
 export const pointsResponseSchema = z.object({
   balance: z.number(),
   transactions: z.array(pointTransactionSchema),
-  page: z.number(),
   totalElements: z.number(),
 })
 export type PointsResponse = z.infer<typeof pointsResponseSchema>
@@ -61,7 +55,7 @@ export const withdrawResponseSchema = z.object({
   amount: z.number(),
   status: WithdrawStatus,
   bankName: z.string(),
-  accountNumber: z.string(),
+  maskedAccountNumber: z.string(),
   requestedAt: z.string(),
 })
 export type WithdrawResponse = z.infer<typeof withdrawResponseSchema>

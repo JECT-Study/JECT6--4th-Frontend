@@ -1,10 +1,11 @@
 import { z } from 'zod'
 
 export const UserCampaignStatus = z.enum([
+  'LIKED',
+  'VIEWED',
   'APPLIED',
   'REVIEWING',
   'SELECTED',
-  'REJECTED',
   'COMPLETED',
 ])
 export type UserCampaignStatus = z.infer<typeof UserCampaignStatus>

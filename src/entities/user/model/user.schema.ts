@@ -1,15 +1,6 @@
 import { z } from 'zod'
 
-import { blogSchema } from './blog.schema'
-import {
-  InterestCategory,
-  Provider,
-  SubscriptionType,
-  UserChannel,
-  UserGrade,
-  UserRole,
-  BlogPlatform,
-} from './user.enums'
+import { InterestCategory, UserChannel, UserRole } from './user.enums'
 
 // users 테이블 기준 DB 엔티티
 export const userSchema = z.object({
@@ -25,36 +16,62 @@ export const userSchema = z.object({
 })
 export type User = z.infer<typeof userSchema>
 
+// 활동 채널 아이템
+export const activityChannelSchema = z.object({
+  id: z.number(),
+  activityType: UserChannel,
+  url: z.string(),
+})
+export type ActivityChannel = z.infer<typeof activityChannelSchema>
+
 // GET /users/me 응답
 export const userProfileSchema = z.object({
   id: z.number(),
   nickname: z.string(),
-  profileImageUrl: z.string().nullable(),
-  provider: Provider,
-  interestCategories: z.array(InterestCategory),
-  channels: z.array(UserChannel),
-  regions: z.array(z.string()),
-  grade: UserGrade,
-  subscriptionType: SubscriptionType,
-  aiCreditRemaining: z.number(),
-  pointBalance: z.number(),
-  blog: blogSchema.nullable(),
-  createdAt: z.string(),
+  onboardingCompleted: z.boolean(),
+  categoryTypes: z.array(InterestCategory),
+  activityTypes: z.array(UserChannel),
+  regionIds: z.array(z.number()),
+  activityChannels: z.array(activityChannelSchema),
 })
 export type UserProfile = z.infer<typeof userProfileSchema>
 
 // PATCH /users/me 요청
 export const updateUserProfileSchema = z.object({
   nickname: z.string().optional(),
-  interestCategories: z.array(InterestCategory).optional(),
-  channels: z.array(UserChannel).optional(),
-  regions: z.array(z.string()).optional(),
+  categoryTypes: z.array(InterestCategory).optional(),
+  activityTypes: z.array(UserChannel).optional(),
+  regionIds: z.array(z.number()).optional(),
 })
 export type UpdateUserProfileRequest = z.infer<typeof updateUserProfileSchema>
 
-// POST /users/me/blog 요청
-export const blogLinkSchema = z.object({
-  blogUrl: z.string(),
-  platform: BlogPlatform,
+// PATCH /users/me 응답
+export const updateUserProfileResponseSchema = z.object({
+  userId: z.number(),
+  nickname: z.string(),
+  onboardingCompleted: z.boolean(),
+  categoryTypes: z.array(InterestCategory),
+  activityTypes: z.array(UserChannel),
+  regionIds: z.array(z.number()),
 })
-export type BlogLinkRequest = z.infer<typeof blogLinkSchema>
+export type UpdateUserProfileResponse = z.infer<typeof updateUserProfileResponseSchema>
+
+// POST /users/me/activity-channel 요청
+export const activityChannelRequestSchema = z.object({
+  activityType: UserChannel,
+  url: z.string(),
+})
+export type ActivityChannelRequest = z.infer<typeof activityChannelRequestSchema>
+
+// GET /users/nickname/check 응답
+export const nicknameCheckSchema = z.object({
+  nickname: z.string(),
+  available: z.boolean(),
+})
+export type NicknameCheck = z.infer<typeof nicknameCheckSchema>
+
+// GET /users/nickname/random 응답
+export const randomNicknameSchema = z.object({
+  nickname: z.string(),
+})
+export type RandomNickname = z.infer<typeof randomNicknameSchema>

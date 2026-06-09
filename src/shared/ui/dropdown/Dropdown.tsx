@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 
 interface DropdownOption {
   label: string
@@ -22,6 +23,9 @@ interface DropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'o
   options: DropdownOption[]
   placeholder?: string
   value?: string
+  triggerClassName?: string
+  itemClassName?: string
+  activeItemClassName?: string
 }
 
 export function Dropdown({
@@ -32,6 +36,9 @@ export function Dropdown({
   options,
   placeholder = '옵션 제목',
   value,
+  triggerClassName,
+  itemClassName,
+  activeItemClassName,
   ...props
 }: DropdownProps) {
   const selectedOption = options.find(option => option.value === value)
@@ -42,14 +49,17 @@ export function Dropdown({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
-            className="group inline-flex h-10 w-full cursor-pointer items-center justify-between rounded-[10px] border border-neutral_50 bg-white px-3 font-pretendard text-14 font-semibold leading-20 text-neutral_20 disabled:cursor-not-allowed disabled:bg-neutral_99 disabled:text-neutral_70"
+            className={cn(
+              'group inline-flex h-10 w-full gap-3 cursor-pointer items-center justify-between rounded-[10px] border border-neutral_50 bg-white px-3 font-pretendard text-14 font-semibold leading-20 text-neutral_20 disabled:cursor-not-allowed disabled:bg-neutral_99 disabled:text-neutral_70',
+              triggerClassName
+            )}
             disabled={disabled}
             type="button"
             {...props}
           >
             <span>{selectedOption?.label ?? placeholder}</span>
             <ChevronDownIcon
-              className="ml-3 size-4 text-neutral_50 transition-transform group-data-[state=open]:rotate-180"
+              className="size-4 text-neutral_50 transition-transform group-data-[state=open]:rotate-180"
               aria-hidden
             />
           </button>
@@ -58,14 +68,16 @@ export function Dropdown({
           {options.map(option => (
             <DropdownMenuItem
               key={option.value}
-              className={[
+              className={cn(
                 'cursor-pointer rounded-lg px-3 py-2.5 font-pretendard text-14 font-medium leading-20 text-neutral_30 focus:bg-neutral_99 focus:text-neutral_30',
+                itemClassName,
                 option.value === value
-                  ? 'bg-blue_95 font-bold text-blue_40 focus:bg-blue_95 focus:text-blue_40'
-                  : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
+                  ? cn(
+                      'bg-blue_95 font-bold text-blue_40 focus:bg-blue_95 focus:text-blue_40',
+                      activeItemClassName
+                    )
+                  : ''
+              )}
               onSelect={() => onChange?.(option.value)}
             >
               {option.label}

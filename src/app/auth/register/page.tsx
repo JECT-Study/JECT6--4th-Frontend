@@ -198,17 +198,17 @@ export default function Page() {
               </div>
             ))}
             <div
-              onClick={() => toggleCategory('OTHER')}
+              onClick={() => toggleCategory('ETC')}
               className={cn(
                 'py-1.5 px-3 border text-14 leading-7.5 border-[#E0E0E0] rounded-[10px] transition hover:bg-neutral_99',
-                categoryList.includes('OTHER')
+                categoryList.includes('ETC')
                   ? 'cursor-pointer text-red_50 font-semibold'
                   : categoryList.length >= 5
                     ? 'cursor-not-allowed text-[#C0C0C0]'
                     : 'cursor-pointer text-neutral_70 hover:text-neutral_50'
               )}
             >
-              {INTEREST_CATEGORY_LABEL['OTHER']}
+              {INTEREST_CATEGORY_LABEL['ETC']}
             </div>
           </div>
           {errors.interestCategories && (
@@ -248,20 +248,20 @@ export default function Page() {
               </div>
             ))}
             <div
-              onClick={() => toggleChannel('OTHER')}
+              onClick={() => toggleChannel('ETC')}
               className={cn(
                 'cursor-pointer py-1.5 px-3 border text-14 gap-2.5 flex items-center leading-7.5 border-[#E0E0E0] rounded-[10px] hover:bg-neutral_99 transition',
-                channelList.includes('OTHER')
+                channelList.includes('ETC')
                   ? 'text-red_50 font-semibold'
                   : 'text-neutral_70 hover:text-neutral_50'
               )}
             >
-              {channelList.includes('OTHER') ? (
+              {channelList.includes('ETC') ? (
                 <CheckIcon className="fill-red_50 stroke-red_50" />
               ) : (
                 <UnCheckIcon />
               )}
-              {CHANNEL_LABEL['OTHER']}
+              {CHANNEL_LABEL['ETC']}
             </div>
           </div>
           <div className="h-px w-full bg-[#E0E0E0] mb-17" />

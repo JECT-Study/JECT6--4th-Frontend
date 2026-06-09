@@ -14,7 +14,6 @@ export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>
 
 // POST /blog/analyze 응답 (202 Accepted)
 export const analyzeJobResponseSchema = z.object({
-  jobId: z.string(),
   documentId: z.number(),
   status: AnalysisStatus,
   message: z.string(),
@@ -64,7 +63,7 @@ export const analysisResultSchema = z.object({
 })
 export type AnalysisResult = z.infer<typeof analysisResultSchema>
 
-// GET /blog/analysis/{id} 응답
+// GET /blog/analysis/{documentId} 응답
 export const blogAnalysisResponseSchema = z.object({
   analysisId: z.number(),
   documentId: z.number(),
@@ -81,9 +80,8 @@ export type BlogAnalysisResponse = z.infer<typeof blogAnalysisResponseSchema>
 
 // GET /blog/analysis/history 아이템
 export const analysisHistoryItemSchema = z.object({
-  documentId: z.number(),
-  title: z.string(),
-  status: AnalysisStatus,
+  id: z.number(),
+  channelUrl: z.string(),
   analyzedAt: z.string(),
   isLocked: z.boolean(),
 })
@@ -92,7 +90,6 @@ export type AnalysisHistoryItem = z.infer<typeof analysisHistoryItemSchema>
 // GET /blog/analysis/history 응답
 export const analysisHistoryResponseSchema = z.object({
   content: z.array(analysisHistoryItemSchema),
-  planType: PlanType,
   totalElements: z.number(),
   visibleCount: z.number(),
 })
@@ -126,7 +123,7 @@ export const popularBloggerSchema = z.object({
   blogUrl: z.string().url(),
   likeCount: z.number(),
   overallScore: z.number(),
-  thumbnailUrl: z.string().nullable(),
+  profileUrl: z.string(),
 })
 export type PopularBlogger = z.infer<typeof popularBloggerSchema>
 

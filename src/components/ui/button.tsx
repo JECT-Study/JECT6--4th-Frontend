@@ -12,7 +12,8 @@ const buttonVariants = cva(
       variant: {
         primary: 'bg-black text-white hover:bg-neutral_20 disabled:hover:bg-neutral_95',
         secondary: 'bg-red_50 text-white hover:bg-red_40 disabled:hover:bg-neutral_95',
-        tertiary: 'bg-transparent text-neutral_20 hover:bg-neutral_99 disabled:hover:bg-neutral_95',
+        tertiary:
+          'bg-transparent text-neutral_20 hover:bg-neutral_99 disabled:hover:bg-neutral_95 border border-[#E0E0E0]',
         navy: 'rounded-[10px] bg-neutral_20 text-white hover:bg-neutral_30 disabled:hover:bg-neutral_95',
       },
       size: {
