@@ -1,6 +1,5 @@
-import { feedService } from '@/service'
+import { blogAnalysisService, feedService } from '@/service'
 
-import { creatorPosts } from './_components/home/home.mock'
 import { HomeCarouselSection } from './_components/home/HomeCarouselSection'
 import {
   CreatorPostsSection,
@@ -12,10 +11,19 @@ import {
 import { RecentViewsSection } from './_components/home/RecentViewsSection'
 
 export default async function Page() {
-  const [hero, feedBody, bloggerStories] = await Promise.all([
-    feedService.getHero().catch(() => ({ type: 'ANONYMOUS' as const, message: '', actionLabel: '' })),
+  const [hero, feedBody, bloggers] = await Promise.all([
+    feedService
+      .getHero()
+      .catch(() => ({ type: 'ANONYMOUS' as const, message: '', actionLabel: '' })),
     feedService.getBody().catch(() => ({ popular: [], closingSoon: [], guaranteed: [] })),
-    feedService.getBloggerStories().catch(() => creatorPosts),
+    blogAnalysisService
+      .getHistory()
+      .then(history => {
+        const latestId = history.content[0]?.id
+        if (!latestId) return null
+        return blogAnalysisService.getBloggers(latestId).catch(() => null)
+      })
+      .catch(() => null),
   ])
 
   return (
@@ -29,7 +37,7 @@ export default async function Page() {
         pageSize={5}
       />
       <RecentViewsSection />
-      <CreatorPostsSection stories={bloggerStories.stories} />
+      <CreatorPostsSection bloggers={bloggers} />
       <PopularCampaignsSection campaigns={feedBody.popular} />
       <RegionPopularCampaignsSection campaigns={feedBody.popular} />
     </main>

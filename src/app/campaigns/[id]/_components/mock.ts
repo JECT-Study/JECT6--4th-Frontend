@@ -17,7 +17,6 @@ export const mockCampaignDetail: CampaignDetail = {
   ],
   providedContent: '샐러드 정기배송 1개월 무료 체험',
   recruitCount: 20,
-  applyCount: 12,
   applyEndDate: '2026-06-30',
   isGuaranteed: false,
   location: {
@@ -38,11 +37,7 @@ export const mockCampaignDetail: CampaignDetail = {
     mission: '블로그 포스팅 1건 (사진 5장 이상, 500자 이상 본문 작성)',
   },
   applyStartDate: '2026-06-01',
-  announceDate: '2026-07-05',
-  reviewDeadline: '2026-07-20',
   status: 'ACTIVE',
-  isLiked: false,
-  viewerCount: 342,
 }
 
 export const mockCampaignDetails: CampaignDetail[] = [
@@ -57,7 +52,6 @@ export const mockCampaignDetails: CampaignDetail[] = [
     images: [{ url: '' }],
     providedContent: '프리미엄 피부 관리 1회 무료 체험',
     recruitCount: 15,
-    applyCount: 8,
     applyEndDate: '2026-06-20',
     isGuaranteed: false,
     location: {
@@ -75,11 +69,7 @@ export const mockCampaignDetails: CampaignDetail[] = [
       mission: null,
     },
     applyStartDate: '2026-06-01',
-    announceDate: '2026-06-25',
-    reviewDeadline: '2026-07-10',
     status: 'ACTIVE',
-    isLiked: true,
-    viewerCount: 218,
   },
   {
     id: 3,
@@ -91,7 +81,6 @@ export const mockCampaignDetails: CampaignDetail[] = [
     images: [{ url: '' }],
     providedContent: '홈카페 키트 1세트 제공',
     recruitCount: 30,
-    applyCount: 19,
     applyEndDate: '2026-06-25',
     isGuaranteed: false,
     location: null,
@@ -103,11 +92,7 @@ export const mockCampaignDetails: CampaignDetail[] = [
       mission: null,
     },
     applyStartDate: '2026-06-01',
-    announceDate: '2026-06-28',
-    reviewDeadline: '2026-07-15',
     status: 'ACTIVE',
     sourcePlatform: 'INVIEW',
-    isLiked: false,
-    viewerCount: 501,
   },
 ]

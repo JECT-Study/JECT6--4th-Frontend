@@ -27,7 +27,6 @@ interface HomeCampaignCardProps extends Campaign {
 }
 
 export function HomeCampaignCard({
-  applyCount,
   applyEndDate,
   brandName,
   className = '',
@@ -40,9 +39,9 @@ export function HomeCampaignCard({
 }: HomeCampaignCardProps) {
   const isHorizontal = variant === 'horizontal'
   const dday = formatDday(applyEndDate)
-  const competitionLabel = `${applyCount}명 / ${recruitCount}명`
+  const competitionLabel = `모집 ${recruitCount ?? '-'}명`
 
-  const campaign: Campaign = { applyCount, applyEndDate, brandName, id, recruitCount, title, type }
+  const campaign: Campaign = { applyEndDate, brandName, id, recruitCount, title, type }
 
   return (
     <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>

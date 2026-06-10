@@ -1,5 +1,5 @@
 import type { Campaign } from '@/entities/campaign'
-import type { FeedHero, BloggerStories } from '@/entities/feed'
+import type { FeedHero } from '@/entities/feed'
 
 export const heroSlide: FeedHero = { type: 'ANONYMOUS', message: '', actionLabel: '' }
 
@@ -13,7 +13,6 @@ export const aiCampaigns: (Campaign & { fitLabel: string })[] = [
     channel: 'BLOG',
     providedContent: '샐러드 정기배송 1개월 무료 체험',
     recruitCount: 20,
-    applyCount: 12,
     applyEndDate: '2026-06-10',
     isGuaranteed: false,
     images: [],
@@ -28,7 +27,6 @@ export const aiCampaigns: (Campaign & { fitLabel: string })[] = [
     channel: 'BLOG',
     providedContent: '프리미엄 피부 관리 1회 무료 체험',
     recruitCount: 15,
-    applyCount: 8,
     applyEndDate: '2026-06-08',
     isGuaranteed: false,
     images: [],
@@ -43,7 +41,6 @@ export const aiCampaigns: (Campaign & { fitLabel: string })[] = [
     channel: 'BLOG',
     providedContent: '홈카페 키트 1세트 제공',
     recruitCount: 30,
-    applyCount: 19,
     applyEndDate: '2026-06-12',
     isGuaranteed: false,
     images: [],
@@ -58,7 +55,6 @@ export const aiCampaigns: (Campaign & { fitLabel: string })[] = [
     channel: 'BLOG',
     providedContent: '프로필 촬영 1회 무료 제공',
     recruitCount: 10,
-    applyCount: 5,
     applyEndDate: '2026-06-07',
     isGuaranteed: false,
     images: [],
@@ -76,7 +72,6 @@ export const highChanceCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '브런치 2인 식사 제공',
     recruitCount: 20,
-    applyCount: 6,
     applyEndDate: '2026-06-11',
     isGuaranteed: false,
     images: [],
@@ -90,7 +85,6 @@ export const highChanceCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '섬유 탈취제 2종 세트 제공',
     recruitCount: 40,
-    applyCount: 9,
     applyEndDate: '2026-06-14',
     isGuaranteed: false,
     images: [],
@@ -104,7 +98,6 @@ export const highChanceCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '반려견 간식 3종 세트 제공',
     recruitCount: 18,
-    applyCount: 4,
     applyEndDate: '2026-06-09',
     isGuaranteed: false,
     images: [],
@@ -118,7 +111,6 @@ export const highChanceCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '침실 조명 1개 제공',
     recruitCount: 25,
-    applyCount: 7,
     applyEndDate: '2026-06-13',
     isGuaranteed: false,
     images: [],
@@ -132,7 +124,6 @@ export const highChanceCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '오션뷰 숙소 1박 2일 제공',
     recruitCount: 12,
-    applyCount: 3,
     applyEndDate: '2026-06-15',
     isGuaranteed: false,
     images: [],
@@ -156,7 +147,6 @@ export const regionPopularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '와인 다이닝 코스 2인 제공',
     recruitCount: 30,
-    applyCount: 10,
     applyEndDate: '2026-06-10',
     isGuaranteed: false,
     images: [],
@@ -170,7 +160,6 @@ export const regionPopularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '디저트 세트 2인 제공',
     recruitCount: 40,
-    applyCount: 14,
     applyEndDate: '2026-06-12',
     isGuaranteed: false,
     images: [],
@@ -184,7 +173,6 @@ export const regionPopularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '광안리 숙소 1박 2일 제공',
     recruitCount: 16,
-    applyCount: 5,
     applyEndDate: '2026-06-14',
     isGuaranteed: false,
     images: [],
@@ -198,7 +186,6 @@ export const regionPopularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '오름 투어 1인 참가권 제공',
     recruitCount: 20,
-    applyCount: 7,
     applyEndDate: '2026-06-11',
     isGuaranteed: false,
     images: [],
@@ -212,7 +199,6 @@ export const regionPopularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '수제맥주 세트 2인 제공',
     recruitCount: 24,
-    applyCount: 8,
     applyEndDate: '2026-06-13',
     isGuaranteed: false,
     images: [],
@@ -226,7 +212,6 @@ export const regionPopularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '스파 케어 1회 제공',
     recruitCount: 32,
-    applyCount: 11,
     applyEndDate: '2026-06-16',
     isGuaranteed: false,
     images: [],
@@ -244,24 +229,8 @@ export const popularCampaigns: Campaign[] = [
     channel: 'BLOG',
     providedContent: '파스타 코스 2인 제공',
     recruitCount: 50,
-    applyCount: 22,
     applyEndDate: '2026-06-17',
     isGuaranteed: false,
     images: [],
   },
 ]
-
-export const creatorPosts: BloggerStories = {
-  stories: [
-    {
-      bloggerNickname: '@dailyplate',
-      campaignTitle: '성수에서 발견한 조용한 브런치 맛집',
-      story: '성수동 골목에서 발견한 조용하고 아늑한 브런치 카페 솔직 후기',
-    },
-    {
-      bloggerNickname: '@moodlog',
-      campaignTitle: '작은 방 분위기를 바꾸는 조명 리뷰',
-      story: '방 분위기를 180도 바꿔준 무드 조명 한 달 사용 후기',
-    },
-  ],
-}
