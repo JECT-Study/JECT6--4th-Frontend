@@ -116,7 +116,7 @@ export function CampaignInfo({ data }: Props) {
           <DoorIcon />
           <div className="flex flex-col">
             <div className="font-medium text-16 leading-20">리뷰 형태</div>
-            <div className="text-14 leading-20 text-[#666666]">{TYPE_LABEL[data.campaignType]}</div>
+            <div className="text-14 leading-20 text-[#666666]">{TYPE_LABEL[data.type]}</div>
           </div>
         </div>
       </div>

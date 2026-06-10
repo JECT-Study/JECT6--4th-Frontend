@@ -3,45 +3,22 @@ import { z } from 'zod'
 import { campaignSchema } from '@/entities/campaign'
 
 // 히어로 배너 타입
-export const HeroType = z.enum(['POPULAR', 'ACTIVITY_BASED', 'AI_MATCHED'])
+export const HeroType = z.enum(['POPULAR', 'ACTIVITY_BASED', 'AI_MATCHED', 'ANONYMOUS', 'BANNER'])
 export type HeroType = z.infer<typeof HeroType>
 
 // GET /feed/hero 응답
 export const feedHeroSchema = z.object({
   type: HeroType,
-  campaigns: z.array(campaignSchema),
+  message: z.string(),
+  actionLabel: z.string(),
 })
 export type FeedHero = z.infer<typeof feedHeroSchema>
 
-// 피드 섹션 타입
-export const FeedSectionType = z.enum([
-  'AI_MATCHED_CAMPAIGNS',
-  'LEVEL_UP_QUEST',
-  'KEYWORD_MATCHED',
-  'PREMIUM_PROMOTION',
-  'RECENT_LIKED',
-  'REALTIME_POPULAR',
-  'ACTIVITY_CATEGORY',
-  'BLOG_GROWTH_BANNER',
-  'AI_BLOG_DIAGNOSIS',
-  'SIGNUP_BANNER',
-  'CLOSING_SOON',
-])
-export type FeedSectionType = z.infer<typeof FeedSectionType>
-
-// 피드 섹션 아이템
-export const feedSectionSchema = z.object({
-  section: z.number(),
-  type: FeedSectionType,
-  title: z.string(),
-  campaigns: z.array(campaignSchema).optional(),
-  bannerUrl: z.string().optional(),
-})
-export type FeedSection = z.infer<typeof feedSectionSchema>
-
 // GET /feed/body 응답
 export const feedBodySchema = z.object({
-  sections: z.array(feedSectionSchema),
+  popular: z.array(campaignSchema),
+  closingSoon: z.array(campaignSchema),
+  guaranteed: z.array(campaignSchema),
 })
 export type FeedBody = z.infer<typeof feedBodySchema>
 

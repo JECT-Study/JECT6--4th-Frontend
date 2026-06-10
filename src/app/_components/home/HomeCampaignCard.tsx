@@ -7,7 +7,7 @@ import { Heart, User } from 'lucide-react'
 import { TYPE_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 
-import type { Campaign, CampaignType } from '@/entities/campaign'
+import type { Campaign } from '@/entities/campaign'
 
 function formatDday(applyEndDate: string) {
   const diff = Math.ceil((new Date(applyEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -20,7 +20,6 @@ interface HomeCampaignCardProps extends Campaign {
   className?: string
   fitLabel?: string
   variant?: 'ai' | 'horizontal' | 'vertical'
-  campaignType: CampaignType
 }
 
 export function HomeCampaignCard({
@@ -32,7 +31,7 @@ export function HomeCampaignCard({
   id,
   recruitCount,
   title,
-  campaignType,
+  type,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
   const isHorizontal = variant === 'horizontal'
@@ -82,7 +81,7 @@ export function HomeCampaignCard({
 
             <div className="flex flex-wrap gap-1.5">
               <span className="rounded-md border border-neutral_90 bg-white px-3 py-1 text-14 font-medium leading-20 text-neutral_50">
-                {TYPE_LABEL[campaignType]}
+                {TYPE_LABEL[type]}
               </span>
               <span className="py-1 text-14 font-medium leading-20 text-neutral_50">
                 {brandName}

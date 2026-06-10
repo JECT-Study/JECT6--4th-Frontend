@@ -180,7 +180,7 @@ export const campaignService = {
 // ==============================
 
 export const feedService = {
-  /** GET /feed/hero — 히어로 배너 (유저 상태별 분기) */
+  /** GET /feed/hero — 히어로 배너 */
   getHero: () => http.get('/feed/hero').then(res => feedHeroSchema.parse(res.data)),
 
   /** GET /feed/body — 메인 바디 5섹션 */
@@ -202,9 +202,7 @@ export const feedService = {
 export const myService = {
   /** GET /my/campaigns — 내 체험단 목록 */
   getCampaigns: (params?: { status?: string; page?: number; size?: number }) =>
-    http
-      .get('/my/campaigns', { params })
-      .then(res => paginatedSchema(myCampaignSchema).parse(res.data)),
+    http.get('/my/campaigns', { params }).then(res => z.array(myCampaignSchema).parse(res.data)),
 
   /** GET /my/campaigns/{id} — 내 체험단 상세 */
   getCampaign: (id: number) =>
@@ -224,7 +222,7 @@ export const myService = {
 
   /** GET /my/likes — 찜한 공고 */
   getLikes: (params?: { page?: number; size?: number }) =>
-    http.get('/my/likes', { params }).then(res => paginatedSchema(campaignSchema).parse(res.data)),
+    http.get('/my/likes', { params }).then(res => z.array(campaignSchema).parse(res.data)),
 }
 
 // ==============================

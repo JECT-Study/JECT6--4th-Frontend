@@ -8,22 +8,23 @@ import { Heart, LockKeyhole } from 'lucide-react'
 
 import { LocationDropdown } from '@/app/campaigns/_components/LocationDropdown'
 
-import type { BloggerStory } from '@/entities/feed'
+import type { Campaign } from '@/entities/campaign'
+import type { BloggerStory, FeedHero } from '@/entities/feed'
 
 import { Button } from '@/shared/ui'
 
 import { HeroCarousel } from './HeroCarousel'
-import { aiCampaigns, creatorPosts, popularCampaigns, regionPopularCampaigns } from './home.mock'
+import { aiCampaigns } from './home.mock'
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
 
-export function HeroSection() {
+export function HeroSection({ hero }: { hero: FeedHero }) {
   return (
     <section
       id="home-hero"
       className="mx-auto w-full max-w-300 px-5 pt-10 md:px-8 lg:px-0 xl:pt-14"
     >
-      <HeroCarousel />
+      <HeroCarousel hero={hero} />
     </section>
   )
 }
@@ -83,9 +84,7 @@ const CATEGORY_OPTIONS = [
   { label: '문화', value: 'CULTURE' },
 ]
 
-export function CreatorPostsSection() {
-  const creatorStories = creatorPosts.stories
-
+export function CreatorPostsSection({ stories }: { stories: BloggerStory[] }) {
   return (
     <section
       id="creator-posts"
@@ -93,7 +92,7 @@ export function CreatorPostsSection() {
     >
       <SectionHeader title="인기있는 블로거들의 포스팅 엿보기" />
       <div className="grid gap-6 lg:grid-cols-2">
-        {creatorStories.map(post => (
+        {stories.map(post => (
           <HomeCreatorPostCard key={post.bloggerNickname} {...post} />
         ))}
       </div>
@@ -101,7 +100,13 @@ export function CreatorPostsSection() {
   )
 }
 
-export function PopularCampaignsSection({ showHeader = true }: { showHeader?: boolean }) {
+export function PopularCampaignsSection({
+  campaigns,
+  showHeader = true,
+}: {
+  campaigns: Campaign[]
+  showHeader?: boolean
+}) {
   const [category, setCategory] = useState('FOOD')
 
   return (
@@ -118,7 +123,7 @@ export function PopularCampaignsSection({ showHeader = true }: { showHeader?: bo
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {[0, 1].map(column => (
           <div key={column} className="flex flex-col gap-6">
-            {popularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+            {campaigns.slice(column * 3, column * 3 + 3).map(campaign => (
               <HomeCampaignCard
                 key={`popular-${campaign.id}`}
                 variant="horizontal"
@@ -138,8 +143,12 @@ export function PopularCampaignsSection({ showHeader = true }: { showHeader?: bo
   )
 }
 
-export function RegionPopularCampaignsSection() {
+export function RegionPopularCampaignsSection({ campaigns }: { campaigns: Campaign[] }) {
   const [region, setRegion] = useState('')
+
+  const displayed = region
+    ? campaigns.filter(c => c.region && region.includes(c.region))
+    : campaigns
 
   return (
     <section
@@ -161,7 +170,7 @@ export function RegionPopularCampaignsSection() {
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {[0, 1].map(column => (
           <div key={column} className="flex flex-col gap-6">
-            {regionPopularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+            {displayed.slice(column * 3, column * 3 + 3).map(campaign => (
               <HomeCampaignCard
                 key={`region-${campaign.id}`}
                 variant="horizontal"

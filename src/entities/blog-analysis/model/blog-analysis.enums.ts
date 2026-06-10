@@ -8,6 +8,7 @@ export const ReasonType = z.enum([
   'SELECTION_PROBABILITY',
   'PERFORMANCE_BASED',
   'CATEGORY_MATCH',
+  'HIGH_SELECTION_RATE',
 ])
 export type ReasonType = z.infer<typeof ReasonType>
 

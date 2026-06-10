@@ -14,7 +14,7 @@ export default function Details({ id }: Props) {
 
   return (
     <div className="max-w-167.5 w-full flex flex-col">
-      <CampaignImageCarousel images={data.images.map(img => img.imageUrl)} />
+      <CampaignImageCarousel images={data.images?.map(img => img.url) ?? []} />
       <div className="flex flex-col gap-7.5 pb-17">
         <CampaignInfo data={data} />
         <CampaignDetailInfo data={data} />
