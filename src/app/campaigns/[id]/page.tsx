@@ -1,10 +1,18 @@
+import { campaignService } from '@/service'
+
 import { AdditionalContent } from './_components/AdditionalContent'
 import Details from './_components/Details'
-import { mockCampaignDetail } from './_components/mock'
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const data = mockCampaignDetail
+  const campaignId = Number(id)
+
+  const [data, related, likesAnalysis, viewers] = await Promise.all([
+    campaignService.getCampaign(campaignId),
+    campaignService.getRelated(campaignId).catch(() => []),
+    campaignService.getLikesAnalysis(campaignId).catch(() => ({ likeCount: 0, analyzed: false })),
+    campaignService.getViewers(campaignId).catch(() => ({ count: 0 })),
+  ])
 
   return (
     <div className="mx-auto flex w-full flex-col max-w-300 gap-11 px-5 md:px-8 lg:px-0">
@@ -16,11 +24,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
           <h1 className="text-[32px] leading-40 font-medium">{data.title}</h1>
         </div>
-        {/* <p className="text-20 text-[#666666] font-normal">{data.description}</p> */}
       </div>
       <div className="flex gap-11.25">
-        <Details id={id} />
-        <AdditionalContent />
+        <Details data={data} viewerCount={viewers.count} />
+        <AdditionalContent
+          campaignId={campaignId}
+          isLiked={false}
+          related={related}
+          likesAnalysis={likesAnalysis}
+        />
       </div>
     </div>
   )

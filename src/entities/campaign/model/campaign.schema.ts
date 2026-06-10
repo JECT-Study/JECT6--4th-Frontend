@@ -75,7 +75,6 @@ export const campaignSchema = z.object({
   images: z.array(campaignImageSchema).optional(),
   providedContent: z.string().optional(),
   recruitCount: z.number().optional(),
-  applyCount: z.number().optional(),
   applyEndDate: z.string().optional(),
   isGuaranteed: z.boolean().optional(),
   region: z.string().optional(),
@@ -88,15 +87,11 @@ export type Campaign = z.infer<typeof campaignSchema>
 // 공고 상세
 export const campaignDetailSchema = campaignSchema.extend({
   applyStartDate: z.string().optional(),
-  announceDate: z.string().optional(),
-  reviewDeadline: z.string().optional(),
   mission: z.string().optional(),
   sourceUrl: z.string().optional(),
   location: campaignLocationSchema.nullable().optional(),
   campaignDetail: campaignDetailInfoSchema.nullable().optional(),
   status: CampaignStatus,
-  isLiked: z.boolean().optional(),
-  viewerCount: z.number().optional(),
 })
 export type CampaignDetail = z.infer<typeof campaignDetailSchema>
 
