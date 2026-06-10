@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 
 import type { ReactNode } from 'react'
@@ -8,6 +10,8 @@ import { TYPE_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 
 import type { Campaign } from '@/entities/campaign'
+
+import { saveRecentView } from '@/shared/hooks/useRecentViews'
 
 function formatDday(applyEndDate: string) {
   const diff = Math.ceil((new Date(applyEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -38,8 +42,10 @@ export function HomeCampaignCard({
   const dday = formatDday(applyEndDate)
   const competitionLabel = `${applyCount}명 / ${recruitCount}명`
 
+  const campaign: Campaign = { applyCount, applyEndDate, brandName, id, recruitCount, title, type }
+
   return (
-    <Link href={`/campaigns/${id}`}>
+    <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
       <article
         className={cn(
           'flex bg-transparent font-pretendard text-neutral_20',

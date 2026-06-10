@@ -1,4 +1,4 @@
-import { feedService, myService } from '@/service'
+import { feedService } from '@/service'
 
 import { creatorPosts } from './_components/home/home.mock'
 import { HomeCarouselSection } from './_components/home/HomeCarouselSection'
@@ -9,12 +9,12 @@ import {
   PopularCampaignsSection,
   RegionPopularCampaignsSection,
 } from './_components/home/HomeSections'
+import { RecentViewsSection } from './_components/home/RecentViewsSection'
 
 export default async function Page() {
-  const [hero, feedBody, recentViews, bloggerStories] = await Promise.all([
+  const [hero, feedBody, bloggerStories] = await Promise.all([
     feedService.getHero().catch(() => ({ type: 'ANONYMOUS' as const, message: '', actionLabel: '' })),
     feedService.getBody().catch(() => ({ popular: [], closingSoon: [], guaranteed: [] })),
-    myService.getRecentViews().catch(() => []),
     feedService.getBloggerStories().catch(() => creatorPosts),
   ])
 
@@ -28,7 +28,7 @@ export default async function Page() {
         columns={5}
         pageSize={5}
       />
-      <HomeCarouselSection title="최근에 내가 본 공고" campaigns={recentViews} marginTop="mt-18" />
+      <RecentViewsSection />
       <CreatorPostsSection stories={bloggerStories.stories} />
       <PopularCampaignsSection campaigns={feedBody.popular} />
       <RegionPopularCampaignsSection campaigns={feedBody.popular} />
