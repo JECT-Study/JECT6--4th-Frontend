@@ -6,6 +6,7 @@ export const http = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    Authorization: 'Bearer 1234',
   },
 })
 
@@ -20,10 +21,18 @@ http.interceptors.request.use(config => {
   return config
 })
 
-// 응답 데이터를 camelCase로 변환해 프론트로 전달한다.
+// 응답 데이터를 camelCase로 변환하고, { success, data } 래퍼를 벗겨서 프론트로 전달한다.
 http.interceptors.response.use(
   response => {
     response.data = keysToCamel(response.data)
+    if (
+      response.data !== null &&
+      typeof response.data === 'object' &&
+      'success' in response.data &&
+      'data' in response.data
+    ) {
+      response.data = response.data.data
+    }
     return response
   },
   (error: unknown) => {

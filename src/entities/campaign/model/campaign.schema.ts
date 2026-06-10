@@ -3,7 +3,6 @@ import { z } from 'zod'
 import {
   CampaignCategory,
   CampaignChannel,
-  CampaignPlatform,
   CampaignSort,
   CampaignStatus,
   CampaignType,
@@ -13,24 +12,28 @@ import {
 export const paginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z.object({
     content: z.array(itemSchema),
-    page: z.number(),
-    size: z.number(),
+    number: z.number().optional(),
+    page: z.number().optional(),
+    size: z.number().optional(),
     totalElements: z.number(),
-    hasNext: z.boolean(),
+    totalPages: z.number().optional(),
+    hasNext: z.boolean().optional(),
   })
 
 export type Paginated<T> = {
   content: T[]
-  page: number
-  size: number
+  number?: number
+  page?: number
+  size?: number
   totalElements: number
-  hasNext: boolean
+  totalPages?: number
+  hasNext?: boolean
 }
 
 // 이미지
 export const campaignImageSchema = z.object({
-  imageUrl: z.string(),
-  sortOrder: z.number().optional(),
+  url: z.string(),
+  altText: z.string().optional(),
 })
 export type CampaignImage = z.infer<typeof campaignImageSchema>
 
@@ -42,7 +45,6 @@ export const campaignLocationSchema = z.object({
   latitude: z.number().nullable(),
   longitude: z.number().nullable(),
 })
-
 export type CampaignLocation = z.infer<typeof campaignLocationSchema>
 
 // 링크
@@ -53,8 +55,7 @@ export const campaignLinkSchema = z.object({
 
 // 체험단 상세 정보
 export const campaignDetailInfoSchema = z.object({
-  titleKeywords: z.array(z.string()),
-  bodyKeywords: z.array(z.string()),
+  searchKeywords: z.array(z.string()),
   links: z.array(campaignLinkSchema),
   additionalNotice: z.string().nullable(),
   caution: z.string().nullable(),
@@ -68,28 +69,29 @@ export const campaignSchema = z.object({
   title: z.string(),
   brandName: z.string().optional(),
   category: CampaignCategory.optional(),
-  campaignType: CampaignType,
-  channel: CampaignChannel,
-  images: z.array(campaignImageSchema),
+  type: CampaignType.optional(),
+  channel: CampaignChannel.optional(),
+  thumbnailUrl: z.string().optional(),
+  images: z.array(campaignImageSchema).optional(),
   providedContent: z.string().optional(),
   recruitCount: z.number().optional(),
-  applyCount: z.number().optional(),
   applyEndDate: z.string().optional(),
-  isGuaranteed: z.boolean(),
+  isGuaranteed: z.boolean().optional(),
+  region: z.string().optional(),
+  status: CampaignStatus.optional(),
+  viewCount: z.number().optional(),
+  sourcePlatform: z.string().optional(),
 })
 export type Campaign = z.infer<typeof campaignSchema>
 
 // 공고 상세
 export const campaignDetailSchema = campaignSchema.extend({
   applyStartDate: z.string().optional(),
-  announceDate: z.string().optional(),
-  reviewDeadline: z.string().optional(),
-  location: campaignLocationSchema.nullable(),
-  campaignDetail: campaignDetailInfoSchema.nullable(),
+  mission: z.string().optional(),
+  sourceUrl: z.string().optional(),
+  location: campaignLocationSchema.nullable().optional(),
+  campaignDetail: campaignDetailInfoSchema.nullable().optional(),
   status: CampaignStatus,
-  sourcePlatform: CampaignPlatform.optional(),
-  isLiked: z.boolean(),
-  viewerCount: z.number(),
 })
 export type CampaignDetail = z.infer<typeof campaignDetailSchema>
 
@@ -107,15 +109,17 @@ export type CampaignListParams = z.infer<typeof campaignListParamsSchema>
 
 // GET /campaigns/{id}/viewers 응답
 export const campaignViewersSchema = z.object({
-  campaignId: z.number(),
-  viewerCount: z.number(),
+  count: z.number(),
 })
 export type CampaignViewers = z.infer<typeof campaignViewersSchema>
 
 // GET /campaigns/{id}/likes/analysis 응답
 export const campaignLikesAnalysisSchema = z.object({
+  campaignId: z.number().optional(),
   likeCount: z.number(),
-  analysisMessage: z.string(),
+  analyzed: z.boolean().optional(),
+  topCategories: z.array(z.object({ category: z.string(), count: z.number() })).optional(),
+  topKeywords: z.array(z.string()).optional(),
 })
 export type CampaignLikesAnalysis = z.infer<typeof campaignLikesAnalysisSchema>
 

@@ -16,7 +16,7 @@ export const tokenUserSchema = z.object({
   profileImageUrl: z.string().nullable(),
   subscriptionType: SubscriptionType,
   aiCreditRemaining: z.number(),
-  isOnboardingCompleted: z.boolean(),
+  isProfileCompleted: z.boolean(),
 })
 export type TokenUser = z.infer<typeof tokenUserSchema>
 

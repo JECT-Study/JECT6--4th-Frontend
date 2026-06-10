@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 
 import type { ReactNode } from 'react'
@@ -7,7 +9,9 @@ import { Heart, User } from 'lucide-react'
 import { TYPE_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 
-import type { Campaign, CampaignType } from '@/entities/campaign'
+import type { Campaign } from '@/entities/campaign'
+
+import { saveRecentView } from '@/shared/hooks/useRecentViews'
 
 function formatDday(applyEndDate: string) {
   const diff = Math.ceil((new Date(applyEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -20,11 +24,9 @@ interface HomeCampaignCardProps extends Campaign {
   className?: string
   fitLabel?: string
   variant?: 'ai' | 'horizontal' | 'vertical'
-  campaignType: CampaignType
 }
 
 export function HomeCampaignCard({
-  applyCount,
   applyEndDate,
   brandName,
   className = '',
@@ -32,15 +34,17 @@ export function HomeCampaignCard({
   id,
   recruitCount,
   title,
-  campaignType,
+  type,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
   const isHorizontal = variant === 'horizontal'
   const dday = formatDday(applyEndDate)
-  const competitionLabel = `${applyCount}명 / ${recruitCount}명`
+  const competitionLabel = `모집 ${recruitCount ?? '-'}명`
+
+  const campaign: Campaign = { applyEndDate, brandName, id, recruitCount, title, type }
 
   return (
-    <Link href={`/campaigns/${id}`}>
+    <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
       <article
         className={cn(
           'flex bg-transparent font-pretendard text-neutral_20',
@@ -82,7 +86,7 @@ export function HomeCampaignCard({
 
             <div className="flex flex-wrap gap-1.5">
               <span className="rounded-md border border-neutral_90 bg-white px-3 py-1 text-14 font-medium leading-20 text-neutral_50">
-                {TYPE_LABEL[campaignType]}
+                {TYPE_LABEL[type]}
               </span>
               <span className="py-1 text-14 font-medium leading-20 text-neutral_50">
                 {brandName}

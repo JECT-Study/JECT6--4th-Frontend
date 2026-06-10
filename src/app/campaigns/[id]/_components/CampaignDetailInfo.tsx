@@ -19,13 +19,13 @@ export function CampaignDetailInfo({ data }: Props) {
         체험단 상세 안내
       </div>
       <div className="flex flex-col gap-4">
-        {(detail.titleKeywords.length > 0 || detail.bodyKeywords.length > 0) && (
+        {detail.searchKeywords.length > 0 && (
           <div className="flex gap-4">
             <CalendarIcon />
             <div className="flex flex-col">
               <div className="text-16 leading-20">키워드</div>
               <div className="text-14 leading-20 text-[#666666]">
-                {[...detail.titleKeywords, ...detail.bodyKeywords].join(', ')}
+                {detail.searchKeywords.join(', ')}
               </div>
             </div>
           </div>

@@ -2,11 +2,17 @@ import Link from 'next/link'
 
 import { ChevronRightIcon } from 'lucide-react'
 
-import { popularCampaigns } from '@/app/_components/home/home.mock'
 import { HomeCampaignCard } from '@/app/_components/home/HomeCampaignCard'
 
-export function CampaignList() {
-  const campaignList = popularCampaigns.slice(0, 3)
+import type { Campaign } from '@/entities/campaign'
+
+interface Props {
+  campaigns: Campaign[]
+}
+
+export function CampaignList({ campaigns }: Props) {
+  if (campaigns.length === 0) return null
+
   return (
     <div className="p-7.5 flex flex-col gap-9.25 border border-neutral_95 rounded-[8px]">
       <div className="flex items-center justify-between">
@@ -18,7 +24,7 @@ export function CampaignList() {
           </div>
         </Link>
       </div>
-      {campaignList.map(item => (
+      {campaigns.map(item => (
         <HomeCampaignCard key={item.id} variant="horizontal" className="max-w-none" {...item} />
       ))}
     </div>

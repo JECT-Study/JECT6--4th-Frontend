@@ -1,7 +1,6 @@
 import { z } from 'zod'
 
-import { campaignSchema } from '@/entities/campaign'
-import { CampaignCategory } from '@/entities/campaign/model/campaign.enums'
+import { CampaignCategory } from '@/entities/campaign'
 
 import { AnalysisStatus, BlogMetricKey, InsightType, ReasonType } from './blog-analysis.enums'
 
@@ -16,7 +15,7 @@ export const analyzeJobResponseSchema = z.object({
   documentId: z.number(),
   status: AnalysisStatus,
   message: z.string(),
-  aiCreditRemaining: z.number(),
+  aiCreditRemaining: z.number().nullable(),
 })
 export type AnalyzeJobResponse = z.infer<typeof analyzeJobResponseSchema>
 
@@ -55,25 +54,25 @@ export const analysisResultSchema = z.object({
   tone: z.string(),
   targetAudience: z.string(),
   suggestions: z.array(z.string()),
-  metrics: z.array(analysisMetricSchema),
-  categoryFits: z.array(categoryFitSchema),
-  strengthCard: analysisInsightCardSchema,
-  weaknessCard: analysisInsightCardSchema,
+  metrics: z.array(analysisMetricSchema).optional(),
+  categoryFits: z.array(categoryFitSchema).optional(),
+  strengthCard: analysisInsightCardSchema.optional(),
+  weaknessCard: analysisInsightCardSchema.optional(),
 })
 export type AnalysisResult = z.infer<typeof analysisResultSchema>
 
 // GET /blog/analysis/{documentId} 응답
 export const blogAnalysisResponseSchema = z.object({
-  analysisId: z.number(),
   documentId: z.number(),
-  userNickname: z.string(),
-  blogName: z.string(),
-  blogType: z.string(),
-  primaryCategory: CampaignCategory,
-  percentile: z.number().int().min(0).max(100),
   status: AnalysisStatus,
   analysis: analysisResultSchema.nullable(),
   analyzedAt: z.string().nullable(),
+  analysisId: z.number().optional(),
+  userNickname: z.string().optional(),
+  blogName: z.string().optional(),
+  blogType: z.string().optional(),
+  primaryCategory: CampaignCategory.optional(),
+  percentile: z.number().int().min(0).max(100).optional(),
 })
 export type BlogAnalysisResponse = z.infer<typeof blogAnalysisResponseSchema>
 
@@ -95,7 +94,9 @@ export const analysisHistoryResponseSchema = z.object({
 export type AnalysisHistoryResponse = z.infer<typeof analysisHistoryResponseSchema>
 
 // GET /blog/analysis/{id}/recommendations 공고 아이템
-export const recommendedCampaignSchema = campaignSchema.extend({
+export const recommendedCampaignSchema = z.object({
+  id: z.number(),
+  title: z.string(),
   fitnessScore: z.number(),
   selectionScore: z.number(),
   reasonType: ReasonType,
@@ -112,15 +113,7 @@ export type AnalysisRecommendationsResponse = z.infer<typeof analysisRecommendat
 
 // GET /blog/analysis/{id}/bloggers 아이템
 export const popularBloggerSchema = z.object({
-  id: z.number(),
   nickname: z.string(),
-  blogName: z.string(),
-  handle: z.string(),
-  badge: z.string(),
-  postTitle: z.string(),
-  postUrl: z.string().url(),
-  blogUrl: z.string().url(),
-  likeCount: z.number(),
   overallScore: z.number(),
   profileUrl: z.string(),
 })

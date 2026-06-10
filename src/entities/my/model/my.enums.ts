@@ -10,7 +10,7 @@ export const UserCampaignStatus = z.enum([
 ])
 export type UserCampaignStatus = z.infer<typeof UserCampaignStatus>
 
-export const PointTransactionType = z.enum(['EARN', 'SPEND', 'REFUND'])
+export const PointTransactionType = z.enum(['EARN', 'SPEND', 'REFUND', 'WITHDRAW'])
 export type PointTransactionType = z.infer<typeof PointTransactionType>
 
 export const WithdrawStatus = z.enum(['PENDING', 'COMPLETED', 'FAILED'])

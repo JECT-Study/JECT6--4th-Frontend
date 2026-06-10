@@ -8,22 +8,24 @@ import { Heart, LockKeyhole } from 'lucide-react'
 
 import { LocationDropdown } from '@/app/campaigns/_components/LocationDropdown'
 
-import type { BloggerStory } from '@/entities/feed'
+import type { PopularBloggersResponse } from '@/entities/blog-analysis'
+import type { Campaign } from '@/entities/campaign'
+import type { FeedHero } from '@/entities/feed'
 
 import { Button } from '@/shared/ui'
 
 import { HeroCarousel } from './HeroCarousel'
-import { aiCampaigns, creatorPosts, popularCampaigns, regionPopularCampaigns } from './home.mock'
+import { aiCampaigns } from './home.mock'
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
 
-export function HeroSection() {
+export function HeroSection({ hero }: { hero: FeedHero }) {
   return (
     <section
       id="home-hero"
       className="mx-auto w-full max-w-300 px-5 pt-10 md:px-8 lg:px-0 xl:pt-14"
     >
-      <HeroCarousel />
+      <HeroCarousel hero={hero} />
     </section>
   )
 }
@@ -83,8 +85,8 @@ const CATEGORY_OPTIONS = [
   { label: '문화', value: 'CULTURE' },
 ]
 
-export function CreatorPostsSection() {
-  const creatorStories = creatorPosts.stories
+export function CreatorPostsSection({ bloggers }: { bloggers: PopularBloggersResponse | null }) {
+  if (!bloggers) return null
 
   return (
     <section
@@ -93,15 +95,21 @@ export function CreatorPostsSection() {
     >
       <SectionHeader title="인기있는 블로거들의 포스팅 엿보기" />
       <div className="grid gap-6 lg:grid-cols-2">
-        {creatorStories.map(post => (
-          <HomeCreatorPostCard key={post.bloggerNickname} {...post} />
+        {bloggers.bloggers.map(blogger => (
+          <HomeCreatorPostCard key={blogger.nickname} {...blogger} category={bloggers.category} />
         ))}
       </div>
     </section>
   )
 }
 
-export function PopularCampaignsSection({ showHeader = true }: { showHeader?: boolean }) {
+export function PopularCampaignsSection({
+  campaigns,
+  showHeader = true,
+}: {
+  campaigns: Campaign[]
+  showHeader?: boolean
+}) {
   const [category, setCategory] = useState('FOOD')
 
   return (
@@ -118,7 +126,7 @@ export function PopularCampaignsSection({ showHeader = true }: { showHeader?: bo
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {[0, 1].map(column => (
           <div key={column} className="flex flex-col gap-6">
-            {popularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+            {campaigns.slice(column * 3, column * 3 + 3).map(campaign => (
               <HomeCampaignCard
                 key={`popular-${campaign.id}`}
                 variant="horizontal"
@@ -138,8 +146,12 @@ export function PopularCampaignsSection({ showHeader = true }: { showHeader?: bo
   )
 }
 
-export function RegionPopularCampaignsSection() {
+export function RegionPopularCampaignsSection({ campaigns }: { campaigns: Campaign[] }) {
   const [region, setRegion] = useState('')
+
+  const displayed = region
+    ? campaigns.filter(c => c.region && region.includes(c.region))
+    : campaigns
 
   return (
     <section
@@ -161,7 +173,7 @@ export function RegionPopularCampaignsSection() {
       <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {[0, 1].map(column => (
           <div key={column} className="flex flex-col gap-6">
-            {regionPopularCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+            {displayed.slice(column * 3, column * 3 + 3).map(campaign => (
               <HomeCampaignCard
                 key={`region-${campaign.id}`}
                 variant="horizontal"
@@ -181,30 +193,45 @@ export function RegionPopularCampaignsSection() {
   )
 }
 
-function HomeCreatorPostCard({ bloggerNickname, campaignTitle, story }: BloggerStory) {
+function HomeCreatorPostCard({
+  nickname,
+  overallScore,
+  profileUrl,
+  category,
+}: {
+  nickname: string
+  overallScore: number
+  profileUrl: string
+  category: string
+}) {
   return (
     <article className="flex h-86.5 max-w-none flex-col gap-4 bg-transparent p-5 font-pretendard text-neutral_20">
       <header className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
           <span className="size-14.75 shrink-0 rounded-full bg-neutral_95" aria-hidden />
           <div className="min-w-0">
-            <h3 className="m-0 truncate text-16 font-bold leading-24">블로그명 &gt;</h3>
-            <span className="text-14 font-medium leading-20 text-neutral_60">
-              {bloggerNickname}
-            </span>
+            <a
+              href={profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="m-0 block truncate text-16 font-bold leading-24"
+            >
+              블로그 방문 &gt;
+            </a>
+            <span className="text-14 font-medium leading-20 text-neutral_60">{nickname}</span>
           </div>
         </div>
         <span className="shrink-0 rounded-sm bg-red_80 px-3 py-1 text-12 font-semibold leading-16 text-white">
-          맛집 블로거
+          {category} 블로거
         </span>
       </header>
       <div className="h-39.5 rounded-md bg-neutral_95" aria-hidden />
       <h3 className="m-0 line-clamp-2 text-18 font-semibold leading-28 text-neutral_20">
-        {campaignTitle}
+        {nickname}
       </h3>
       <div className="mt-auto flex items-center gap-2 text-14 font-semibold leading-20 text-neutral_20">
         <Heart className="size-4 text-red_50" aria-hidden />
-        <span className="line-clamp-1 font-normal text-neutral_50">{story}</span>
+        <span className="line-clamp-1 font-normal text-neutral_50">종합 점수 {overallScore}점</span>
       </div>
     </article>
   )

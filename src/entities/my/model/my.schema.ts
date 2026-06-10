@@ -12,7 +12,7 @@ export const myCampaignSchema = z.object({
   appliedAt: z.string(),
   reviewDeadline: z.string().nullable(),
   dDay: z.number().nullable(),
-  rewardAmount: z.number(),
+  rewardAmount: z.number().nullable(),
   isUrgent: z.boolean(),
 })
 export type MyCampaign = z.infer<typeof myCampaignSchema>
@@ -36,7 +36,7 @@ export type PointTransaction = z.infer<typeof pointTransactionSchema>
 export const pointsResponseSchema = z.object({
   balance: z.number(),
   transactions: z.array(pointTransactionSchema),
-  totalElements: z.number(),
+  totalElements: z.number().optional(),
 })
 export type PointsResponse = z.infer<typeof pointsResponseSchema>
 

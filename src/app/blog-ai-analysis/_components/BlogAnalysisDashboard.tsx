@@ -285,7 +285,7 @@ function PopularBloggersSection({ bloggers }: { bloggers: PopularBlogger[] }) {
       <h2 className="text-24 font-bold leading-36">내 카테고리의 인기 블로거</h2>
       <div className="grid gap-8 lg:grid-cols-2">
         {bloggers.map(blogger => (
-          <PopularBloggerCard key={blogger.id} blogger={blogger} />
+          <PopularBloggerCard key={blogger.nickname} blogger={blogger} />
         ))}
       </div>
     </section>
@@ -295,25 +295,14 @@ function PopularBloggersSection({ bloggers }: { bloggers: PopularBlogger[] }) {
 function PopularBloggerCard({ blogger }: { blogger: PopularBlogger }) {
   return (
     <article className="rounded-lg bg-white p-5 shadow-sm">
-      <div className="mb-8 flex items-center gap-3 pl-14">
-        <span className="text-14 font-medium leading-20 text-neutral_40">{blogger.handle}</span>
-        <span className="rounded-sm bg-red_70 px-2 py-1 text-12 font-bold leading-14 text-white">
-          {blogger.badge}
-        </span>
-      </div>
-      <Link className="group block" href={blogger.blogUrl}>
+      <Link className="group block" href={blogger.profileUrl}>
         <h3 className="flex items-center gap-1 text-22 font-bold leading-32 text-neutral_20">
-          {blogger.blogName}
+          {blogger.nickname}
           <ChevronRight className="size-5 transition-transform group-hover:translate-x-0.5" />
         </h3>
         <div className="mt-4 h-42 rounded-sm bg-neutral_95" aria-hidden />
       </Link>
-      <Link className="mt-4 block text-14 leading-20 text-neutral_20" href={blogger.postUrl}>
-        {blogger.postTitle}
-      </Link>
       <div className="mt-4 flex items-center gap-2 text-12 leading-16 text-neutral_70">
-        <span className="text-red_50">♡</span>
-        <span>{blogger.likeCount}</span>
         <span className="ml-auto font-semibold text-green_40">
           상위 {100 - blogger.overallScore}%
         </span>

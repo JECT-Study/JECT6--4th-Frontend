@@ -1,7 +1,30 @@
+'use client'
+
+import { useState } from 'react'
+
+import { campaignService } from '@/service'
+
+import type { CampaignLikesAnalysis } from '@/entities/campaign'
+
 import HeartIcon from '@/shared/assets/icons/heart.svg'
 import { Button } from '@/shared/ui'
 
-export function CampaignActionSection() {
+interface Props {
+  campaignId: number
+  initialIsLiked: boolean
+  likesAnalysis: CampaignLikesAnalysis
+}
+
+export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysis }: Props) {
+  const [isLiked, setIsLiked] = useState(initialIsLiked)
+
+  async function handleLike() {
+    const result = await campaignService.toggleLike(campaignId)
+    setIsLiked(result.liked)
+  }
+
+  const { analyzed, topKeywords } = likesAnalysis
+
   return (
     <div className="flex flex-col gap-3.5">
       <Button>지원하러 가기</Button>
@@ -15,16 +38,24 @@ export function CampaignActionSection() {
             />
           ))}
         </div>
-        <p className="text-16 leading-5.5">
-          이 공고에 좋아요를 누른 사용자는
-          <br />
-          <span className="font-bold">000 블로거</span>의 특징을 가지고 있어요
-        </p>
+        {analyzed && topKeywords && topKeywords.length > 0 ? (
+          <p className="text-16 leading-5.5">
+            이 공고에 좋아요를 누른 사용자는
+            <br />
+            <span className="font-bold">{topKeywords.join(', ')}</span> 특징을 가지고 있어요
+          </p>
+        ) : (
+          <p className="text-16 leading-5.5 text-neutral_50">
+            좋아요가 5개 이상 쌓이면
+            <br />
+            사용자 특징 분석 결과를 볼 수 있어요
+          </p>
+        )}
       </div>
-      <Button variant="tertiary">
+      <Button variant="tertiary" onClick={handleLike}>
         <div className="flex items-center gap-3.5">
-          <HeartIcon className="size-8" />
-          관심공고 담기
+          <HeartIcon className={`size-8 ${isLiked ? 'text-red_50' : ''}`} />
+          {isLiked ? '관심공고 취소' : '관심공고 담기'}
         </div>
       </Button>
     </div>

@@ -20,12 +20,7 @@ import {
   paginatedSchema,
   type CampaignListParams,
 } from '@/entities/campaign'
-import {
-  aiRecommendationsSchema,
-  bloggerStoriesSchema,
-  feedBodySchema,
-  feedHeroSchema,
-} from '@/entities/feed'
+import { feedBodySchema, feedHeroSchema } from '@/entities/feed'
 import {
   myCampaignDetailSchema,
   myCampaignSchema,
@@ -39,15 +34,9 @@ import {
   type OnboardingResponseRequest,
 } from '@/entities/onboarding'
 import {
-  cancelSubscriptionResponseSchema,
-  subscriptionSchema,
-  type UpgradeSubscriptionRequest,
-} from '@/entities/subscription'
-import {
-  activityChannelSchema,
+  blogSchema,
   userProfileSchema,
   nicknameCheckSchema,
-  type ActivityChannelRequest,
   type Provider,
   type UpdateUserProfileRequest,
 } from '@/entities/user'
@@ -59,12 +48,22 @@ import { http } from '@/shared/api'
 // ==============================
 
 export const authService = {
-  /** POST /auth/login/{provider} — 소셜 로그인 */
+  /** POST /auth/login/{provider} — OAuth 코드로 서비스 토큰 발급 */
   login: (provider: Provider, data: LoginRequest) =>
     http.post(`/auth/login/${provider}`, data).then(res => tokenResponseSchema.parse(res.data)),
 
-  /** POST /auth/logout — 로그아웃 */
+  /** POST /auth/logout — Redis refresh token 세션 제거 */
   logout: () => http.post<void>('/auth/logout').then(res => res.data),
+
+  /** POST /auth/refresh — Access Token 재발급 */
+  refresh: () =>
+    http
+      .post('/auth/refresh')
+      .then(res =>
+        z
+          .object({ accessToken: z.string(), tokenType: z.string(), expiresIn: z.number() })
+          .parse(res.data)
+      ),
 }
 
 // ==============================
@@ -75,21 +74,17 @@ export const userService = {
   /** GET /users/me — 내 정보 조회 */
   getMe: () => http.get('/users/me').then(res => userProfileSchema.parse(res.data)),
 
-  /** PATCH /users/me — 프로필 수정 */
+  /** POST /users/me — 프로필 최초 생성 (온보딩 완료 시) */
+  createProfile: (data: UpdateUserProfileRequest) =>
+    http.post('/users/me', data).then(res => userProfileSchema.parse(res.data)),
+
+  /** PATCH /users/me — 프로필 부분 수정 */
   updateMe: (data: UpdateUserProfileRequest) =>
     http.patch('/users/me', data).then(res => userProfileSchema.parse(res.data)),
 
-  /** POST /users/me/activity-channel — 활동 채널 연동 */
-  linkActivityChannel: (data: ActivityChannelRequest) =>
-    http
-      .post('/users/me/activity-channel', data)
-      .then(res => activityChannelSchema.parse(res.data)),
-
-  /** DELETE /users/me/activity-channel — 활동 채널 연동 해제 */
-  unlinkActivityChannel: (activityType: string) =>
-    http
-      .delete<void>('/users/me/activity-channel', { params: { activityType } })
-      .then(res => res.data),
+  /** POST /users/me/blog — 블로그 연동 */
+  linkBlog: (data: { blogUrl: string; platform: string }) =>
+    http.post('/users/me/blog', data).then(res => blogSchema.parse(res.data)),
 
   /** GET /users/nickname/check — 닉네임 중복 확인 */
   checkNickname: (nickname: string) =>
@@ -108,21 +103,15 @@ export const userService = {
 }
 
 // ==============================
-// Subscription
+// Feed
 // ==============================
 
-export const subscriptionService = {
-  /** GET /my/subscription — 구독 상태 조회 */
-  getSubscription: () =>
-    http.get('/my/subscription').then(res => subscriptionSchema.parse(res.data)),
+export const feedService = {
+  /** GET /feed/hero — 히어로 배너 (비로그인/로그인/블로그연동 분기) */
+  getHero: () => http.get('/feed/hero').then(res => feedHeroSchema.parse(res.data)),
 
-  /** POST /my/subscription/upgrade — 프리미엄 구독 */
-  upgrade: (data: UpgradeSubscriptionRequest) =>
-    http.post('/my/subscription/upgrade', data).then(res => subscriptionSchema.parse(res.data)),
-
-  /** DELETE /my/subscription — 구독 해지 */
-  cancel: () =>
-    http.delete('/my/subscription').then(res => cancelSubscriptionResponseSchema.parse(res.data)),
+  /** GET /feed/body — 메인 바디 (인기·마감임박·100%당첨) */
+  getBody: () => http.get('/feed/body').then(res => feedBodySchema.parse(res.data)),
 }
 
 // ==============================
@@ -130,7 +119,7 @@ export const subscriptionService = {
 // ==============================
 
 export const campaignService = {
-  /** GET /campaigns — 공고 목록 (필터·정렬·무한스크롤) */
+  /** GET /campaigns — 공고 목록 (필터·정렬·페이지네이션) */
   getCampaigns: (params?: CampaignListParams) =>
     http.get('/campaigns', { params }).then(res => paginatedSchema(campaignSchema).parse(res.data)),
 
@@ -138,31 +127,21 @@ export const campaignService = {
   getCampaign: (id: number) =>
     http.get(`/campaigns/${id}`).then(res => campaignDetailSchema.parse(res.data)),
 
-  /** GET /campaigns/{id}/viewers — 실시간 조회수 */
+  /** GET /campaigns/{id}/viewers — 실시간 조회수 (Redis) */
   getViewers: (id: number) =>
     http.get(`/campaigns/${id}/viewers`).then(res => campaignViewersSchema.parse(res.data)),
 
-  /** GET /campaigns/{id}/related — 관련 공고 3개 */
+  /** GET /campaigns/{id}/related — 관련 공고 최대 3개 */
   getRelated: (id: number) =>
     http.get(`/campaigns/${id}/related`).then(res => z.array(campaignSchema).parse(res.data)),
 
-  /** GET /campaigns/{id}/likes/analysis — 좋아요 사용자 특성 LLM 메시지 */
-  getLikesAnalysis: (id: number) =>
+  /** GET /campaigns/search — 공고 검색 */
+  search: (keyword: string, params?: { page?: number; size?: number }) =>
     http
-      .get(`/campaigns/${id}/likes/analysis`)
-      .then(res => campaignLikesAnalysisSchema.parse(res.data)),
-
-  /** POST /campaigns/{id}/like — 좋아요 토글 */
-  toggleLike: (id: number) =>
-    http.post(`/campaigns/${id}/like`).then(res => campaignLikeSchema.parse(res.data)),
-
-  /** GET /campaigns/search — 통합 검색 */
-  search: (q: string, params?: Pick<CampaignListParams, 'page' | 'size'>) =>
-    http
-      .get('/campaigns/search', { params: { q, ...params } })
+      .get('/campaigns/search', { params: { keyword, ...params } })
       .then(res => paginatedSchema(campaignSchema).parse(res.data)),
 
-  /** GET /campaigns/popular — 인기 체험단 */
+  /** GET /campaigns/popular — 인기 체험단 Top10 */
   getPopular: () =>
     http.get('/campaigns/popular').then(res => z.array(campaignSchema).parse(res.data)),
 
@@ -173,26 +152,16 @@ export const campaignService = {
   /** GET /campaigns/closing-soon — 마감 임박 공고 */
   getClosingSoon: () =>
     http.get('/campaigns/closing-soon').then(res => z.array(campaignSchema).parse(res.data)),
-}
 
-// ==============================
-// Feed
-// ==============================
+  /** POST /campaigns/{id}/like — 좋아요 토글 */
+  toggleLike: (id: number) =>
+    http.post(`/campaigns/${id}/like`).then(res => campaignLikeSchema.parse(res.data)),
 
-export const feedService = {
-  /** GET /feed/hero — 히어로 배너 (유저 상태별 분기) */
-  getHero: () => http.get('/feed/hero').then(res => feedHeroSchema.parse(res.data)),
-
-  /** GET /feed/body — 메인 바디 5섹션 */
-  getBody: () => http.get('/feed/body').then(res => feedBodySchema.parse(res.data)),
-
-  /** GET /feed/ai-recommendations — AI 맞춤 추천 (로그인+연동 필수) */
-  getAiRecommendations: () =>
-    http.get('/feed/ai-recommendations').then(res => aiRecommendationsSchema.parse(res.data)),
-
-  /** GET /feed/blogger-stories — 유명 블로거 성공 사례 */
-  getBloggerStories: () =>
-    http.get('/feed/blogger-stories').then(res => bloggerStoriesSchema.parse(res.data)),
+  /** GET /campaigns/{id}/likes/analysis — 좋아요 사용자 특성 분석 */
+  getLikesAnalysis: (id: number) =>
+    http
+      .get(`/campaigns/${id}/likes/analysis`)
+      .then(res => campaignLikesAnalysisSchema.parse(res.data)),
 }
 
 // ==============================
@@ -202,11 +171,9 @@ export const feedService = {
 export const myService = {
   /** GET /my/campaigns — 내 체험단 목록 */
   getCampaigns: (params?: { status?: string; page?: number; size?: number }) =>
-    http
-      .get('/my/campaigns', { params })
-      .then(res => paginatedSchema(myCampaignSchema).parse(res.data)),
+    http.get('/my/campaigns', { params }).then(res => z.array(myCampaignSchema).parse(res.data)),
 
-  /** GET /my/campaigns/{id} — 내 체험단 상세 */
+  /** GET /my/campaigns/{id} — 내 체험단 상세 (user_campaign_id 기준) */
   getCampaign: (id: number) =>
     http.get(`/my/campaigns/${id}`).then(res => myCampaignDetailSchema.parse(res.data)),
 
@@ -218,13 +185,13 @@ export const myService = {
   withdraw: (data: WithdrawRequest) =>
     http.post('/my/points/withdraw', data).then(res => withdrawResponseSchema.parse(res.data)),
 
-  /** GET /my/recent-views — 최근 본 공고 */
+  /** GET /my/recent-views — 최근 본 공고 목록 */
   getRecentViews: () =>
     http.get('/my/recent-views').then(res => z.array(campaignSchema).parse(res.data)),
 
-  /** GET /my/likes — 찜한 공고 */
+  /** GET /my/likes — 찜한 공고 목록 */
   getLikes: (params?: { page?: number; size?: number }) =>
-    http.get('/my/likes', { params }).then(res => paginatedSchema(campaignSchema).parse(res.data)),
+    http.get('/my/likes', { params }).then(res => z.array(campaignSchema).parse(res.data)),
 }
 
 // ==============================
@@ -250,7 +217,7 @@ export const onboardingService = {
 // ==============================
 
 export const blogAnalysisService = {
-  /** POST /blog/analyze — 블로그 분석 요청 (크레딧 차감 → Queue 발행) */
+  /** POST /blog/analyze — 블로그 분석 요청 (RabbitMQ Queue 발행, 202 비동기) */
   analyze: (data: AnalyzeRequest) =>
     http.post('/blog/analyze', data).then(res => analyzeJobResponseSchema.parse(res.data)),
 
@@ -260,13 +227,13 @@ export const blogAnalysisService = {
       .get(`/blog/analysis/${documentId}`)
       .then(res => blogAnalysisResponseSchema.parse(res.data)),
 
-  /** GET /blog/analysis/history — 분석 이력 (Free: 3건, Premium: 전체) */
+  /** GET /blog/analysis/history — 분석 이력 (Free: 최근 3건, Premium: 전체) */
   getHistory: (params?: { page?: number; size?: number }) =>
     http
       .get('/blog/analysis/history', { params })
       .then(res => analysisHistoryResponseSchema.parse(res.data)),
 
-  /** GET /blog/analysis/{analysisId}/recommendations — AI 추천 공고 (최대 8개) */
+  /** GET /blog/analysis/{analysisId}/recommendations — AI 추천 공고 최대 8개 */
   getRecommendations: (analysisId: number) =>
     http
       .get(`/blog/analysis/${analysisId}/recommendations`)
@@ -274,11 +241,16 @@ export const blogAnalysisService = {
 
   /** GET /blog/analysis/{analysisId}/bloggers — 인기 블로거 Top3 */
   getBloggers: (analysisId: number) =>
-    http
-      .get(`/blog/analysis/${analysisId}/bloggers`)
-      .then(res => popularBloggersResponseSchema.parse(res.data)),
+    http.get(`/blog/analysis/${analysisId}/bloggers`).then(res => {
+      console.log(res)
+      return popularBloggersResponseSchema.parse(res.data)
+    }),
 
-  /** POST /blog/chat — 블로그 기반 AI 챗봇 */
+  /** POST /blog/chat — AI 챗봇 메시지 */
   chat: (data: ChatRequest) =>
     http.post('/blog/chat', data).then(res => chatResponseSchema.parse(res.data)),
+
+  /** DELETE /blog/chat/{sessionId} — 챗 세션 초기화 */
+  deleteChat: (sessionId: string) =>
+    http.delete<void>(`/blog/chat/${sessionId}`).then(res => res.data),
 }
