@@ -30,7 +30,7 @@ export default function Page() {
       })
 
       setAuth({ ...token, accessToken: '1234' })
-      router.replace(token.user.isProfileCompleted ? '/' : '/auth/register')
+      router.replace(token.user.isProfileCompleted ? '/' : '/onboarding')
     } catch {
       setErrorMessage('로그인에 실패했어요. 다시 시도해주세요.')
     } finally {
