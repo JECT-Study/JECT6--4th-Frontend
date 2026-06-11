@@ -12,6 +12,7 @@ interface Props {
   isLoading: boolean
   isLoadingMore: boolean
   onLoadMore: () => void
+  title?: string
   totalElements: number
 }
 
@@ -21,6 +22,7 @@ export function CampaignList({
   isLoading,
   isLoadingMore,
   onLoadMore,
+  title = '공고 전체 보기',
   totalElements,
 }: Props) {
   const { ref } = useInView({
@@ -35,7 +37,7 @@ export function CampaignList({
   return (
     <div className="flex flex-col gap-15">
       <div className="flex items-center justify-between">
-        <div className="text-22 leading-6.25 font-semibold">공고 전체 보기</div>
+        <div className="text-22 leading-6.25 font-semibold">{title}</div>
         <span className="text-14 font-medium leading-20 text-neutral_60">
           총 {totalElements.toLocaleString()}개
         </span>

@@ -1,6 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import { useState } from 'react'
 
 import { useAtomValue } from 'jotai'
 
@@ -11,7 +14,20 @@ import SearchIcon from '@/shared/assets/icons/search.svg'
 import { Button, Input } from '@/shared/ui'
 
 export function Header() {
+  const router = useRouter()
   const isLoggedIn = useAtomValue(isLoggedInAtom)
+  const [keyword, setKeyword] = useState('')
+
+  const submitSearch = () => {
+    const trimmedKeyword = keyword.trim()
+
+    if (!trimmedKeyword) {
+      router.push('/campaigns')
+      return
+    }
+
+    router.push(`/campaigns?keyword=${encodeURIComponent(trimmedKeyword)}`)
+  }
 
   return (
     <header className="w-full">
@@ -27,6 +43,13 @@ export function Header() {
         <div className="flex gap-6">
           <Input
             variant="search"
+            value={keyword}
+            onChange={e => setKeyword(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                submitSearch()
+              }
+            }}
             placeholder="원하는 공고를 입력해주세요"
             className="w-93.5"
             inputClassName="text-14 leading-4.5"

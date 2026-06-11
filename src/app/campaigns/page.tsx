@@ -1,5 +1,7 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
+
 import { useCallback, useEffect, useState } from 'react'
 
 import { campaignService } from '@/service'
@@ -26,6 +28,8 @@ function hasNextPage({
 }
 
 export default function Page() {
+  const searchParams = useSearchParams()
+  const keyword = searchParams.get('keyword')?.trim() ?? ''
   const [params, setParams] = useState<CampaignListParams>({})
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -41,11 +45,13 @@ export default function Page() {
       setIsLoading(true)
 
       try {
-        const response = await campaignService.getCampaigns({
-          ...params,
-          page: 0,
-          size: PAGE_SIZE,
-        })
+        const response = keyword
+          ? await campaignService.search(keyword, { page: 0, size: PAGE_SIZE })
+          : await campaignService.getCampaigns({
+              ...params,
+              page: 0,
+              size: PAGE_SIZE,
+            })
 
         if (!ignore) {
           setCampaigns(response.content)
@@ -78,7 +84,7 @@ export default function Page() {
     return () => {
       ignore = true
     }
-  }, [params])
+  }, [keyword, params])
 
   const loadMore = useCallback(async () => {
     if (isLoading || isLoadingMore || !hasMore) return
@@ -87,11 +93,13 @@ export default function Page() {
     setIsLoadingMore(true)
 
     try {
-      const response = await campaignService.getCampaigns({
-        ...params,
-        page: nextPage,
-        size: PAGE_SIZE,
-      })
+      const response = keyword
+        ? await campaignService.search(keyword, { page: nextPage, size: PAGE_SIZE })
+        : await campaignService.getCampaigns({
+            ...params,
+            page: nextPage,
+            size: PAGE_SIZE,
+          })
 
       const nextCampaigns = response.content.filter(
         campaign => !campaigns.some(existing => existing.id === campaign.id)
@@ -115,7 +123,7 @@ export default function Page() {
     } finally {
       setIsLoadingMore(false)
     }
-  }, [campaigns, currentPage, hasMore, isLoading, isLoadingMore, params])
+  }, [campaigns, currentPage, hasMore, isLoading, isLoadingMore, keyword, params])
 
   return (
     <div className="mx-auto flex w-full flex-col max-w-300">
@@ -125,6 +133,7 @@ export default function Page() {
         hasMore={hasMore}
         isLoading={isLoading}
         isLoadingMore={isLoadingMore}
+        title={keyword ? `"${keyword}" 검색 결과` : '공고 전체 보기'}
         onLoadMore={() => void loadMore()}
         totalElements={totalElements}
       />
