@@ -1,15 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
 import type { CampaignListParams } from '@/entities/campaign'
 
 import { DetailFilterGroup } from './DetailFilterGroup'
 import { LocationDropdown } from './LocationDropdown'
 
-export default function Filter() {
-  const [params, setParams] = useState<CampaignListParams>({})
+interface Props {
+  params: CampaignListParams
+  setParams: Dispatch<SetStateAction<CampaignListParams>>
+}
 
+export default function Filter({ params, setParams }: Props) {
   const handleLocationChange = (region: string) => setParams(prev => ({ ...prev, region, page: 0 }))
 
   return (
