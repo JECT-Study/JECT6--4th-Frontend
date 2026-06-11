@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
 
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 
-import { isLoggedInAtom } from '@/entities/auth'
+import { authService } from '@/service'
+
+import { authAtom, isLoggedInAtom } from '@/entities/auth'
 
 // import Hamburger from '@/shared/assets/icons/hamburger.svg'
 import SearchIcon from '@/shared/assets/icons/search.svg'
@@ -16,7 +18,9 @@ import { Button, Input } from '@/shared/ui'
 export function Header() {
   const router = useRouter()
   const isLoggedIn = useAtomValue(isLoggedInAtom)
+  const setAuth = useSetAtom(authAtom)
   const [keyword, setKeyword] = useState('')
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const submitSearch = () => {
     const trimmedKeyword = keyword.trim()
@@ -27,6 +31,18 @@ export function Header() {
     }
 
     router.push(`/campaigns?keyword=${encodeURIComponent(trimmedKeyword)}`)
+  }
+
+  const logout = async () => {
+    setIsLoggingOut(true)
+
+    try {
+      await authService.logout()
+    } finally {
+      setAuth(null)
+      setIsLoggingOut(false)
+      router.replace('/')
+    }
   }
 
   return (
@@ -60,8 +76,10 @@ export function Header() {
               <Button
                 variant="tertiary"
                 className="border border-[#E0E0E0] text-16 leading-20 text-[#666666] font-medium px-3 py-3.5"
+                disabled={isLoggingOut}
+                onClick={() => void logout()}
               >
-                마이페이지
+                로그아웃
               </Button>
             ) : (
               <Link href="/auth/login">
