@@ -9,7 +9,9 @@ import {
   chatResponseSchema,
   popularBloggersResponseSchema,
   type AnalyzeRequest,
+  type AnalysisHistoryResponse,
   type ChatRequest,
+  type PopularBloggersResponse,
 } from '@/entities/blog-analysis'
 import {
   campaignDetailSchema,
@@ -228,7 +230,7 @@ export const blogAnalysisService = {
       .then(res => blogAnalysisResponseSchema.parse(res.data)),
 
   /** GET /blog/analysis/history — 분석 이력 (Free: 최근 3건, Premium: 전체) */
-  getHistory: (params?: { page?: number; size?: number }) =>
+  getHistory: (params?: { page?: number; size?: number }): Promise<AnalysisHistoryResponse> =>
     http
       .get('/blog/analysis/history', { params })
       .then(res => analysisHistoryResponseSchema.parse(res.data)),
@@ -240,7 +242,7 @@ export const blogAnalysisService = {
       .then(res => analysisRecommendationsResponseSchema.parse(res.data)),
 
   /** GET /blog/analysis/{analysisId}/bloggers — 인기 블로거 Top3 */
-  getBloggers: (analysisId: number) =>
+  getBloggers: (analysisId: number): Promise<PopularBloggersResponse> =>
     http.get(`/blog/analysis/${analysisId}/bloggers`).then(res => {
       console.log(res)
       return popularBloggersResponseSchema.parse(res.data)
