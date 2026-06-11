@@ -1,9 +1,11 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 
 import {
@@ -13,9 +15,9 @@ import {
   SelectableChannel,
 } from '@/constant'
 import { cn } from '@/lib/utils'
+import { userService } from '@/service'
 
 import { InterestCategory, UserChannel } from '@/entities/user'
-// import { userService } from '@/service'
 
 import CheckIcon from '@/shared/assets/icons/checked.svg'
 import UnCheckIcon from '@/shared/assets/icons/unchecked.svg'
@@ -38,12 +40,15 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>
 
 export default function Page() {
+  const router = useRouter()
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null)
+  const [submitErrorMessage, setSubmitErrorMessage] = useState('')
 
   const {
     register,
     handleSubmit,
-    watch,
+    control,
+    getValues,
     setValue,
     setError,
     formState: { errors, isSubmitting, isValid },
@@ -58,25 +63,32 @@ export default function Page() {
     },
   })
 
-  const categoryList = watch('interestCategories') as SelectableCategory[]
-  const channelList = watch('channels') as SelectableChannel[]
-  const regionList = watch('regions')
+  const nicknameValue = useWatch({ control, name: 'nickname' })
+  const categoryList = useWatch({ control, name: 'interestCategories' }) as SelectableCategory[]
+  const channelList = useWatch({ control, name: 'channels' }) as SelectableChannel[]
+  const regionList = useWatch({ control, name: 'regions' })
 
-  const handleRandomNickname = () => {
-    // const { nickname } = await userService.randomNickname()
-    const nickname = '테스트닉네임'
-    setValue('nickname', nickname, { shouldValidate: true })
-    setNicknameAvailable(null)
+  const handleRandomNickname = async () => {
+    try {
+      const { nickname } = await userService.randomNickname()
+      setValue('nickname', nickname, { shouldValidate: true })
+      setNicknameAvailable(null)
+    } catch {
+      setError('nickname', { message: '랜덤 닉네임을 불러오지 못했어요.' })
+    }
   }
 
-  const handleCheckNickname = () => {
-    const nickname = watch('nickname')
-    console.log(nickname)
-    // const { available } = await userService.checkNickname(nickname)
-    const available = nickname !== '테스트 닉네임'
-    setNicknameAvailable(available)
-    if (!available) {
-      setError('nickname', { message: '이미 사용 중인 닉네임이에요.' })
+  const handleCheckNickname = async () => {
+    const nickname = getValues('nickname')
+
+    try {
+      const { available } = await userService.checkNickname(nickname)
+      setNicknameAvailable(available)
+      if (!available) {
+        setError('nickname', { message: '이미 사용 중인 닉네임이에요.' })
+      }
+    } catch {
+      setError('nickname', { message: '닉네임 중복 확인에 실패했어요.' })
     }
   }
 
@@ -103,7 +115,7 @@ export default function Page() {
     }
   }
 
-  const onSubmit = (data: RegisterFormValues) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     if (nicknameAvailable !== true) {
       setError('nickname', { message: '닉네임 중복 확인을 해주세요.' })
       return
@@ -111,18 +123,23 @@ export default function Page() {
     const validCategories = data.interestCategories.filter((c): c is InterestCategory =>
       InterestCategory.options.includes(c as InterestCategory)
     )
-    console.log({
-      nickname: data.nickname,
-      interestCategories: validCategories,
-      channels: data.channels as UserChannel[],
-      regions: data.regions,
-    })
-    // await userService.updateMe({
-    //   nickname: data.nickname,
-    //   interestCategories: validCategories,
-    //   channels: data.channels as UserChannel[],
-    //   regions: data.regions,
-    // })
+    const activityTypes = data.channels.filter((channel): channel is UserChannel =>
+      UserChannel.options.includes(channel as UserChannel)
+    )
+    const regionIds = data.regions.map((_, index) => index + 1)
+
+    try {
+      setSubmitErrorMessage('')
+      await userService.createProfile({
+        nickname: data.nickname,
+        categoryTypes: validCategories,
+        activityTypes,
+        regionIds,
+      })
+      router.replace('/')
+    } catch {
+      setSubmitErrorMessage('회원가입에 실패했어요. 다시 시도해주세요.')
+    }
   }
 
   return (
@@ -154,7 +171,7 @@ export default function Page() {
                 <Button
                   type="button"
                   className="py-0.75 px-2.5 text-12 leading-7.5 h-fit"
-                  onClick={handleRandomNickname}
+                  onClick={() => void handleRandomNickname()}
                 >
                   랜덤 생성
                 </Button>
@@ -166,8 +183,8 @@ export default function Page() {
             <Button
               type="button"
               className="w-36.75 shrink-0 text-14 leading-7.5 font-medium py-2.5 h-12 self-start"
-              onClick={handleCheckNickname}
-              disabled={!watch('nickname') || isSubmitting}
+              onClick={() => void handleCheckNickname()}
+              disabled={!nicknameValue || isSubmitting}
             >
               중복 확인
             </Button>
@@ -197,19 +214,6 @@ export default function Page() {
                 {INTEREST_CATEGORY_LABEL[item]}
               </div>
             ))}
-            <div
-              onClick={() => toggleCategory('ETC')}
-              className={cn(
-                'py-1.5 px-3 border text-14 leading-7.5 border-[#E0E0E0] rounded-[10px] transition hover:bg-neutral_99',
-                categoryList.includes('ETC')
-                  ? 'cursor-pointer text-red_50 font-semibold'
-                  : categoryList.length >= 5
-                    ? 'cursor-not-allowed text-[#C0C0C0]'
-                    : 'cursor-pointer text-neutral_70 hover:text-neutral_50'
-              )}
-            >
-              {INTEREST_CATEGORY_LABEL['ETC']}
-            </div>
           </div>
           {errors.interestCategories && (
             <p className="text-12 leading-24 text-red_50 mb-1">
@@ -247,22 +251,6 @@ export default function Page() {
                 {CHANNEL_LABEL[item]}
               </div>
             ))}
-            <div
-              onClick={() => toggleChannel('ETC')}
-              className={cn(
-                'cursor-pointer py-1.5 px-3 border text-14 gap-2.5 flex items-center leading-7.5 border-[#E0E0E0] rounded-[10px] hover:bg-neutral_99 transition',
-                channelList.includes('ETC')
-                  ? 'text-red_50 font-semibold'
-                  : 'text-neutral_70 hover:text-neutral_50'
-              )}
-            >
-              {channelList.includes('ETC') ? (
-                <CheckIcon className="fill-red_50 stroke-red_50" />
-              ) : (
-                <UnCheckIcon />
-              )}
-              {CHANNEL_LABEL['ETC']}
-            </div>
           </div>
           <div className="h-px w-full bg-[#E0E0E0] mb-17" />
         </div>
@@ -313,6 +301,11 @@ export default function Page() {
           </div>
           <div className="h-px w-full bg-[#E0E0E0]" />
         </div>
+        {submitErrorMessage && (
+          <p className="mb-4 text-center text-14 font-medium leading-20 text-red_50">
+            {submitErrorMessage}
+          </p>
+        )}
         <Button
           type="submit"
           className="w-full"

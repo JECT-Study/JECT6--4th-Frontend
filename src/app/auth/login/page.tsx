@@ -1,11 +1,41 @@
 'use client'
-import { Provider } from '@/entities/user'
+
+import { useRouter } from 'next/navigation'
+
+import { useState } from 'react'
+
+import { useSetAtom } from 'jotai'
+
+import { authService } from '@/service'
+
+import { authAtom } from '@/entities/auth'
+import type { Provider } from '@/entities/user'
 
 import { Button } from '@/shared/ui'
 
 export default function Page() {
-  const handleClick = (type: Provider) => {
-    console.log(type)
+  const router = useRouter()
+  const setAuth = useSetAtom(authAtom)
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleClick = async (type: Provider) => {
+    setIsLoading(true)
+    setErrorMessage('')
+
+    try {
+      const token = await authService.login(type, {
+        code: '1234',
+        redirectUri: window.location.origin + window.location.pathname,
+      })
+
+      setAuth({ ...token, accessToken: '1234' })
+      router.replace(token.user.isProfileCompleted ? '/' : '/onboarding')
+    } catch {
+      setErrorMessage('로그인에 실패했어요. 다시 시도해주세요.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -21,7 +51,8 @@ export default function Page() {
             variant="tertiary"
             className="border border-neutral_90"
             size="lg"
-            onClick={() => handleClick('KAKAO')}
+            disabled={isLoading}
+            onClick={() => void handleClick('KAKAO')}
           >
             카카오 계정으로 계속하기
           </Button>
@@ -29,7 +60,8 @@ export default function Page() {
             variant="tertiary"
             className="border border-neutral_90"
             size="lg"
-            onClick={() => handleClick('NAVER')}
+            disabled={isLoading}
+            onClick={() => void handleClick('NAVER')}
           >
             네이버 계정으로 계속하기
           </Button>
@@ -37,10 +69,21 @@ export default function Page() {
             variant="tertiary"
             className="border border-neutral_90"
             size="lg"
-            onClick={() => handleClick('GOOGLE')}
+            disabled={isLoading}
+            onClick={() => void handleClick('GOOGLE')}
           >
             구글 계정으로 계속하기
           </Button>
+          {isLoading && (
+            <p className="m-0 text-center text-14 font-medium leading-20 text-neutral_60">
+              로그인 처리 중...
+            </p>
+          )}
+          {errorMessage && (
+            <p className="m-0 text-center text-14 font-medium leading-20 text-red_50">
+              {errorMessage}
+            </p>
+          )}
         </div>
       </div>
     </div>

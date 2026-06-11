@@ -8,11 +8,13 @@ import AnalyzeIcon from '@/shared/assets/icons/analyze.svg'
 import { Button, Input } from '@/shared/ui'
 
 interface Props {
-  handleStep: (v: number) => void
+  isSubmitting: boolean
+  onSubmit: (blogUrl: string) => void
 }
 
-export default function Step1({ handleStep }: Props) {
+export default function Step1({ isSubmitting, onSubmit }: Props) {
   const [inputValue, setInputValue] = useState('')
+  const canSubmit = inputValue.trim().length > 0 && !isSubmitting
 
   return (
     <>
@@ -29,13 +31,17 @@ export default function Step1({ handleStep }: Props) {
         <Input
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && inputValue && handleStep(2)}
+          onKeyDown={e => e.key === 'Enter' && canSubmit && onSubmit(inputValue.trim())}
           placeholder="URL을 입력해주세요"
           variant="analyze"
           inputClassName="text-[28px] font-normal"
           rightAddon={
             inputValue && (
-              <Button className="rounded-full p-3.5 size-12.5" onClick={() => handleStep(2)}>
+              <Button
+                className="rounded-full p-3.5 size-12.5"
+                disabled={!canSubmit}
+                onClick={() => onSubmit(inputValue.trim())}
+              >
                 <ArrowRight className="size-5.5" />
               </Button>
             )

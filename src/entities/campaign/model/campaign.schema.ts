@@ -81,6 +81,7 @@ export const campaignSchema = z.object({
   status: CampaignStatus.optional(),
   viewCount: z.number().optional(),
   sourcePlatform: z.string().optional(),
+  liked: z.boolean().optional(),
 })
 export type Campaign = z.infer<typeof campaignSchema>
 

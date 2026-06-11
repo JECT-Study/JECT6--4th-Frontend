@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-import { InterestCategory, UserChannel, UserRole } from './user.enums'
 import { blogSchema } from './blog.schema'
+import { InterestCategory, UserChannel, UserRole } from './user.enums'
 
 // users 테이블 기준 DB 엔티티
 export const userSchema = z.object({
@@ -50,7 +50,7 @@ export type UpdateUserProfileRequest = z.infer<typeof updateUserProfileSchema>
 export const updateUserProfileResponseSchema = z.object({
   userId: z.number(),
   nickname: z.string(),
-  onboardingCompleted: z.boolean(),
+  profileCompleted: z.boolean(),
   categoryTypes: z.array(InterestCategory),
   activityTypes: z.array(UserChannel),
   regionIds: z.array(z.number()),

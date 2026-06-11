@@ -9,7 +9,10 @@ import {
   chatResponseSchema,
   popularBloggersResponseSchema,
   type AnalyzeRequest,
+  type AnalysisHistoryResponse,
+  type AnalysisRecommendationsResponse,
   type ChatRequest,
+  type PopularBloggersResponse,
 } from '@/entities/blog-analysis'
 import {
   campaignDetailSchema,
@@ -36,6 +39,7 @@ import {
 import {
   blogSchema,
   userProfileSchema,
+  updateUserProfileResponseSchema,
   nicknameCheckSchema,
   type Provider,
   type UpdateUserProfileRequest,
@@ -50,15 +54,17 @@ import { http } from '@/shared/api'
 export const authService = {
   /** POST /auth/login/{provider} — OAuth 코드로 서비스 토큰 발급 */
   login: (provider: Provider, data: LoginRequest) =>
-    http.post(`/auth/login/${provider}`, data).then(res => tokenResponseSchema.parse(res.data)),
+    http
+      .post(`/api/auth/login/${provider.toLowerCase()}`, data)
+      .then(res => tokenResponseSchema.parse(res.data)),
 
   /** POST /auth/logout — Redis refresh token 세션 제거 */
-  logout: () => http.post<void>('/auth/logout').then(res => res.data),
+  logout: () => http.post<void>('/api/auth/logout').then(res => res.data),
 
   /** POST /auth/refresh — Access Token 재발급 */
   refresh: () =>
     http
-      .post('/auth/refresh')
+      .post('/api/auth/refresh')
       .then(res =>
         z
           .object({ accessToken: z.string(), tokenType: z.string(), expiresIn: z.number() })
@@ -72,34 +78,34 @@ export const authService = {
 
 export const userService = {
   /** GET /users/me — 내 정보 조회 */
-  getMe: () => http.get('/users/me').then(res => userProfileSchema.parse(res.data)),
+  getMe: () => http.get('/api/users/me').then(res => userProfileSchema.parse(res.data)),
 
   /** POST /users/me — 프로필 최초 생성 (온보딩 완료 시) */
   createProfile: (data: UpdateUserProfileRequest) =>
-    http.post('/users/me', data).then(res => userProfileSchema.parse(res.data)),
+    http.post('/api/users/me', data).then(res => updateUserProfileResponseSchema.parse(res.data)),
 
   /** PATCH /users/me — 프로필 부분 수정 */
   updateMe: (data: UpdateUserProfileRequest) =>
-    http.patch('/users/me', data).then(res => userProfileSchema.parse(res.data)),
+    http.patch('/api/users/me', data).then(res => userProfileSchema.parse(res.data)),
 
   /** POST /users/me/blog — 블로그 연동 */
   linkBlog: (data: { blogUrl: string; platform: string }) =>
-    http.post('/users/me/blog', data).then(res => blogSchema.parse(res.data)),
+    http.post('/api/users/me/blog', data).then(res => blogSchema.parse(res.data)),
 
   /** GET /users/nickname/check — 닉네임 중복 확인 */
   checkNickname: (nickname: string) =>
     http
-      .get('/users/nickname/check', { params: { nickname } })
+      .get('/api/users/nickname/check', { params: { nickname } })
       .then(res => nicknameCheckSchema.parse(res.data)),
 
   /** GET /users/nickname/random — 랜덤 닉네임 생성 */
   randomNickname: () =>
     http
-      .get('/users/nickname/random')
+      .get('/api/users/nickname/random')
       .then(res => z.object({ nickname: z.string() }).parse(res.data)),
 
   /** DELETE /users/me — 회원 탈퇴 */
-  deleteMe: () => http.delete<void>('/users/me').then(res => res.data),
+  deleteMe: () => http.delete<void>('/api/users/me').then(res => res.data),
 }
 
 // ==============================
@@ -228,19 +234,19 @@ export const blogAnalysisService = {
       .then(res => blogAnalysisResponseSchema.parse(res.data)),
 
   /** GET /blog/analysis/history — 분석 이력 (Free: 최근 3건, Premium: 전체) */
-  getHistory: (params?: { page?: number; size?: number }) =>
+  getHistory: (params?: { page?: number; size?: number }): Promise<AnalysisHistoryResponse> =>
     http
       .get('/blog/analysis/history', { params })
       .then(res => analysisHistoryResponseSchema.parse(res.data)),
 
   /** GET /blog/analysis/{analysisId}/recommendations — AI 추천 공고 최대 8개 */
-  getRecommendations: (analysisId: number) =>
+  getRecommendations: (analysisId: number): Promise<AnalysisRecommendationsResponse> =>
     http
       .get(`/blog/analysis/${analysisId}/recommendations`)
       .then(res => analysisRecommendationsResponseSchema.parse(res.data)),
 
   /** GET /blog/analysis/{analysisId}/bloggers — 인기 블로거 Top3 */
-  getBloggers: (analysisId: number) =>
+  getBloggers: (analysisId: number): Promise<PopularBloggersResponse> =>
     http.get(`/blog/analysis/${analysisId}/bloggers`).then(res => {
       console.log(res)
       return popularBloggersResponseSchema.parse(res.data)

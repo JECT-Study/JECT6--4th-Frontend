@@ -1,5 +1,7 @@
 'use client'
 
+import type { Dispatch, SetStateAction } from 'react'
+
 import { CAMPAIGN_CATEGORY_LABEL, CHANNEL_LABEL, TYPE_LABEL } from '@/constant'
 
 import type { CampaignListParams } from '@/entities/campaign'
@@ -29,7 +31,7 @@ const CHANNEL_OPTIONS = CampaignChannel.options.map(value => ({
 
 interface Props {
   params: CampaignListParams
-  setParams: (params: CampaignListParams) => void
+  setParams: Dispatch<SetStateAction<CampaignListParams>>
 }
 
 const FILTER_ITEM_CLASS = 'hover:bg-red_95 hover:text-red_50 focus:bg-red_95 focus:text-red_50'
@@ -43,7 +45,7 @@ function filterTriggerClass(selected: boolean) {
 
 export function DetailFilterGroup({ params, setParams }: Props) {
   const update = (key: keyof CampaignListParams) => (value: string) =>
-    setParams({ ...params, [key]: value, page: 0 })
+    setParams(prev => ({ ...prev, [key]: value, page: 0 }))
 
   return (
     <div className="flex items-center gap-4">

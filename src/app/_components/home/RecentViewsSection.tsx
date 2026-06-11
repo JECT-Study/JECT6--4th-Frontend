@@ -4,7 +4,7 @@ import { useRecentViews } from '@/shared/hooks/useRecentViews'
 
 import { HomeCarouselSection } from './HomeCarouselSection'
 
-export function RecentViewsSection() {
+export default function RecentViewsSection() {
   const items = useRecentViews()
 
   if (items.length === 0) return null

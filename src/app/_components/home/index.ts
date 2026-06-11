@@ -1,8 +1,5 @@
-export {
-  CreatorPostsSection,
-  HeroSection,
-  LockedAiSection,
-  PopularCampaignsSection,
-  RegionPopularCampaignsSection,
-} from './HomeSections'
+export { default as AnalysisSection } from './AnalysisSection'
+export { CreatorPostsSection, HeroSection } from './HomeSections'
+export { default as PopularCampaignsSection } from './PopularCampaignsSection'
+export { default as RegionPopularCampaignsSection } from './RegionPopularCampaignsSection'
 export { highChanceCampaigns, recentCampaigns } from './home.mock'
