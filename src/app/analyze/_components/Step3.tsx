@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import type { BlogAnalysisResponse } from '@/entities/blog-analysis'
+
 import AnalyzeIcon from '@/shared/assets/icons/analyze.svg'
 import CheckboxIcon from '@/shared/assets/icons/checked.svg'
 import CircleCheckIcon from '@/shared/assets/icons/circle-check.svg'
@@ -11,10 +13,13 @@ import { Button } from '@/shared/ui'
 import AnalyzeDialog from './AnalyzeDialog'
 
 interface Props {
-  handleStep: (v: number) => void
+  analysis: BlogAnalysisResponse
+  blogUrl: string
+  onCancel: () => void
+  onViewResult: () => void
 }
 
-export default function Step3({ handleStep }: Props) {
+export default function Step3({ analysis, blogUrl, onCancel, onViewResult }: Props) {
   const [isChecked, setIsChecked] = useState(false)
 
   return (
@@ -38,7 +43,10 @@ export default function Step3({ handleStep }: Props) {
             </div>
             <div className="flex flex-col gap-1">
               <p className="text-20 leading-7.75 font-medium">네이버 블로그</p>
-              <p className="text-16 leading-5.5 text-[#6A7282]">https://blog.naver.com/example</p>
+              <p className="text-16 leading-5.5 text-[#6A7282]">{blogUrl}</p>
+              {analysis.analysis?.summary && (
+                <p className="text-14 leading-5 text-[#6A7282]">{analysis.analysis.summary}</p>
+              )}
             </div>
           </div>
         </div>
@@ -57,11 +65,11 @@ export default function Step3({ handleStep }: Props) {
           </div>
         </div>
         <div className="flex gap-4.25 w-full">
-          <Button variant="tertiary" className="w-1/2" onClick={() => handleStep(1)}>
+          <Button variant="tertiary" className="w-1/2" onClick={onCancel}>
             취소
           </Button>
           <div className="w-1/2">
-            <AnalyzeDialog handleClick={() => handleStep(4)} />
+            <AnalyzeDialog handleClick={onViewResult} />
           </div>
         </div>
       </div>

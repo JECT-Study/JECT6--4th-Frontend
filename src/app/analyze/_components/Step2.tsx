@@ -2,11 +2,18 @@
 
 import { useEffect, useState } from 'react'
 
+import { blogAnalysisService } from '@/service'
+
+import type { BlogAnalysisResponse } from '@/entities/blog-analysis'
+
 import AnalyzeIcon from '@/shared/assets/icons/analyze.svg'
 import { Input } from '@/shared/ui'
 
 interface Props {
-  handleStep: (v: number) => void
+  blogUrl: string
+  documentId: number
+  onComplete: (analysis: BlogAnalysisResponse) => void
+  onError: (message: string) => void
 }
 
 const STEPS = [
@@ -15,18 +22,40 @@ const STEPS = [
   { title: 'AI 진단 리포트 생성 중', description: '분석 결과를 바탕으로 리포트를 작성합니다...' },
 ]
 
-export default function Step2({ handleStep }: Props) {
+export default function Step2({ blogUrl, documentId, onComplete, onError }: Props) {
   const [currentStep, setCurrentStep] = useState(0)
 
   useEffect(() => {
+    let ignore = false
     const timers = [
       setTimeout(() => setCurrentStep(1), 3000),
       setTimeout(() => setCurrentStep(2), 6000),
-      setTimeout(() => handleStep(3), 9000),
     ]
-    return () => timers.forEach(clearTimeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    async function fetchAnalysis() {
+      try {
+        const analysis = await blogAnalysisService.getAnalysis(documentId)
+        if (!ignore) {
+          setCurrentStep(2)
+          onComplete(analysis)
+        }
+      } catch {
+        if (!ignore) {
+          onError('분석 결과를 불러오지 못했어요. 다시 시도해주세요.')
+        }
+      }
+    }
+
+    const completeTimer = setTimeout(() => {
+      void fetchAnalysis()
+    }, 9000)
+
+    return () => {
+      ignore = true
+      timers.forEach(clearTimeout)
+      clearTimeout(completeTimer)
+    }
+  }, [documentId, onComplete, onError])
 
   return (
     <>
@@ -40,7 +69,7 @@ export default function Step2({ handleStep }: Props) {
       <div className="flex flex-col items-center gap-6">
         <Input
           readOnly
-          value="https://blog.naver.com/example"
+          value={blogUrl}
           variant="analyze"
           inputClassName="text-[28px] font-normal"
         />
