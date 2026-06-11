@@ -39,6 +39,7 @@ import {
 import {
   blogSchema,
   userProfileSchema,
+  updateUserProfileResponseSchema,
   nicknameCheckSchema,
   type Provider,
   type UpdateUserProfileRequest,
@@ -77,34 +78,34 @@ export const authService = {
 
 export const userService = {
   /** GET /users/me — 내 정보 조회 */
-  getMe: () => http.get('/users/me').then(res => userProfileSchema.parse(res.data)),
+  getMe: () => http.get('/api/users/me').then(res => userProfileSchema.parse(res.data)),
 
   /** POST /users/me — 프로필 최초 생성 (온보딩 완료 시) */
   createProfile: (data: UpdateUserProfileRequest) =>
-    http.post('/users/me', data).then(res => userProfileSchema.parse(res.data)),
+    http.post('/api/users/me', data).then(res => updateUserProfileResponseSchema.parse(res.data)),
 
   /** PATCH /users/me — 프로필 부분 수정 */
   updateMe: (data: UpdateUserProfileRequest) =>
-    http.patch('/users/me', data).then(res => userProfileSchema.parse(res.data)),
+    http.patch('/api/users/me', data).then(res => userProfileSchema.parse(res.data)),
 
   /** POST /users/me/blog — 블로그 연동 */
   linkBlog: (data: { blogUrl: string; platform: string }) =>
-    http.post('/users/me/blog', data).then(res => blogSchema.parse(res.data)),
+    http.post('/api/users/me/blog', data).then(res => blogSchema.parse(res.data)),
 
   /** GET /users/nickname/check — 닉네임 중복 확인 */
   checkNickname: (nickname: string) =>
     http
-      .get('/users/nickname/check', { params: { nickname } })
+      .get('/api/users/nickname/check', { params: { nickname } })
       .then(res => nicknameCheckSchema.parse(res.data)),
 
   /** GET /users/nickname/random — 랜덤 닉네임 생성 */
   randomNickname: () =>
     http
-      .get('/users/nickname/random')
+      .get('/api/users/nickname/random')
       .then(res => z.object({ nickname: z.string() }).parse(res.data)),
 
   /** DELETE /users/me — 회원 탈퇴 */
-  deleteMe: () => http.delete<void>('/users/me').then(res => res.data),
+  deleteMe: () => http.delete<void>('/api/users/me').then(res => res.data),
 }
 
 // ==============================
