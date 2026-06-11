@@ -10,6 +10,7 @@ import {
   popularBloggersResponseSchema,
   type AnalyzeRequest,
   type AnalysisHistoryResponse,
+  type AnalysisRecommendationsResponse,
   type ChatRequest,
   type PopularBloggersResponse,
 } from '@/entities/blog-analysis'
@@ -52,15 +53,17 @@ import { http } from '@/shared/api'
 export const authService = {
   /** POST /auth/login/{provider} — OAuth 코드로 서비스 토큰 발급 */
   login: (provider: Provider, data: LoginRequest) =>
-    http.post(`/auth/login/${provider}`, data).then(res => tokenResponseSchema.parse(res.data)),
+    http
+      .post(`/api/auth/login/${provider.toLowerCase()}`, data)
+      .then(res => tokenResponseSchema.parse(res.data)),
 
   /** POST /auth/logout — Redis refresh token 세션 제거 */
-  logout: () => http.post<void>('/auth/logout').then(res => res.data),
+  logout: () => http.post<void>('/api/auth/logout').then(res => res.data),
 
   /** POST /auth/refresh — Access Token 재발급 */
   refresh: () =>
     http
-      .post('/auth/refresh')
+      .post('/api/auth/refresh')
       .then(res =>
         z
           .object({ accessToken: z.string(), tokenType: z.string(), expiresIn: z.number() })
@@ -236,7 +239,7 @@ export const blogAnalysisService = {
       .then(res => analysisHistoryResponseSchema.parse(res.data)),
 
   /** GET /blog/analysis/{analysisId}/recommendations — AI 추천 공고 최대 8개 */
-  getRecommendations: (analysisId: number) =>
+  getRecommendations: (analysisId: number): Promise<AnalysisRecommendationsResponse> =>
     http
       .get(`/blog/analysis/${analysisId}/recommendations`)
       .then(res => analysisRecommendationsResponseSchema.parse(res.data)),

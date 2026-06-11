@@ -3,8 +3,9 @@ import { blogAnalysisService, feedService } from '@/service'
 import type { PopularBloggersResponse } from '@/entities/blog-analysis'
 import type { FeedBody, FeedHero } from '@/entities/feed'
 
+import AnalysisSection from './_components/home/AnalysisSection'
 import { HomeCarouselSection } from './_components/home/HomeCarouselSection'
-import { CreatorPostsSection, HeroSection, LockedAiSection } from './_components/home/HomeSections'
+import { CreatorPostsSection, HeroSection } from './_components/home/HomeSections'
 import PopularCampaignsSection from './_components/home/PopularCampaignsSection'
 import RecentViewsSection from './_components/home/RecentViewsSection'
 import RegionPopularCampaignsSection from './_components/home/RegionPopularCampaignsSection'
@@ -38,7 +39,7 @@ export default async function Page() {
   return (
     <main className="bg-white pb-16">
       <HeroSection hero={hero} />
-      <LockedAiSection />
+      <AnalysisSection />
       <HomeCarouselSection
         title="당첨확률이 높은 공고"
         campaigns={feedBody.guaranteed}
