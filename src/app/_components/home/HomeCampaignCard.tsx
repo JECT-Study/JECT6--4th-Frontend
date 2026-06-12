@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { useEffect, useState } from 'react'
@@ -13,6 +14,7 @@ import { campaignService } from '@/service'
 
 import type { Campaign } from '@/entities/campaign'
 
+import BlogThumbnailImage from '@/shared/assets/icons/thumbnail.jpeg'
 import { saveRecentView } from '@/shared/hooks/useRecentViews'
 import { BlogTag } from '@/shared/ui/blog-card/BlogTag'
 
@@ -32,6 +34,7 @@ interface HomeCampaignCardProps extends Campaign {
 export function HomeCampaignCard({
   applyEndDate,
   brandName,
+  channel,
   className = '',
   fitLabel,
   id,
@@ -44,12 +47,14 @@ export function HomeCampaignCard({
   const [isLiked, setIsLiked] = useState(liked)
   const [isLikeSubmitting, setIsLikeSubmitting] = useState(false)
   const isHorizontal = variant === 'horizontal'
+  const isBlogCampaign = !channel || channel === 'BLOG'
   const dday = formatDday(applyEndDate)
   const competitionLabel = `모집 ${recruitCount ?? '-'}명`
 
   const campaign: Campaign = {
     applyEndDate,
     brandName,
+    channel,
     id,
     liked: isLiked,
     recruitCount,
@@ -91,7 +96,7 @@ export function HomeCampaignCard({
         )}
       >
         <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
-          <HomeCardImage className="h-full w-full">
+          <HomeCardImage className="h-full w-full" showBlogThumbnail={isBlogCampaign}>
             {variant === 'ai' && fitLabel && (
               <span className="absolute left-3 top-4 rounded-sm bg-red_95 px-3 py-1 text-12 font-semibold leading-16 text-red_40">
                 {fitLabel}
@@ -153,9 +158,20 @@ export function HomeCampaignCard({
   )
 }
 
-function HomeCardImage({ children, className = '' }: { children?: ReactNode; className?: string }) {
+function HomeCardImage({
+  children,
+  className = '',
+  showBlogThumbnail,
+}: {
+  children?: ReactNode
+  className?: string
+  showBlogThumbnail: boolean
+}) {
   return (
-    <div className={cn('relative shrink-0 rounded-md bg-neutral_99', className)} aria-hidden>
+    <div className={cn('relative shrink-0 overflow-hidden rounded-md bg-neutral_99', className)}>
+      {showBlogThumbnail && (
+        <Image src={BlogThumbnailImage} alt="" fill className="object-cover" sizes="282px" />
+      )}
       {children}
     </div>
   )
