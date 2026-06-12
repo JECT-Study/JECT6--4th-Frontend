@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { useEffect, useState } from 'react'
 
 import {
@@ -13,6 +11,8 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel'
 import { cn } from '@/lib/utils'
+
+import { CampaignImage } from './CampaignImage'
 
 interface CampaignImageCarouselProps {
   images?: string[]
@@ -42,7 +42,7 @@ export function CampaignImageCarousel({ images = [] }: CampaignImageCarouselProp
           {images.map((src, i) => (
             <CarouselItem key={i} className="pl-0">
               <div className="relative h-100 w-full overflow-hidden rounded-lg bg-neutral_95">
-                <Image src={src} alt={`이미지 ${i + 1}`} fill className="object-cover" />
+                <CampaignImage src={src} alt={`이미지 ${i + 1}`} />
               </div>
             </CarouselItem>
           ))}
