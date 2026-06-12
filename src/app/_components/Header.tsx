@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -12,6 +13,7 @@ import { authService } from '@/service'
 import { authAtom, isLoggedInAtom } from '@/entities/auth'
 
 // import Hamburger from '@/shared/assets/icons/hamburger.svg'
+import LogoImage from '@/shared/assets/icons/logo.png'
 import SearchIcon from '@/shared/assets/icons/search.svg'
 import { Button, Input } from '@/shared/ui'
 
@@ -52,8 +54,8 @@ export function Header() {
           {/* <Button className="bg-[#F5F5F5] p-2 hover:bg-neutral_95">
             <Hamburger className="size-8" />
           </Button> */}
-          <Link href="/" className="text-4xl font-bold">
-            LOGO
+          <Link href="/" className="block w-32 shrink-0">
+            <Image src={LogoImage} alt="Boost" className="h-auto w-full" priority />
           </Link>
         </div>
         <div className="flex gap-6">

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
@@ -11,6 +12,7 @@ import { authService } from '@/service'
 import { authAtom } from '@/entities/auth'
 import type { Provider } from '@/entities/user'
 
+import AuthBackgroundImage from '@/shared/assets/icons/auth_background.png'
 import { Button } from '@/shared/ui'
 
 export default function Page() {
@@ -40,7 +42,16 @@ export default function Page() {
 
   return (
     <div className="flex w-full max-w-360 mx-auto">
-      <div className="bg-[#FAFAFA] w-10/19">이미지</div>
+      <div className="relative min-h-screen w-10/19 overflow-hidden">
+        <Image
+          src={AuthBackgroundImage}
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 53vw"
+          className="object-contain"
+        />
+      </div>
       <div className="px-13 py-45 flex-1">
         <div className="flex flex-col items-center gap-4.5 mb-13.75">
           <h1 className="text-36 leading-7.5 font-medium">[로그인]</h1>
