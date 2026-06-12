@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils'
 
 import type { AnalysisInsightCard } from '@/entities/blog-analysis'
 
+// [Figma 기준 컴포넌트] 강점/약점 카드. 현재 백엔드 명세 GET /blog/analysis/{id}는
+// strengthCard/weaknessCard를 제공하지 않아 데이터가 있을 때만 렌더된다(없으면 null).
 export function InsightCard({ insight }: { insight?: AnalysisInsightCard }) {
   if (!insight) return null
 

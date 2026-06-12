@@ -2,6 +2,8 @@ import { CAMPAIGN_CATEGORY_LABEL } from '@/constant'
 
 import type { CategoryFit } from '@/entities/blog-analysis'
 
+// [Figma 기준 컴포넌트] 카테고리 적합도 표. 현재 백엔드 명세 GET /blog/analysis/{id}는
+// categoryFits를 제공하지 않아 데이터가 있을 때만 렌더된다(없으면 null).
 export function CategoryFitTable({ rows }: { rows?: CategoryFit[] }) {
   if (!rows || rows.length === 0) return null
 

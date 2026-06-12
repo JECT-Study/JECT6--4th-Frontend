@@ -1,5 +1,7 @@
 import type { AnalysisMetric } from '@/entities/blog-analysis'
 
+// [Figma 기준 컴포넌트] 현재 백엔드 명세 GET /blog/analysis/{id}는 metrics를 제공하지 않아
+// BlogAnalysisDashboard에서 데이터가 있을 때만 렌더된다. 백엔드 응답에 metrics가 추가되면 자동 노출.
 export function OverallAnalysisCard({ metrics }: { metrics: AnalysisMetric[] }) {
   return (
     <article className="rounded-lg border border-neutral_95 bg-white p-7 shadow-sm">

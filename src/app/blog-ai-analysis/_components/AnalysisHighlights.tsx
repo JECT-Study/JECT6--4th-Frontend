@@ -2,6 +2,9 @@ import { CheckCircle2 } from 'lucide-react'
 
 import type { AnalysisResult } from '@/entities/blog-analysis'
 
+// [백엔드 명세 기준 컴포넌트] GET /blog/analysis/{id}가 실제 제공하는 필드
+// (keyTopics/tone/targetAudience/suggestions)만 사용. Figma의 도넛·강약점·카테고리 적합도
+// (OverallAnalysisCard/InsightCard/CategoryFitTable)를 대체하는 명세 기반 버전이다.
 export function AnalysisHighlights({ result }: { result: AnalysisResult }) {
   return (
     <div className="grid gap-8 lg:grid-cols-2">

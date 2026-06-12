@@ -77,6 +77,15 @@ export function BlogAnalysisDashboard({
 
         <section className="flex flex-col gap-8">
           <h2 className="text-28 font-bold leading-40">내 블로그 상세 분석</h2>
+          {/*
+            [Figma 디자인 vs 백엔드 명세]
+            - 종합분석 도넛(OverallAnalysisCard)·강약점 카드(InsightCard)·카테고리 적합도(CategoryFitTable)는
+              Figma 디자인 기준으로 먼저 구현된 컴포넌트다.
+            - 그러나 현재 백엔드 명세 GET /blog/analysis/{id}는 metrics/categoryFits/strengthCard/weaknessCard를
+              제공하지 않는다. 그래서 "명세에 맞춰" 데이터가 있을 때만 렌더한다(없으면 숨김).
+            - AnalysisHighlights(요약/키워드/톤/독자층/제안)는 명세가 실제 제공하는 필드 기준 버전이다.
+            => 백엔드가 위 필드를 주기 시작하면 프론트 수정 없이 Figma 디자인이 자동 복원된다(forward-compatible).
+          */}
           <AnalysisHighlights result={result} />
           {(hasMetrics || result.strengthCard || result.weaknessCard) && (
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
