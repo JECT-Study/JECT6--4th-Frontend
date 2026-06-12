@@ -247,10 +247,9 @@ export const blogAnalysisService = {
 
   /** GET /blog/analysis/{analysisId}/bloggers — 인기 블로거 Top3 */
   getBloggers: (analysisId: number): Promise<PopularBloggersResponse> =>
-    http.get(`/blog/analysis/${analysisId}/bloggers`).then(res => {
-      console.log(res)
-      return popularBloggersResponseSchema.parse(res.data)
-    }),
+    http
+      .get(`/blog/analysis/${analysisId}/bloggers`)
+      .then(res => popularBloggersResponseSchema.parse(res.data)),
 
   /** POST /blog/chat — AI 챗봇 메시지 */
   chat: (data: ChatRequest) =>
