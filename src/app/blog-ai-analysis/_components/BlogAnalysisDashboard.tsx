@@ -118,7 +118,7 @@ function AnalysisHighlights({ result }: { result: AnalysisResult }) {
             ))}
           </div>
         )}
-        <dl className="mt-6 grid gap-3 text-14 leading-22">
+        <dl className="mt-6 grid gap-3 text-14 leading-20">
           <div className="flex gap-3">
             <dt className="w-16 shrink-0 font-semibold text-neutral_50">톤</dt>
             <dd className="text-neutral_20">{result.tone}</dd>
@@ -133,7 +133,7 @@ function AnalysisHighlights({ result }: { result: AnalysisResult }) {
         <h3 className="text-18 font-bold leading-28">개선 제안</h3>
         <ul className="mt-5 grid gap-3">
           {result.suggestions.map(suggestion => (
-            <li key={suggestion} className="flex gap-2 text-14 leading-22 text-neutral_30">
+            <li key={suggestion} className="flex gap-2 text-14 leading-20 text-neutral_30">
               <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green_40" aria-hidden />
               <span>{suggestion}</span>
             </li>
