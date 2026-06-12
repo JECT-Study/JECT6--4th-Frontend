@@ -43,7 +43,7 @@ export function HeroCarousel({ hero }: HeroCarouselProps) {
 
   const title = isBanner ? (hero.message ?? '') : hero.message || base?.title || ''
   const description = isBanner ? '' : (base?.description ?? '')
-  const cta = hero.actionLabel ? `${hero.actionLabel} >` : (base?.cta ?? '보러가기 >')
+  const cta = hero.actionLabel ? `${hero.actionLabel}` : (base?.cta ?? '보러가기')
   const href = base?.href ?? '/campaigns'
 
   return (

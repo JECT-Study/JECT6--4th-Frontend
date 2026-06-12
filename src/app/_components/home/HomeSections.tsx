@@ -1,13 +1,11 @@
 'use client'
 
-import { Heart, LockKeyhole } from 'lucide-react'
+import { Heart } from 'lucide-react'
 
 import type { PopularBloggersResponse } from '@/entities/blog-analysis'
 import type { FeedHero } from '@/entities/feed'
 
 import { HeroCarousel } from './HeroCarousel'
-import { aiCampaigns } from './home.mock'
-import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
 
 export function HeroSection({ hero }: { hero: FeedHero }) {

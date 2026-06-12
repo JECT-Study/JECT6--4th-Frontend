@@ -19,8 +19,8 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
   const [isLiked, setIsLiked] = useState(initialIsLiked)
 
   async function handleLike() {
-    const result = await campaignService.toggleLike(campaignId)
-    setIsLiked(result.liked)
+    await campaignService.toggleLike(campaignId)
+    setIsLiked(!isLiked)
   }
 
   const { analyzed, topKeywords } = likesAnalysis
@@ -54,7 +54,9 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
       </div>
       <Button variant="tertiary" onClick={handleLike}>
         <div className="flex items-center gap-3.5">
-          <HeartIcon className={`size-8 ${isLiked ? 'text-red_50' : ''}`} />
+          <HeartIcon
+            className={`size-8 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-black'}`}
+          />
           {isLiked ? '관심공고 취소' : '관심공고 담기'}
         </div>
       </Button>

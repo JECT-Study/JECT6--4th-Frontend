@@ -2,16 +2,19 @@
 
 import Link from 'next/link'
 
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { Heart, User } from 'lucide-react'
 
 import { TYPE_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
+import { campaignService } from '@/service'
 
 import type { Campaign } from '@/entities/campaign'
 
 import { saveRecentView } from '@/shared/hooks/useRecentViews'
+import { BlogTag } from '@/shared/ui/blog-card/BlogTag'
 
 function formatDday(applyEndDate: string) {
   const diff = Math.ceil((new Date(applyEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -32,48 +35,88 @@ export function HomeCampaignCard({
   className = '',
   fitLabel,
   id,
+  liked = false,
   recruitCount,
   title,
   type,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
+  const [isLiked, setIsLiked] = useState(liked)
+  const [isLikeSubmitting, setIsLikeSubmitting] = useState(false)
   const isHorizontal = variant === 'horizontal'
   const dday = formatDday(applyEndDate)
   const competitionLabel = `모집 ${recruitCount ?? '-'}명`
 
-  const campaign: Campaign = { applyEndDate, brandName, id, recruitCount, title, type }
+  const campaign: Campaign = {
+    applyEndDate,
+    brandName,
+    id,
+    liked: isLiked,
+    recruitCount,
+    title,
+    type,
+  }
+
+  useEffect(() => {
+    setIsLiked(liked)
+  }, [liked])
+
+  async function handleLike() {
+    if (isLikeSubmitting) return
+
+    setIsLikeSubmitting(true)
+
+    try {
+      await campaignService.toggleLike(id)
+      setIsLiked(prev => !prev)
+    } finally {
+      setIsLikeSubmitting(false)
+    }
+  }
 
   return (
-    <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
-      <article
+    <article
+      className={cn(
+        'flex bg-transparent font-pretendard text-neutral_20',
+        isHorizontal
+          ? 'min-h-43 max-w-none flex-col gap-4 sm:flex-row sm:gap-6'
+          : 'h-80.5 max-w-70.5 flex-col gap-3',
+        className
+      )}
+    >
+      <div
         className={cn(
-          'flex bg-transparent font-pretendard text-neutral_20',
-          isHorizontal
-            ? 'min-h-43 max-w-none flex-col gap-4 sm:flex-row sm:gap-6'
-            : 'h-80.5 max-w-70.5 flex-col gap-3',
-          className
+          'relative shrink-0',
+          isHorizontal ? 'min-h-43 w-full sm:w-[45%]' : 'h-43 w-full'
         )}
       >
-        {isHorizontal ? (
-          <HomeCardImage className="min-h-43 w-full sm:w-[45%]" />
-        ) : (
-          <HomeCardImage className="h-43 w-full">
+        <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
+          <HomeCardImage className="h-full w-full">
             {variant === 'ai' && fitLabel && (
               <span className="absolute left-3 top-4 rounded-sm bg-red_95 px-3 py-1 text-12 font-semibold leading-16 text-red_40">
                 {fitLabel}
               </span>
             )}
           </HomeCardImage>
-        )}
+        </Link>
+        <button
+          type="button"
+          disabled={isLikeSubmitting}
+          className="absolute right-4 top-4 flex size-8.5 cursor-pointer items-center justify-center rounded-full bg-white text-neutral_20 disabled:cursor-not-allowed disabled:opacity-70"
+          onClick={() => void handleLike()}
+        >
+          <Heart
+            className={`size-5 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-neutral_20'}`}
+            aria-hidden
+          />
+          <span className="sr-only">{isLiked ? '관심공고 취소' : '관심공고 담기'}</span>
+        </button>
+      </div>
 
+      <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
         <div className={cn('flex min-w-0 flex-1 flex-col gap-2', isHorizontal && 'py-1')}>
           <div className="flex flex-col gap-2 border-b border-neutral_95 pb-3">
-            <div className="flex items-center gap-2 text-green_40">
-              <span className="flex size-5 items-center justify-center rounded-full bg-green_40 text-[8px] font-bold leading-none text-white">
-                blog
-              </span>
-              <span className="text-16 font-bold leading-24">blog</span>
-            </div>
+            <BlogTag />
 
             <h3
               className={cn(
@@ -105,8 +148,8 @@ export function HomeCampaignCard({
             <span>{competitionLabel}</span>
           </div>
         </div>
-      </article>
-    </Link>
+      </Link>
+    </article>
   )
 }
 
@@ -114,9 +157,6 @@ function HomeCardImage({ children, className = '' }: { children?: ReactNode; cla
   return (
     <div className={cn('relative shrink-0 rounded-md bg-neutral_99', className)} aria-hidden>
       {children}
-      <span className="absolute right-4 top-4 flex size-8.5 items-center justify-center rounded-full bg-white text-neutral_20">
-        <Heart className="size-5" />
-      </span>
     </div>
   )
 }

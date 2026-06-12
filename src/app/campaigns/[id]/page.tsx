@@ -1,5 +1,7 @@
 import { campaignService } from '@/service'
 
+import { BlogTag } from '@/shared/ui/blog-card/BlogTag'
+
 import { AdditionalContent } from './_components/AdditionalContent'
 import Details from './_components/Details'
 
@@ -19,7 +21,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <div className="flex flex-col gap-8.25 pt-23 max-w-167.5">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4">
-            <div>{data.channel}</div>
+            <BlogTag />
             <div className="text-22 leading-6.5">{data.brandName}</div>
           </div>
           <h1 className="text-[32px] leading-40 font-medium">{data.title}</h1>
