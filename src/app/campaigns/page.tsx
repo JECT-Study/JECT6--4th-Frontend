@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 
 import { campaignService } from '@/service'
 
@@ -27,7 +27,23 @@ function hasNextPage({
   return serverHasNext ?? (itemCount >= pageSize && itemCount < totalElements)
 }
 
-export default function Page() {
+function CampaignsPageFallback() {
+  return (
+    <div className="mx-auto flex w-full max-w-300 flex-col">
+      <CampaignList
+        campaigns={[]}
+        hasMore={false}
+        isLoading
+        isLoadingMore={false}
+        title="공고 전체 보기"
+        onLoadMore={() => undefined}
+        totalElements={0}
+      />
+    </div>
+  )
+}
+
+function CampaignsPageContent() {
   const searchParams = useSearchParams()
   const keyword = searchParams.get('keyword')?.trim() ?? ''
   const [params, setParams] = useState<CampaignListParams>({})
@@ -138,5 +154,13 @@ export default function Page() {
         totalElements={totalElements}
       />
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<CampaignsPageFallback />}>
+      <CampaignsPageContent />
+    </Suspense>
   )
 }
