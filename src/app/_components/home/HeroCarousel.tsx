@@ -4,7 +4,9 @@ import type { FeedHero, HeroType } from '@/entities/feed'
 
 import { Button } from '@/shared/ui'
 
-const HERO_CONTENT: Partial<Record<HeroType, { title: string; description: string; cta: string; href: string }>> = {
+const HERO_CONTENT: Partial<
+  Record<HeroType, { title: string; description: string; cta: string; href: string }>
+> = {
   AI_MATCHED: {
     title: '내 블로그 진단하고 더 정확한 공고 추천받기',
     description: 'AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.',
@@ -39,8 +41,8 @@ export function HeroCarousel({ hero }: HeroCarouselProps) {
   const base = HERO_CONTENT[hero.type]
   const isBanner = hero.type === 'BANNER'
 
-  const title = isBanner ? (hero.message ?? '') : (base?.title ?? hero.message ?? '')
-  const description = isBanner ? '' : (hero.message ?? base?.description ?? '')
+  const title = isBanner ? (hero.message ?? '') : hero.message || base?.title || ''
+  const description = isBanner ? '' : (base?.description ?? '')
   const cta = hero.actionLabel ? `${hero.actionLabel} >` : (base?.cta ?? '보러가기 >')
   const href = base?.href ?? '/campaigns'
 
