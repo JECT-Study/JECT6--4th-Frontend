@@ -1,7 +1,7 @@
 import { blogAnalysisService, feedService } from '@/service'
 
 import type { PopularBloggersResponse } from '@/entities/blog-analysis'
-import type { FeedBody, FeedHero } from '@/entities/feed'
+import type { FeedBody } from '@/entities/feed'
 
 import AnalysisSection from './_components/home/AnalysisSection'
 import { HomeCarouselSection } from './_components/home/HomeCarouselSection'
@@ -23,22 +23,16 @@ async function getPopularBloggers(): Promise<PopularBloggersResponse | null> {
 }
 
 export default async function Page() {
-  const heroFallback: FeedHero = { type: 'ANONYMOUS', message: '', actionLabel: '' }
   const feedBodyFallback: FeedBody = { popular: [], closingSoon: [], guaranteed: [] }
 
-  const heroPromise: Promise<FeedHero> = feedService.getHero().catch(() => heroFallback)
   const feedBodyPromise: Promise<FeedBody> = feedService.getBody().catch(() => feedBodyFallback)
   const bloggersPromise = getPopularBloggers()
 
-  const [hero, feedBody, bloggers] = await Promise.all([
-    heroPromise,
-    feedBodyPromise,
-    bloggersPromise,
-  ])
+  const [feedBody, bloggers] = await Promise.all([feedBodyPromise, bloggersPromise])
 
   return (
     <main className="bg-white pb-16">
-      <HeroSection hero={hero} />
+      <HeroSection />
       <AnalysisSection />
       <HomeCarouselSection
         title="당첨확률이 높은 공고"

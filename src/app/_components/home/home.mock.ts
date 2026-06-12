@@ -1,7 +1,12 @@
 import type { Campaign } from '@/entities/campaign'
 import type { FeedHero } from '@/entities/feed'
 
-export const heroSlide: FeedHero = { type: 'ANONYMOUS', message: '', actionLabel: '' }
+export const heroSlides: FeedHero[] = [
+  { type: 'ANONYMOUS', message: '', actionLabel: '지금 시작하기' },
+  { type: 'AI_MATCHED', message: '', actionLabel: 'AI 맞춤 체험단 보기' },
+  { type: 'POPULAR', message: '', actionLabel: '인기 체험단 보기' },
+  { type: 'ACTIVITY_BASED', message: '', actionLabel: '지역별 체험단 보기' },
+]
 
 export const aiCampaigns: (Campaign & { fitLabel: string })[] = [
   {

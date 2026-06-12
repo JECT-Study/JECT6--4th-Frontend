@@ -1,4 +1,8 @@
+import Image from 'next/image'
+
 import type { HTMLAttributes } from 'react'
+
+import BlogThumbnailImage from '@/shared/assets/icons/thumbnail.jpeg'
 
 export type BlogCardVariant = 'creator' | 'vertical' | 'ai' | 'horizontal' | 'thumbnail'
 
@@ -65,7 +69,9 @@ export function BlogCard({
       )}
 
       {hasThumbnail && (
-        <div className="h-[120px] w-full rounded-[10px] bg-neutral_95" aria-hidden />
+        <div className="relative h-[120px] w-full overflow-hidden rounded-[10px] bg-neutral_95">
+          <Image src={BlogThumbnailImage} alt="" fill className="object-cover" sizes="282px" />
+        </div>
       )}
 
       <div className="flex flex-wrap gap-2">

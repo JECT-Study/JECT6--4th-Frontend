@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { User } from 'lucide-react'
+
 import { campaignService } from '@/service'
 
 import type { CampaignLikesAnalysis } from '@/entities/campaign'
@@ -19,8 +21,8 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
   const [isLiked, setIsLiked] = useState(initialIsLiked)
 
   async function handleLike() {
-    const result = await campaignService.toggleLike(campaignId)
-    setIsLiked(result.liked)
+    await campaignService.toggleLike(campaignId)
+    setIsLiked(!isLiked)
   }
 
   const { analyzed, topKeywords } = likesAnalysis
@@ -33,9 +35,11 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
           {Array.from({ length: 3 }, (_, i) => (
             <div
               key={i}
-              className="size-8 rounded-full border border-[#A8A8A8] bg-white shadow-md"
+              className="flex size-8 items-center justify-center rounded-full border border-[#A8A8A8] bg-white text-neutral_60 shadow-md"
               style={{ marginLeft: i === 0 ? 0 : '-8px', zIndex: 3 - i }}
-            />
+            >
+              <User className="size-4" aria-hidden />
+            </div>
           ))}
         </div>
         {analyzed && topKeywords && topKeywords.length > 0 ? (
@@ -52,9 +56,11 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
           </p>
         )}
       </div>
-      <Button variant="tertiary" onClick={handleLike}>
+      <Button variant="tertiary" onClick={() => void handleLike()}>
         <div className="flex items-center gap-3.5">
-          <HeartIcon className={`size-8 ${isLiked ? 'text-red_50' : ''}`} />
+          <HeartIcon
+            className={`size-8 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-black'}`}
+          />
           {isLiked ? '관심공고 취소' : '관심공고 담기'}
         </div>
       </Button>

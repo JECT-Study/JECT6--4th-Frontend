@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
@@ -19,6 +20,7 @@ import { userService } from '@/service'
 
 import { InterestCategory, UserChannel } from '@/entities/user'
 
+import AuthBackgroundImage from '@/shared/assets/icons/auth_background.png'
 import CheckIcon from '@/shared/assets/icons/checked.svg'
 import UnCheckIcon from '@/shared/assets/icons/unchecked.svg'
 import XIcon from '@/shared/assets/icons/x.svg'
@@ -144,7 +146,16 @@ export default function Page() {
 
   return (
     <form onSubmit={e => void handleSubmit(onSubmit)(e)} className="flex w-full max-w-360 mx-auto">
-      <div className="bg-[#FAFAFA] w-10/19">이미지</div>
+      <div className="relative min-h-screen w-10/19 overflow-hidden">
+        <Image
+          src={AuthBackgroundImage}
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 53vw"
+          className="object-contain"
+        />
+      </div>
       <div className="px-13 pt-21.25 flex-1">
         <div className="flex flex-col gap-4.5 mb-13.75">
           <h1 className="text-36 leading-7.5 font-medium">[회원가입]</h1>
