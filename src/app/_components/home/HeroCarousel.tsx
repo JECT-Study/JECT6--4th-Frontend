@@ -1,5 +1,17 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
+import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
+import { cn } from '@/lib/utils'
+
 import type { FeedHero, HeroType } from '@/entities/feed'
 
 import { Button } from '@/shared/ui'
@@ -34,10 +46,66 @@ const HERO_CONTENT: Partial<
 }
 
 interface HeroCarouselProps {
-  hero: FeedHero
+  heroes: FeedHero[]
 }
 
-export function HeroCarousel({ hero }: HeroCarouselProps) {
+export function HeroCarousel({ heroes }: HeroCarouselProps) {
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    if (!api) return
+
+    const handleSelect = () => setCurrent(api.selectedScrollSnap())
+
+    handleSelect()
+    api.on('select', handleSelect)
+    api.on('reInit', handleSelect)
+
+    return () => {
+      api.off('select', handleSelect)
+      api.off('reInit', handleSelect)
+    }
+  }, [api])
+
+  if (heroes.length === 0) return null
+
+  return (
+    <Carousel setApi={setApi} opts={{ loop: true }}>
+      <CarouselContent className="ml-0">
+        {heroes.map((hero, index) => (
+          <CarouselItem key={`${hero.type}-${index}`} className="pl-0">
+            <HeroSlide hero={hero} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+
+      {heroes.length > 1 && (
+        <>
+          <CarouselPrevious className="left-4 hidden bg-white/90 text-neutral_30 hover:bg-white md:flex" />
+          <CarouselNext className="right-4 hidden bg-white/90 text-neutral_30 hover:bg-white md:flex" />
+          <div className="absolute bottom-5 left-8 z-20 flex gap-2 md:left-12">
+            {heroes.map((hero, index) => (
+              <button
+                key={`${hero.type}-indicator-${index}`}
+                type="button"
+                aria-label={`${index + 1}번째 배너 보기`}
+                aria-current={current === index}
+                onClick={() => api?.scrollTo(index)}
+                className={cn(
+                  'h-2 rounded-full transition-all',
+                  current === index ? 'w-6 bg-red_50' : 'w-2 bg-neutral_70'
+                )}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </Carousel>
+  )
+}
+
+function HeroSlide({ hero }: { hero: FeedHero }) {
   const base = HERO_CONTENT[hero.type]
   const isBanner = hero.type === 'BANNER'
 
@@ -47,7 +115,7 @@ export function HeroCarousel({ hero }: HeroCarouselProps) {
   const href = base?.href ?? '/campaigns'
 
   return (
-    <div className="relative flex min-h-86 overflow-hidden rounded-none bg-neutral_95 px-8 py-12 md:px-12 xl:items-center xl:py-0">
+    <div className="relative flex min-h-86 overflow-hidden rounded-none bg-linear-to-t from-red_80 to-white px-8 py-12 md:px-12 xl:items-center xl:py-0">
       <div className="relative z-10 flex max-w-150 flex-col gap-5">
         <div className="flex flex-col gap-2">
           <h1 className="m-0 text-20 font-semibold leading-32 text-neutral_30">{title}</h1>
