@@ -79,7 +79,7 @@ export type BlogAnalysisResponse = z.infer<typeof blogAnalysisResponseSchema>
 // GET /blog/analysis/history 아이템
 export const analysisHistoryItemSchema = z.object({
   id: z.number(),
-  channelUrl: z.string(),
+  channelUrl: z.string().nullable(),
   analyzedAt: z.string(),
   isLocked: z.boolean(),
 })
