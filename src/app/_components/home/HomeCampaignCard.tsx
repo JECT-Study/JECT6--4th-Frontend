@@ -95,7 +95,7 @@ export function HomeCampaignCard({
           isHorizontal ? 'min-h-43 w-full sm:w-[45%]' : 'h-43 w-full'
         )}
       >
-        <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
+        <Link href={`/campaigns/${id}`} prefetch={false} onClick={() => saveRecentView(campaign)}>
           <HomeCardImage className="h-full w-full" showBlogThumbnail={isBlogCampaign}>
             {variant === 'ai' && fitLabel && (
               <span className="absolute left-3 top-4 rounded-sm bg-red_95 px-3 py-1 text-12 font-semibold leading-16 text-red_40">
@@ -118,7 +118,7 @@ export function HomeCampaignCard({
         </button>
       </div>
 
-      <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
+      <Link href={`/campaigns/${id}`} prefetch={false} onClick={() => saveRecentView(campaign)}>
         <div className={cn('flex min-w-0 flex-1 flex-col gap-2', isHorizontal && 'py-1')}>
           <div className="flex flex-col gap-2 border-b border-neutral_95 pb-3">
             <BlogTag />

@@ -134,7 +134,7 @@ export default function AnalysisSection() {
 
 function RecommendedCampaignCard({ campaign }: { campaign: RecommendedCampaign }) {
   return (
-    <Link href={`/campaigns/${campaign.id}`}>
+    <Link href={`/campaigns/${campaign.id}`} prefetch={false}>
       <article className="flex h-80.5 max-w-none flex-col gap-4 bg-transparent p-5 font-pretendard text-neutral_20">
         <div
           className="relative flex h-34 shrink-0 items-start justify-between rounded-md bg-neutral_99 p-4"

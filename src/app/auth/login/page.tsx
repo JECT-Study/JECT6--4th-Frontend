@@ -1,43 +1,38 @@
 'use client'
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
-
-import { useSetAtom } from 'jotai'
-
-import { authService } from '@/service'
-
-import { authAtom } from '@/entities/auth'
 import type { Provider } from '@/entities/user'
 
 import AuthBackgroundImage from '@/shared/assets/icons/auth_background.png'
 import { Button } from '@/shared/ui'
 
+const getOAuthAuthorizationUrl = (provider: Provider) => {
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+
+  if (!apiBaseUrl) {
+    return null
+  }
+
+  return new URL(`/oauth2/authorization/${provider.toLowerCase()}`, apiBaseUrl).toString()
+}
+
 export default function Page() {
-  const router = useRouter()
-  const setAuth = useSetAtom(authAtom)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleClick = async (type: Provider) => {
+  const handleClick = (type: Provider) => {
+    const authorizationUrl = getOAuthAuthorizationUrl(type)
+
+    if (!authorizationUrl) {
+      setErrorMessage('API 서버 주소가 설정되지 않았어요.')
+      return
+    }
+
     setIsLoading(true)
     setErrorMessage('')
-
-    try {
-      const token = await authService.login(type, {
-        code: '1234',
-        redirectUri: window.location.origin + window.location.pathname,
-      })
-
-      setAuth({ ...token, accessToken: '1234' })
-      router.replace(token.user.isProfileCompleted ? '/' : '/onboarding')
-    } catch {
-      setErrorMessage('로그인에 실패했어요. 다시 시도해주세요.')
-    } finally {
-      setIsLoading(false)
-    }
+    window.location.href = authorizationUrl
   }
 
   return (

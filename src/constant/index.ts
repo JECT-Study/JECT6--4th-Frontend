@@ -36,10 +36,11 @@ export const CAMPAIGN_CATEGORY_LABEL: Record<CampaignCategory, string> = {
   BEAUTY: '뷰티',
   FASHION: '패션',
   TRAVEL: '여행',
-  LIFESTYLE: '라이프스타일',
-  IT: '테크/IT',
-  SPORTS: '스포츠',
   CULTURE: '문화',
+  TECH_IT: '테크/IT',
+  PET: '반려동물',
+  LIVING: '라이프스타일',
+  ETC: '기타',
 }
 
 export const TYPE_LABEL: Record<CampaignType, string> = {

@@ -5,10 +5,11 @@ export const CampaignCategory = z.enum([
   'BEAUTY',
   'FASHION',
   'TRAVEL',
-  'LIFESTYLE',
-  'IT',
-  'SPORTS',
   'CULTURE',
+  'TECH_IT',
+  'PET',
+  'LIVING',
+  'ETC',
 ])
 export type CampaignCategory = z.infer<typeof CampaignCategory>
 

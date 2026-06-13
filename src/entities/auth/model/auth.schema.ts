@@ -24,8 +24,8 @@ export type TokenUser = z.infer<typeof tokenUserSchema>
 export const tokenResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
-  expiresIn: z.number(),
-  tokenType: z.string(),
-  user: tokenUserSchema,
+  expiresIn: z.coerce.number().positive(),
+  tokenType: z.string().default('Bearer'),
+  user: tokenUserSchema.optional(),
 })
 export type TokenResponse = z.infer<typeof tokenResponseSchema>

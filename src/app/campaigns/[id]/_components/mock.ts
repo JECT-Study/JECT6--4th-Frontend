@@ -75,7 +75,7 @@ export const mockCampaignDetails: CampaignDetail[] = [
     id: 3,
     title: '[전국] 홈카페 키트 리뷰어',
     brandName: '그린하우스',
-    category: 'LIFESTYLE',
+    category: 'LIVING',
     type: 'DELIVERY',
     channel: 'BLOG',
     images: [{ url: '' }],

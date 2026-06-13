@@ -1,17 +1,64 @@
-import axios from 'axios'
+import axios, { AxiosHeaders } from 'axios'
+
+import type { TokenResponse } from '@/entities/auth'
 
 import { keysToCamel, keysToSnake } from './case-converter'
+
+const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/refresh']
+
+const getStoredAuth = (): Pick<TokenResponse, 'accessToken' | 'tokenType'> | null => {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const storedAuth = window.localStorage.getItem('auth')
+
+  if (!storedAuth) {
+    return null
+  }
+
+  try {
+    const parsedAuth = JSON.parse(storedAuth) as Partial<TokenResponse> | null
+
+    if (!parsedAuth?.accessToken) {
+      return null
+    }
+
+    return {
+      accessToken: parsedAuth.accessToken,
+      tokenType: parsedAuth.tokenType ?? 'Bearer',
+    }
+  } catch {
+    return null
+  }
+}
 
 export const http = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer 1234',
   },
 })
 
 // 요청 바디·쿼리를 snake_case로 변환해 서버로 보낸다.
 http.interceptors.request.use(config => {
+  const headers = AxiosHeaders.from(config.headers)
+  const isPublicPath = PUBLIC_PATHS.some(path => config.url?.startsWith(path))
+
+  if (isPublicPath) {
+    headers.delete('Authorization')
+  } else {
+    const auth = getStoredAuth()
+
+    if (auth) {
+      headers.set('Authorization', `${auth.tokenType} ${auth.accessToken}`)
+    } else {
+      headers.delete('Authorization')
+    }
+  }
+
+  config.headers = headers
+
   if (config.data) {
     config.data = keysToSnake(config.data)
   }

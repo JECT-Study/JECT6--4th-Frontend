@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 import { campaignService } from '@/service'
 
+import { CAMPAIGN_CATEGORY_LABEL } from '@/constant'
 import type { Campaign, CampaignCategory } from '@/entities/campaign'
 
 import { Button } from '@/shared/ui'
@@ -13,16 +14,21 @@ import { Button } from '@/shared/ui'
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
 
-const CATEGORY_OPTIONS: { label: string; value: CampaignCategory }[] = [
-  { label: '음식', value: 'FOOD' },
-  { label: '뷰티', value: 'BEAUTY' },
-  { label: '패션', value: 'FASHION' },
-  { label: '여행', value: 'TRAVEL' },
-  { label: '라이프스타일', value: 'LIFESTYLE' },
-  { label: '테크/IT', value: 'IT' },
-  { label: '스포츠', value: 'SPORTS' },
-  { label: '문화', value: 'CULTURE' },
+const CATEGORY_VALUES: CampaignCategory[] = [
+  'FOOD',
+  'BEAUTY',
+  'FASHION',
+  'TRAVEL',
+  'CULTURE',
+  'TECH_IT',
+  'PET',
+  'LIVING',
 ]
+
+const CATEGORY_OPTIONS: { label: string; value: CampaignCategory }[] = CATEGORY_VALUES.map(value => ({
+  value,
+  label: CAMPAIGN_CATEGORY_LABEL[value],
+}))
 
 export default function PopularCampaignsSection({
   campaigns,
