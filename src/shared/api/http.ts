@@ -2,16 +2,37 @@ import axios from 'axios'
 
 import { keysToCamel, keysToSnake } from './case-converter'
 
+const isWrappedResponse = (value: unknown): value is { success: unknown; data: unknown } =>
+  value !== null && typeof value === 'object' && 'success' in value && 'data' in value
+
 export const http = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer 1234',
   },
 })
 
 // 요청 바디·쿼리를 snake_case로 변환해 서버로 보낸다.
 http.interceptors.request.use(config => {
+  if (typeof window !== 'undefined') {
+    const storedAuth = window.localStorage.getItem('auth')
+
+    if (storedAuth) {
+      try {
+        const auth = JSON.parse(storedAuth) as { accessToken?: string; tokenType?: string }
+        const tokenType = auth.tokenType || 'Bearer'
+
+        if (auth.accessToken) {
+          config.headers.Authorization = `${tokenType} ${auth.accessToken}`
+        }
+      } catch {
+        delete config.headers.Authorization
+      }
+    } else {
+      delete config.headers.Authorization
+    }
+  }
+
   if (config.data) {
     config.data = keysToSnake(config.data)
   }
@@ -24,15 +45,10 @@ http.interceptors.request.use(config => {
 // 응답 데이터를 camelCase로 변환하고, { success, data } 래퍼를 벗겨서 프론트로 전달한다.
 http.interceptors.response.use(
   response => {
-    response.data = keysToCamel(response.data)
-    if (
-      response.data !== null &&
-      typeof response.data === 'object' &&
-      'success' in response.data &&
-      'data' in response.data
-    ) {
-      response.data = response.data.data
-    }
+    const responseData = keysToCamel(response.data)
+
+    response.data = isWrappedResponse(responseData) ? responseData.data : responseData
+
     return response
   },
   (error: unknown) => {

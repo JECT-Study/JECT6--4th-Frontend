@@ -72,7 +72,7 @@ function HomeCreatorPostCard({
             {category} 블로거
           </span> */}
         </header>
-        <div className="flex h-39.5 items-center justify-center rounded-md border">
+        <div className="flex h-39.5 items-center justify-center ㅇㄹㄴㄷㄹ rounded-md border">
           <Image src={LogoImage} alt="Boost" className="h-auto w-32" />
         </div>
         <h3 className="m-0 line-clamp-2 text-18 font-semibold leading-28 text-neutral_20">

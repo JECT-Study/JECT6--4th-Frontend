@@ -21,17 +21,23 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
+  const handleKakaoClick = () => {
+    setIsLoading(true)
+    setErrorMessage('')
+
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080'
+
+    window.location.href = `${apiBaseUrl.replace(/\/$/, '')}/api/auth/login/kakao`
+  }
+
   const handleClick = async (type: Provider) => {
     setIsLoading(true)
     setErrorMessage('')
 
     try {
-      const token = await authService.login(type, {
-        code: '1234',
-        redirectUri: window.location.origin + window.location.pathname,
-      })
+      const token = await authService.login(type)
 
-      setAuth({ ...token, accessToken: '1234' })
+      setAuth(token)
       router.replace(token.user.isProfileCompleted ? '/' : '/onboarding')
     } catch {
       setErrorMessage('로그인에 실패했어요. 다시 시도해주세요.')
@@ -63,7 +69,7 @@ export default function Page() {
             className="border border-neutral_90"
             size="lg"
             disabled={isLoading}
-            onClick={() => void handleClick('KAKAO')}
+            onClick={handleKakaoClick}
           >
             카카오 계정으로 계속하기
           </Button>
