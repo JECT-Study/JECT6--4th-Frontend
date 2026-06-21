@@ -2,9 +2,7 @@
 
 import Link from 'next/link'
 
-import { useEffect, useState } from 'react'
-
-import { campaignService } from '@/service'
+import { usePopularCampaigns } from '@/app/hooks/usePopularCampaigns'
 
 import type { Campaign, CampaignCategory } from '@/entities/campaign'
 
@@ -31,48 +29,12 @@ export default function PopularCampaignsSection({
   campaigns: Campaign[]
   showHeader?: boolean
 }) {
-  const [category, setCategory] = useState<CampaignCategory>('FOOD')
-  const [displayedCampaigns, setDisplayedCampaigns] = useState(campaigns)
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    setDisplayedCampaigns(campaigns)
-  }, [campaigns])
-
-  useEffect(() => {
-    let ignore = false
-
-    async function fetchCampaignsByCategory() {
-      setIsLoading(true)
-
-      try {
-        const response = await campaignService.getCampaigns({
-          category,
-          page: 0,
-          size: 6,
-          sort: 'popular',
-        })
-
-        if (!ignore) {
-          setDisplayedCampaigns(response.content)
-        }
-      } catch {
-        if (!ignore) {
-          setDisplayedCampaigns(campaigns)
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoading(false)
-        }
-      }
-    }
-
-    void fetchCampaignsByCategory()
-
-    return () => {
-      ignore = true
-    }
-  }, [campaigns, category])
+  const {
+    campaigns: displayedCampaigns,
+    category,
+    isLoading,
+    setCategory,
+  } = usePopularCampaigns(campaigns)
 
   return (
     <section
