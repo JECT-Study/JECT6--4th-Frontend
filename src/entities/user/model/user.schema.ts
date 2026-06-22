@@ -26,15 +26,34 @@ export const activityChannelSchema = z.object({
 export type ActivityChannel = z.infer<typeof activityChannelSchema>
 
 // GET /users/me 응답
-export const userProfileSchema = z.object({
-  id: z.number(),
-  nickname: z.string(),
-  profileCompleted: z.boolean(),
-  categoryTypes: z.array(InterestCategory),
-  activityTypes: z.array(UserChannel),
-  regionIds: z.array(z.number()),
-  blogs: z.array(blogSchema),
-})
+export const userProfileSchema = z
+  .object({
+    id: z.number(),
+    nickname: z.string().nullable(),
+    profileCompleted: z.boolean().optional(),
+    isProfileCompleted: z.boolean().optional(),
+    isOnboardingCompleted: z.boolean().optional(),
+    categoryTypes: z
+      .array(InterestCategory)
+      .nullish()
+      .transform(value => value ?? []),
+    activityTypes: z
+      .array(UserChannel)
+      .nullish()
+      .transform(value => value ?? []),
+    regionIds: z
+      .array(z.number())
+      .nullish()
+      .transform(value => value ?? []),
+    blogs: z
+      .array(blogSchema)
+      .nullish()
+      .transform(value => value ?? []),
+  })
+  .transform(({ isOnboardingCompleted, isProfileCompleted, profileCompleted, ...profile }) => ({
+    ...profile,
+    profileCompleted: profileCompleted ?? isProfileCompleted ?? isOnboardingCompleted ?? false,
+  }))
 export type UserProfile = z.infer<typeof userProfileSchema>
 
 // PATCH /users/me 요청

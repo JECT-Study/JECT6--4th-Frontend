@@ -20,12 +20,17 @@ export const tokenUserSchema = z.object({
 })
 export type TokenUser = z.infer<typeof tokenUserSchema>
 
-// POST /auth/login/{provider} 응답
-export const tokenResponseSchema = z.object({
+export const authTokenSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   expiresIn: z.number(),
   tokenType: z.string(),
+})
+export type AuthToken = z.infer<typeof authTokenSchema>
+
+// POST /auth/login/{provider} 응답
+export const tokenResponseSchema = authTokenSchema.extend({
   user: tokenUserSchema,
 })
 export type TokenResponse = z.infer<typeof tokenResponseSchema>
+export type AuthState = AuthToken & { user?: TokenUser }

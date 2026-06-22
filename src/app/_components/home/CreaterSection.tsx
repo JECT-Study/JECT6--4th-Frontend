@@ -1,31 +1,32 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { Heart, User } from 'lucide-react'
 
+import { blogAnalysisService } from '@/service'
+
 import type { PopularBloggersResponse } from '@/entities/blog-analysis'
 
 import LogoImage from '@/shared/assets/icons/logo.png'
 
-import { HeroCarousel } from './HeroCarousel'
-import { heroSlides } from './home.mock'
 import { SectionHeader } from './SectionHeader'
 
-export function HeroSection() {
-  return (
-    <section
-      id="home-hero"
-      className="mx-auto w-full max-w-300 px-5 pt-10 md:px-8 lg:px-0 xl:pt-14"
-    >
-      <HeroCarousel heroes={heroSlides} />
-    </section>
-  )
+async function getPopularBloggers(): Promise<PopularBloggersResponse | null> {
+  try {
+    const history = await blogAnalysisService.getHistory()
+    const latestId = history.content[0]?.id
+    if (!latestId) return null
+
+    return await blogAnalysisService.getBloggers(latestId)
+  } catch {
+    return null
+  }
 }
 
-export function CreatorPostsSection({ bloggers }: { bloggers: PopularBloggersResponse | null }) {
-  if (!bloggers) return null
+export default async function CreatorPostsSection() {
+  const bloggers = await getPopularBloggers()
+
+  if (!bloggers?.bloggers.length) return null
 
   return (
     <section
@@ -35,7 +36,7 @@ export function CreatorPostsSection({ bloggers }: { bloggers: PopularBloggersRes
       <SectionHeader title="인기있는 블로거들의 포스팅 엿보기" />
       <div className="grid gap-6 lg:grid-cols-2">
         {bloggers.bloggers.map(blogger => (
-          <HomeCreatorPostCard key={blogger.nickname} {...blogger} category={bloggers.category} />
+          <HomeCreatorPostCard key={blogger.nickname} {...blogger} />
         ))}
       </div>
     </section>
@@ -46,12 +47,10 @@ function HomeCreatorPostCard({
   nickname,
   overallScore,
   profileUrl,
-  category,
 }: {
   nickname: string
   overallScore: number
   profileUrl: string
-  category: string
 }) {
   return (
     <Link href={profileUrl} target="_blank" rel="noopener noreferrer">
@@ -69,11 +68,11 @@ function HomeCreatorPostCard({
               <span className="text-14 font-medium leading-20 text-neutral_60">{nickname}</span>
             </div>
           </div>
-          <span className="shrink-0 rounded-sm bg-red_80 px-3 py-1 text-12 font-semibold leading-16 text-white">
+          {/* <span className="shrink-0 rounded-sm bg-red_80 px-3 py-1 text-12 font-semibold leading-16 text-white">
             {category} 블로거
-          </span>
+          </span> */}
         </header>
-        <div className="flex h-39.5 items-center justify-center rounded-md border">
+        <div className="flex h-39.5 items-center justify-center ㅇㄹㄴㄷㄹ rounded-md border">
           <Image src={LogoImage} alt="Boost" className="h-auto w-32" />
         </div>
         <h3 className="m-0 line-clamp-2 text-18 font-semibold leading-28 text-neutral_20">

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { tokenResponseSchema, type LoginRequest } from '@/entities/auth'
+import { tokenResponseSchema } from '@/entities/auth'
 import {
   analyzeJobResponseSchema,
   analysisHistoryResponseSchema,
@@ -53,9 +53,9 @@ import { http } from '@/shared/api'
 
 export const authService = {
   /** POST /auth/login/{provider} — OAuth 코드로 서비스 토큰 발급 */
-  login: (provider: Provider, data: LoginRequest) =>
+  login: (provider: Provider) =>
     http
-      .post(`/api/auth/login/${provider.toLowerCase()}`, data)
+      .post(`/api/auth/login/${provider.toLowerCase()}`)
       .then(res => tokenResponseSchema.parse(res.data)),
 
   /** POST /auth/logout — Redis refresh token 세션 제거 */

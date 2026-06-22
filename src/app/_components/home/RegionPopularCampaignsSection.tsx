@@ -2,11 +2,8 @@
 
 import Link from 'next/link'
 
-import { useEffect, useState } from 'react'
-
-import { campaignService } from '@/service'
-
 import { LocationDropdown } from '@/app/campaigns/_components/LocationDropdown'
+import { useRegionPopularCampaigns } from '@/app/hooks/useRegionPopularCampaigns'
 
 import type { Campaign } from '@/entities/campaign'
 
@@ -15,53 +12,12 @@ import { Button } from '@/shared/ui'
 import { HomeCampaignCard } from './HomeCampaignCard'
 
 export default function RegionPopularCampaignsSection({ campaigns }: { campaigns: Campaign[] }) {
-  const [region, setRegion] = useState('')
-  const [displayedCampaigns, setDisplayedCampaigns] = useState(campaigns)
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    setDisplayedCampaigns(campaigns)
-  }, [campaigns])
-
-  useEffect(() => {
-    if (!region) {
-      setDisplayedCampaigns(campaigns)
-      return
-    }
-
-    let ignore = false
-
-    async function fetchCampaignsByRegion() {
-      setIsLoading(true)
-
-      try {
-        const response = await campaignService.getCampaigns({
-          region,
-          page: 0,
-          size: 6,
-          sort: 'popular',
-        })
-
-        if (!ignore) {
-          setDisplayedCampaigns(response.content)
-        }
-      } catch {
-        if (!ignore) {
-          setDisplayedCampaigns(campaigns)
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoading(false)
-        }
-      }
-    }
-
-    void fetchCampaignsByRegion()
-
-    return () => {
-      ignore = true
-    }
-  }, [campaigns, region])
+  const {
+    campaigns: displayedCampaigns,
+    isLoading,
+    region,
+    setRegion,
+  } = useRegionPopularCampaigns(campaigns)
 
   return (
     <section
