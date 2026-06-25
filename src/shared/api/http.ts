@@ -6,7 +6,10 @@ const isWrappedResponse = (value: unknown): value is { success: unknown; data: u
   value !== null && typeof value === 'object' && 'success' in value && 'data' in value
 
 export const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL:
+    typeof window === 'undefined'
+      ? (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL)
+      : process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

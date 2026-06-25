@@ -38,7 +38,7 @@ export default function Page() {
       const token = await authService.login(type)
 
       setAuth(token)
-      router.replace(token.user.isProfileCompleted ? '/' : '/onboarding')
+      router.replace(token.user.isProfileCompleted ? '/' : '/auth/register')
     } catch {
       setErrorMessage('로그인에 실패했어요. 다시 시도해주세요.')
     } finally {
