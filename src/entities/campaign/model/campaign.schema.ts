@@ -77,7 +77,7 @@ export const campaignSchema = z.object({
   recruitCount: z.number().optional(),
   applyEndDate: z.string().optional(),
   isGuaranteed: z.boolean().optional(),
-  region: z.string().optional(),
+  region: z.string().nullable().optional(),
   status: CampaignStatus.optional(),
   viewCount: z.number().optional(),
   sourcePlatform: z.string().optional(),

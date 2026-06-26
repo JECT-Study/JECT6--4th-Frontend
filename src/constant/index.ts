@@ -40,6 +40,7 @@ export const CAMPAIGN_CATEGORY_LABEL: Record<CampaignCategory, string> = {
   IT: '테크/IT',
   SPORTS: '스포츠',
   CULTURE: '문화',
+  ETC: '기타',
 }
 
 export const TYPE_LABEL: Record<CampaignType, string> = {

@@ -5,8 +5,13 @@ import { keysToCamel, keysToSnake } from './case-converter'
 const isWrappedResponse = (value: unknown): value is { success: unknown; data: unknown } =>
   value !== null && typeof value === 'object' && 'success' in value && 'data' in value
 
+const baseURL =
+  typeof window === 'undefined'
+    ? (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL)
+    : process.env.NEXT_PUBLIC_API_BASE_URL
+
 export const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },

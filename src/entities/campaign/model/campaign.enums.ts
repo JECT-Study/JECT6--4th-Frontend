@@ -9,6 +9,7 @@ export const CampaignCategory = z.enum([
   'IT',
   'SPORTS',
   'CULTURE',
+  'ETC',
 ])
 export type CampaignCategory = z.infer<typeof CampaignCategory>
 
