@@ -19,6 +19,7 @@ export function ProfileHeader({
   const [editing, setEditing] = useState(false)
   const [value, setValue] = useState(nickname)
   const [error, setError] = useState<string>()
+  const [checking, setChecking] = useState(false)
 
   const handleSave = async () => {
     const next = value.trim()
@@ -30,10 +31,18 @@ export function ProfileHeader({
       setEditing(false)
       return
     }
-    const { available } = await userService.checkNickname(next)
-    if (!available) {
-      setError('이미 사용 중인 닉네임입니다.')
+    setChecking(true)
+    try {
+      const { available } = await userService.checkNickname(next)
+      if (!available) {
+        setError('이미 사용 중인 닉네임입니다.')
+        return
+      }
+    } catch {
+      setError('닉네임 확인 중 오류가 발생했습니다. 다시 시도해 주세요.')
       return
+    } finally {
+      setChecking(false)
     }
     setError(undefined)
     onSave?.(next)
@@ -70,7 +79,7 @@ export function ProfileHeader({
       />
       <Button
         size="md"
-        disabled={isSaving}
+        disabled={isSaving || checking}
         onClick={() => {
           void handleSave()
         }}
