@@ -4,13 +4,40 @@ import { AccountNavCard } from '../_components/AccountNavCard'
 import { BlogLinkSection } from '../_components/BlogLinkSection'
 import { CategorySection } from '../_components/CategorySection'
 import { ProfileHeader } from '../_components/ProfileHeader'
+import { CATEGORY_LABELS, useMyProfile } from '../hooks/useMyProfile'
 
 export default function AccountPage() {
+  const { data: profile, isLoading, isError, refetch } = useMyProfile()
+
+  if (isLoading) {
+    return <p className="pt-12 text-16 text-neutral_60">불러오는 중...</p>
+  }
+
+  if (isError || !profile) {
+    return (
+      <div className="flex flex-col items-start gap-3 pt-12">
+        <p className="text-16 text-neutral_60">정보를 불러오지 못했습니다.</p>
+        <button
+          type="button"
+          onClick={() => {
+            void refetch()
+          }}
+          className="text-16 font-medium text-violet_80"
+        >
+          다시 시도
+        </button>
+      </div>
+    )
+  }
+
+  const blogUrl = profile.blogs[0]?.blogUrl ?? null
+  const categoryLabels = profile.categoryTypes.map(c => CATEGORY_LABELS[c])
+
   return (
     <div className="pb-20">
-      <ProfileHeader nickname="사용자 닉네임" />
-      <BlogLinkSection blogUrl="https://blog.naver.com/example" />
-      <CategorySection categories={['문화', '여행', '테크/IT', '펫']} />
+      <ProfileHeader nickname={profile.nickname ?? '닉네임 미설정'} />
+      <BlogLinkSection blogUrl={blogUrl} />
+      <CategorySection categories={categoryLabels} />
 
       <section className="mt-16">
         <h2 className="text-24 font-bold text-neutral_20">개인 정보 관리</h2>
