@@ -42,15 +42,23 @@ function getCampaignPage({
 
 export function useCampaignList({
   keyword,
+  initialPage,
   params,
 }: {
   keyword: string
+  initialPage?: Paginated<Campaign>
   params: CampaignListParams
 }) {
   return useInfiniteQuery({
     queryKey: ['campaigns', keyword, params],
     queryFn: ({ pageParam }) => getCampaignPage({ keyword, params, page: pageParam }),
     initialPageParam: 0,
+    initialData: initialPage
+      ? {
+          pageParams: [0],
+          pages: [initialPage],
+        }
+      : undefined,
     getNextPageParam: (lastPage, allPages) => {
       const itemCount = allPages.reduce((count, page) => count + page.content.length, 0)
       const hasNext = hasNextPage({
