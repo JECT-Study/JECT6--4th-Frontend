@@ -7,13 +7,15 @@ import { userService } from '@/service'
 
 import { Input } from '@/shared/ui/input/Input'
 
+import { getApiErrorMessage } from '../hooks/useProfileMutations'
+
 export function ProfileHeader({
   nickname,
   onSave,
   isSaving = false,
 }: {
   nickname: string
-  onSave?: (nickname: string) => void
+  onSave?: (nickname: string) => Promise<unknown>
   isSaving?: boolean
 }) {
   const [editing, setEditing] = useState(false)
@@ -44,9 +46,13 @@ export function ProfileHeader({
     } finally {
       setChecking(false)
     }
-    setError(undefined)
-    onSave?.(next)
-    setEditing(false)
+    try {
+      await onSave?.(next)
+      setError(undefined)
+      setEditing(false)
+    } catch (e) {
+      setError(getApiErrorMessage(e))
+    }
   }
 
   if (!editing) {

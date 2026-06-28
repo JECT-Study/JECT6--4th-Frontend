@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 
 import { Input } from '@/shared/ui/input/Input'
 
+import { getApiErrorMessage } from '../hooks/useProfileMutations'
+
 import { SectionShell } from './SectionShell'
 
 export function BlogLinkSection({
@@ -14,22 +16,26 @@ export function BlogLinkSection({
   isSaving = false,
 }: {
   blogUrl: string | null
-  onSave?: (blogUrl: string) => void
+  onSave?: (blogUrl: string) => Promise<unknown>
   isSaving?: boolean
 }) {
   const [editing, setEditing] = useState(false)
   const [value, setValue] = useState(blogUrl ?? '')
   const [error, setError] = useState<string>()
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const next = value.trim()
     if (!next.startsWith('https://')) {
       setError('https:// 로 시작하는 URL을 입력해 주세요.')
       return
     }
-    setError(undefined)
-    onSave?.(next)
-    setEditing(false)
+    try {
+      await onSave?.(next)
+      setError(undefined)
+      setEditing(false)
+    } catch (e) {
+      setError(getApiErrorMessage(e))
+    }
   }
 
   return (
@@ -62,7 +68,12 @@ export function BlogLinkSection({
             placeholder="https://blog.naver.com/..."
             className="flex-1"
           />
-          <Button disabled={isSaving} onClick={handleSave}>
+          <Button
+            disabled={isSaving}
+            onClick={() => {
+              void handleSave()
+            }}
+          >
             저장
           </Button>
           <Button variant="tertiary" onClick={() => setEditing(false)}>

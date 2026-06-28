@@ -40,17 +40,17 @@ export default function AccountPage() {
       <ProfileHeader
         nickname={profile.nickname ?? '닉네임 미설정'}
         isSaving={updateProfile.isPending}
-        onSave={nickname => updateProfile.mutate({ nickname })}
+        onSave={nickname => updateProfile.mutateAsync({ nickname })}
       />
       <BlogLinkSection
         blogUrl={blogUrl}
         isSaving={linkBlog.isPending}
-        onSave={url => linkBlog.mutate({ blogUrl: url, platform: 'NAVER' })}
+        onSave={url => linkBlog.mutateAsync({ blogUrl: url, platform: 'NAVER' })}
       />
       <CategorySection
         selected={profile.categoryTypes}
         isSaving={updateProfile.isPending}
-        onSave={categoryTypes => updateProfile.mutate({ categoryTypes })}
+        onSave={categoryTypes => updateProfile.mutateAsync({ categoryTypes })}
       />
 
       <section className="mt-16">
