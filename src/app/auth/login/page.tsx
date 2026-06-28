@@ -10,7 +10,6 @@ import { useSetAtom } from 'jotai'
 import { authService } from '@/service'
 
 import { authAtom } from '@/entities/auth'
-import type { Provider } from '@/entities/user'
 
 import AuthBackgroundImage from '@/shared/assets/icons/auth_background.png'
 import { Button } from '@/shared/ui'
@@ -21,26 +20,17 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleKakaoClick = () => {
-    setIsLoading(true)
-    setErrorMessage('')
-
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080'
-
-    window.location.href = `${apiBaseUrl.replace(/\/$/, '')}/api/auth/login/kakao`
-  }
-
-  const handleClick = async (type: Provider) => {
+  const handleDemoLogin = async () => {
     setIsLoading(true)
     setErrorMessage('')
 
     try {
-      const token = await authService.login(type)
+      const token = await authService.demoLogin()
 
       setAuth(token)
-      router.replace(token.user.isProfileCompleted ? '/' : '/onboarding')
+      router.replace(token.user.isProfileCompleted ? '/' : '/auth/register')
     } catch {
-      setErrorMessage('로그인에 실패했어요. 다시 시도해주세요.')
+      setErrorMessage('데모 로그인에 실패했어요. 다시 시도해주세요.')
     } finally {
       setIsLoading(false)
     }
@@ -61,7 +51,7 @@ export default function Page() {
       <div className="px-13 py-45 flex-1">
         <div className="flex flex-col items-center gap-4.5 mb-13.75">
           <h1 className="text-36 leading-7.5 font-medium">[로그인]</h1>
-          <div className="text-16 leading-24">소셜 계정으로 간편하게 로그인하세요.</div>
+          <div className="text-16 leading-24">데모 계정으로 로컬 테스트를 시작하세요.</div>
         </div>
         <div className="flex flex-col gap-7">
           <Button
@@ -69,27 +59,9 @@ export default function Page() {
             className="border border-neutral_90"
             size="lg"
             disabled={isLoading}
-            onClick={handleKakaoClick}
+            onClick={() => void handleDemoLogin()}
           >
-            카카오 계정으로 계속하기
-          </Button>
-          <Button
-            variant="tertiary"
-            className="border border-neutral_90"
-            size="lg"
-            disabled={isLoading}
-            onClick={() => void handleClick('NAVER')}
-          >
-            네이버 계정으로 계속하기
-          </Button>
-          <Button
-            variant="tertiary"
-            className="border border-neutral_90"
-            size="lg"
-            disabled={isLoading}
-            onClick={() => void handleClick('GOOGLE')}
-          >
-            구글 계정으로 계속하기
+            데모 계정으로 계속하기
           </Button>
           {isLoading && (
             <p className="m-0 text-center text-14 font-medium leading-20 text-neutral_60">
