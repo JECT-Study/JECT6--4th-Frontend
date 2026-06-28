@@ -57,6 +57,7 @@ export function ProfileHeader({
           type="button"
           onClick={() => {
             setValue(nickname)
+            setError(undefined)
             setEditing(true)
           }}
           className="pb-2 text-16 font-medium text-neutral_60 hover:text-neutral_30"

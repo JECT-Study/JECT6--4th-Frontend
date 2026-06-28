@@ -85,13 +85,15 @@ export const userService = {
     http.post('/api/users/me', data).then(res => updateUserProfileResponseSchema.parse(res.data)),
 
   /** PATCH /users/me — 프로필 부분 수정 */
-  updateMe: (data: UpdateUserProfileRequest) =>
-    http
+  updateMe: (data: UpdateUserProfileRequest) => {
+    const { categoryTypes, ...rest } = data
+    return http
       .patch('/api/users/me', {
-        ...data,
-        ...(data.categoryTypes ? { interestCategories: data.categoryTypes } : {}),
+        ...rest,
+        ...(categoryTypes ? { interestCategories: categoryTypes } : {}),
       })
-      .then(res => userProfileSchema.parse(res.data)),
+      .then(res => userProfileSchema.parse(res.data))
+  },
 
   /** POST /users/me/blog — 블로그 연동 */
   linkBlog: (data: { blogUrl: string; platform: string }) =>

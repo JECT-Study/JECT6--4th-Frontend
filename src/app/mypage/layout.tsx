@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 
 import { useAtomValue } from 'jotai'
 
@@ -14,13 +14,16 @@ export default function MyPageLayout({ children }: { children: ReactNode }) {
   const isLoggedIn = useAtomValue(isLoggedInAtom)
   const router = useRouter()
 
+  const [hydrated, setHydrated] = useState(false)
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard: effect runs only on client after mount
+  useEffect(() => setHydrated(true), [])
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (hydrated && !isLoggedIn) {
       router.replace('/auth/login')
     }
-  }, [isLoggedIn, router])
+  }, [hydrated, isLoggedIn, router])
 
-  if (!isLoggedIn) {
+  if (!hydrated || !isLoggedIn) {
     return null
   }
 

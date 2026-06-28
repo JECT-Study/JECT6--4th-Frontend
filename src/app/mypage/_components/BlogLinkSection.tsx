@@ -41,6 +41,7 @@ export function BlogLinkSection({
             type="button"
             onClick={() => {
               setValue(blogUrl ?? '')
+              setError(undefined)
               setEditing(true)
             }}
             className="text-16 font-medium text-neutral_60 hover:text-neutral_30"

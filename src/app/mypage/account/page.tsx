@@ -60,9 +60,7 @@ export default function AccountPage() {
             title="회원 정보 수정"
             description="닉네임 등 내 프로필 정보를 변경할 수 있어요. (이메일 변경은 준비 중이에요.)"
             badge="일부 준비 중"
-            onClick={() => {
-              // 닉네임 편집은 상단 ProfileHeader에서 가능. 별도 상세 페이지는 v1 범위 밖.
-            }}
+            disabled
           />
           <AccountNavCard
             title="내 결제 수단"
