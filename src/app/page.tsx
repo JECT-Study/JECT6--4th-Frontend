@@ -1,7 +1,5 @@
 import { feedService } from '@/service'
 
-export const dynamic = 'force-dynamic'
-
 import {
   AnalysisSection,
   CreatorPostsSection,
