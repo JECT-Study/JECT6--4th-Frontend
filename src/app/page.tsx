@@ -10,13 +10,15 @@ import {
   RegionPopularCampaignsSection,
 } from './_components/home'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
-  const feed = await feedService.getBody()
+  const [hero, feed] = await Promise.all([feedService.getHero(), feedService.getBody()])
 
   return (
     <main className="bg-white pb-16">
-      <HeroSection />
-      <AnalysisSection />
+      <HeroSection hero={hero} />
+      <AnalysisSection previewCampaigns={feed.popular.slice(0, 4)} />
       <HomeCarouselSection
         title="당첨확률이 높은 공고"
         campaigns={feed.guaranteed}

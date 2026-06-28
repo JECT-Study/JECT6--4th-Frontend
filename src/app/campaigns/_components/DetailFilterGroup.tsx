@@ -11,7 +11,7 @@ import { Dropdown } from '@/shared/ui'
 
 const SORT_OPTIONS = CampaignSort.options.map(value => ({
   value,
-  label: { closing_soon: '마감임박', low_competition: '경쟁 낮은순', popular: '인기순' }[value],
+  label: { CLOSING: '마감임박', COMPETITION: '경쟁 낮은순', POPULAR: '인기순' }[value],
 }))
 
 const CATEGORY_OPTIONS = CampaignCategory.options.map(value => ({

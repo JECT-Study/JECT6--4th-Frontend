@@ -8,6 +8,8 @@ import type {
 
 import { BlogAnalysisDashboard } from './_components/BlogAnalysisDashboard'
 
+export const dynamic = 'force-dynamic'
+
 interface BlogAnalysisData {
   analysis: BlogAnalysisResponse
   bloggers: PopularBlogger[]

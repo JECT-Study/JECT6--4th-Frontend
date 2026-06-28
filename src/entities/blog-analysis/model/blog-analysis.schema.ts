@@ -2,11 +2,16 @@ import { z } from 'zod'
 
 import { CampaignCategory } from '@/entities/campaign'
 
-import { AnalysisStatus, BlogMetricKey, InsightType, ReasonType } from './blog-analysis.enums'
+import { AnalysisStatus, BlogMetricKey, InsightType } from './blog-analysis.enums'
+
+const unknownRecordSchema = z.record(z.string(), z.unknown())
 
 // POST /blog/analyze 요청
 export const analyzeRequestSchema = z.object({
-  blogUrl: z.string().url(),
+  blogId: z.number().optional(),
+  documentId: z.number().optional(),
+  analysisMode: z.enum(['FULL_BLOG', 'POST', 'full_blog', 'post']).optional(),
+  forceRefresh: z.boolean().optional(),
 })
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>
 
@@ -15,7 +20,11 @@ export const analyzeJobResponseSchema = z.object({
   documentId: z.number(),
   status: AnalysisStatus,
   message: z.string(),
-  aiCreditRemaining: z.number().nullable(),
+  aiCreditRemaining: z.number().nullable().optional(),
+  correlationId: z.string().optional(),
+  batchId: z.string().optional(),
+  cached: z.boolean().optional(),
+  cachedJobId: z.number().optional(),
 })
 export type AnalyzeJobResponse = z.infer<typeof analyzeJobResponseSchema>
 
@@ -54,6 +63,12 @@ export const analysisResultSchema = z.object({
   tone: z.string(),
   targetAudience: z.string(),
   suggestions: z.array(z.string()),
+  overallScore: z.number().optional(),
+  percentile: z.number().optional(),
+  blogType: z.string().optional(),
+  strengthSummary: z.string().optional(),
+  weaknessSummary: z.string().optional(),
+  topCategories: z.array(unknownRecordSchema).optional(),
   metrics: z.array(analysisMetricSchema).optional(),
   categoryFits: z.array(categoryFitSchema).optional(),
   strengthCard: analysisInsightCardSchema.optional(),
@@ -65,8 +80,8 @@ export type AnalysisResult = z.infer<typeof analysisResultSchema>
 export const blogAnalysisResponseSchema = z.object({
   documentId: z.number(),
   status: AnalysisStatus,
-  analysis: analysisResultSchema.nullable(),
-  analyzedAt: z.string().nullable(),
+  analysis: analysisResultSchema.nullable().optional(),
+  analyzedAt: z.string().nullable().optional(),
   analysisId: z.number().optional(),
   userNickname: z.string().optional(),
   blogName: z.string().optional(),
@@ -97,10 +112,12 @@ export type AnalysisHistoryResponse = z.infer<typeof analysisHistoryResponseSche
 export const recommendedCampaignSchema = z.object({
   id: z.number(),
   title: z.string(),
-  fitnessScore: z.number(),
-  selectionScore: z.number(),
-  reasonType: ReasonType,
-  reasonMessage: z.string(),
+  category: CampaignCategory.optional(),
+  thumbnailUrl: z.string().optional(),
+  applyEndDate: z.string().optional(),
+  fitnessScore: z.number().default(0),
+  selectionScore: z.number().default(0),
+  reasonMessage: z.string().default(''),
 })
 export type RecommendedCampaign = z.infer<typeof recommendedCampaignSchema>
 
@@ -142,3 +159,30 @@ export const chatResponseSchema = z.object({
   tokensRemaining: z.number(),
 })
 export type ChatResponse = z.infer<typeof chatResponseSchema>
+
+// POST /blog/diagnosis 요청
+export const diagnoseRequestSchema = z.object({
+  documentId: z.number(),
+})
+export type DiagnoseRequest = z.infer<typeof diagnoseRequestSchema>
+
+// POST /blog/diagnosis 응답
+export const diagnoseResponseSchema = z.object({
+  id: z.number(),
+  userId: z.number().optional(),
+  metrics: unknownRecordSchema,
+  categoryFit: z.array(z.unknown()).optional(),
+  strengths: z.array(z.string()),
+  weaknesses: z.array(z.string()),
+  hasEmbedding: z.boolean().optional(),
+})
+export type DiagnoseResponse = z.infer<typeof diagnoseResponseSchema>
+
+// GET /blog/diagnosis/quota 응답
+export const quotaResponseSchema = z.object({
+  used: z.number(),
+  limit: z.number(),
+  remaining: z.number(),
+  resetAt: z.string().optional(),
+})
+export type QuotaResponse = z.infer<typeof quotaResponseSchema>

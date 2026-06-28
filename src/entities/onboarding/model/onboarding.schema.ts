@@ -1,12 +1,21 @@
 import { z } from 'zod'
 
-import { CampaignCategory } from '@/entities/campaign'
+import { CampaignCategory, CampaignChannel } from '@/entities/campaign'
 
 // POST /onboarding/response 요청
 export const onboardingResponseRequestSchema = z.object({
   sessionId: z.string().optional(),
-  step: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
-  answer: z.string(),
+  step: z.union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal(4),
+    z.literal(5),
+    z.literal(6),
+  ]),
+  answer: z.string().optional(),
+  activityTypes: z.array(CampaignChannel).optional(),
+  regionIds: z.array(z.number()).optional(),
 })
 export type OnboardingResponseRequest = z.infer<typeof onboardingResponseRequestSchema>
 
