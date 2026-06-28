@@ -1,7 +1,7 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn config set network-timeout 600000 && yarn install --frozen-lockfile
 
 FROM node:20-alpine AS builder
 WORKDIR /app
