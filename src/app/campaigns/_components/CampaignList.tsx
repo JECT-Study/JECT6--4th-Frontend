@@ -6,6 +6,8 @@ import { HomeCampaignCard } from '@/app/_components/home/HomeCampaignCard'
 
 import type { Campaign } from '@/entities/campaign'
 
+import CampaignCardSkeleton from './CampaignSkeleton'
+
 interface Props {
   campaigns: Campaign[]
   hasMore: boolean
@@ -14,6 +16,16 @@ interface Props {
   onLoadMore: () => void
   title?: string
   totalElements: number
+}
+
+function CampaignCardSkeletonGrid({ count }: { count: number }) {
+  return (
+    <div className="grid grid-cols-4 gap-x-6 gap-y-26 pb-15">
+      {Array.from({ length: count }, (_, index) => (
+        <CampaignCardSkeleton key={`campaign-skeleton-${index}`} />
+      ))}
+    </div>
+  )
 }
 
 export function CampaignList({
@@ -43,9 +55,7 @@ export function CampaignList({
         </div>
       </div>
       {isLoading ? (
-        <p className="py-20 text-center text-16 font-medium leading-24 text-neutral_60">
-          공고를 불러오는 중...
-        </p>
+        <CampaignCardSkeletonGrid count={12} />
       ) : campaigns.length > 0 ? (
         <div className="grid grid-cols-4 gap-x-6 gap-y-26 pb-15">
           {campaigns.map((item, index) => (
@@ -62,11 +72,7 @@ export function CampaignList({
           조건에 맞는 공고가 없어요.
         </p>
       )}
-      {isLoadingMore && (
-        <p className="text-center text-14 font-medium leading-20 text-neutral_60">
-          더 불러오는 중...
-        </p>
-      )}
+      {isLoadingMore && <CampaignCardSkeletonGrid count={4} />}
       {hasMore && <div ref={ref} className="h-1" aria-hidden />}
     </div>
   )
