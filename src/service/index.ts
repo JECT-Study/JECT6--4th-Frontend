@@ -86,7 +86,12 @@ export const userService = {
 
   /** PATCH /users/me — 프로필 부분 수정 */
   updateMe: (data: UpdateUserProfileRequest) =>
-    http.patch('/api/users/me', data).then(res => userProfileSchema.parse(res.data)),
+    http
+      .patch('/api/users/me', {
+        ...data,
+        ...(data.categoryTypes ? { interestCategories: data.categoryTypes } : {}),
+      })
+      .then(res => userProfileSchema.parse(res.data)),
 
   /** POST /users/me/blog — 블로그 연동 */
   linkBlog: (data: { blogUrl: string; platform: string }) =>

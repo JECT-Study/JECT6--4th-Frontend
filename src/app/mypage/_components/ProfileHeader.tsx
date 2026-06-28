@@ -1,14 +1,85 @@
-export function ProfileHeader({ nickname, onEdit }: { nickname: string; onEdit?: () => void }) {
+'use client'
+
+import { useState } from 'react'
+
+import { Button } from '@/components/ui/button'
+import { userService } from '@/service'
+
+import { Input } from '@/shared/ui/input/Input'
+
+export function ProfileHeader({
+  nickname,
+  onSave,
+  isSaving = false,
+}: {
+  nickname: string
+  onSave?: (nickname: string) => void
+  isSaving?: boolean
+}) {
+  const [editing, setEditing] = useState(false)
+  const [value, setValue] = useState(nickname)
+  const [error, setError] = useState<string>()
+
+  const handleSave = async () => {
+    const next = value.trim()
+    if (!next) {
+      setError('닉네임을 입력해 주세요.')
+      return
+    }
+    if (next === nickname) {
+      setEditing(false)
+      return
+    }
+    const { available } = await userService.checkNickname(next)
+    if (!available) {
+      setError('이미 사용 중인 닉네임입니다.')
+      return
+    }
+    setError(undefined)
+    onSave?.(next)
+    setEditing(false)
+  }
+
+  if (!editing) {
+    return (
+      <div className="flex items-end gap-4 pt-12">
+        <h1 className="text-40 font-bold leading-12 text-neutral_20">{nickname}</h1>
+        <button
+          type="button"
+          onClick={() => {
+            setValue(nickname)
+            setEditing(true)
+          }}
+          className="pb-2 text-16 font-medium text-neutral_60 hover:text-neutral_30"
+        >
+          편집
+        </button>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex items-end gap-4 pt-12">
-      <h1 className="text-40 font-bold leading-12 text-neutral_20">{nickname}</h1>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="pb-2 text-16 font-medium leading-5 text-neutral_60 hover:text-neutral_30"
+    <div className="flex items-end gap-3 pt-12">
+      <Input
+        label="닉네임"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        errorMessage={error}
+        maxLength={12}
+        className="w-80"
+      />
+      <Button
+        size="md"
+        disabled={isSaving}
+        onClick={() => {
+          void handleSave()
+        }}
       >
-        편집
-      </button>
+        저장
+      </Button>
+      <Button size="md" variant="tertiary" onClick={() => setEditing(false)}>
+        취소
+      </Button>
     </div>
   )
 }

@@ -4,10 +4,13 @@ import { AccountNavCard } from '../_components/AccountNavCard'
 import { BlogLinkSection } from '../_components/BlogLinkSection'
 import { CategorySection } from '../_components/CategorySection'
 import { ProfileHeader } from '../_components/ProfileHeader'
-import { CATEGORY_LABELS, useMyProfile } from '../hooks/useMyProfile'
+import { useMyProfile } from '../hooks/useMyProfile'
+import { useLinkBlog, useUpdateProfile } from '../hooks/useProfileMutations'
 
 export default function AccountPage() {
   const { data: profile, isLoading, isError, refetch } = useMyProfile()
+  const updateProfile = useUpdateProfile()
+  const linkBlog = useLinkBlog()
 
   if (isLoading) {
     return <p className="pt-12 text-16 text-neutral_60">불러오는 중...</p>
@@ -31,13 +34,24 @@ export default function AccountPage() {
   }
 
   const blogUrl = profile.blogs[0]?.blogUrl ?? null
-  const categoryLabels = profile.categoryTypes.map(c => CATEGORY_LABELS[c])
 
   return (
     <div className="pb-20">
-      <ProfileHeader nickname={profile.nickname ?? '닉네임 미설정'} />
-      <BlogLinkSection blogUrl={blogUrl} />
-      <CategorySection categories={categoryLabels} />
+      <ProfileHeader
+        nickname={profile.nickname ?? '닉네임 미설정'}
+        isSaving={updateProfile.isPending}
+        onSave={nickname => updateProfile.mutate({ nickname })}
+      />
+      <BlogLinkSection
+        blogUrl={blogUrl}
+        isSaving={linkBlog.isPending}
+        onSave={url => linkBlog.mutate({ blogUrl: url, platform: 'NAVER' })}
+      />
+      <CategorySection
+        selected={profile.categoryTypes}
+        isSaving={updateProfile.isPending}
+        onSave={categoryTypes => updateProfile.mutate({ categoryTypes })}
+      />
 
       <section className="mt-16">
         <h2 className="text-24 font-bold text-neutral_20">개인 정보 관리</h2>
