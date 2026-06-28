@@ -37,10 +37,10 @@ export function CampaignList({
   return (
     <div className="flex flex-col gap-15">
       <div className="flex items-center justify-between">
-        <div className="text-22 leading-6.25 font-semibold">{title}</div>
-        <span className="text-14 font-medium leading-20 text-neutral_60">
-          총 {totalElements.toLocaleString()}개
-        </span>
+        <div className="text-22 leading-6.25 font-semibold gap-2 flex items-center">
+          {title}
+          <span className="font-medium text-neutral_60">{totalElements.toLocaleString()}</span>
+        </div>
       </div>
       {isLoading ? (
         <p className="py-20 text-center text-16 font-medium leading-24 text-neutral_60">

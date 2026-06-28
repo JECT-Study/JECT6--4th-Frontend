@@ -1,8 +1,9 @@
 'use client'
 
+import type { MouseEvent, PointerEvent } from 'react'
 import { useState } from 'react'
 
-import { ChevronDownIcon } from 'lucide-react'
+import { ChevronDownIcon, XIcon } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -16,7 +17,7 @@ const CITIES = REGION_OPTIONS
 
 interface Props {
   location: string
-  setLocation: (location: RegionSelection) => void
+  setLocation: (location: RegionSelection | null) => void
   triggerClassName?: string
 }
 
@@ -25,12 +26,44 @@ export function LocationDropdown({ location, setLocation, triggerClassName }: Pr
 
   const districts = selectedCity.children
 
-  const handleSelect = (district: (typeof districts)[number]) => {
+  const handleCitySelect = (city: (typeof CITIES)[number]) => {
+    setSelectedCity(city)
+
+    if (location === city.name) {
+      setLocation(null)
+      return
+    }
+
     setLocation({
-      label: `${selectedCity.name} ${district.name}`,
+      label: city.name,
+      parentRegionId: city.id,
+    })
+  }
+
+  const handleSelect = (district: (typeof districts)[number]) => {
+    const label = `${selectedCity.name} ${district.name}`
+
+    if (location === label) {
+      setLocation(null)
+      return
+    }
+
+    setLocation({
+      label,
       parentRegionId: selectedCity.id,
       childRegionId: district.id,
     })
+  }
+
+  const clearLocation = (event: MouseEvent<SVGSVGElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setLocation(null)
+  }
+
+  const stopTrigger = (event: PointerEvent<SVGSVGElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
   }
 
   return (
@@ -44,10 +77,20 @@ export function LocationDropdown({ location, setLocation, triggerClassName }: Pr
           type="button"
         >
           <span>{location || '지역 선택'}</span>
-          <ChevronDownIcon
-            className="size-6 transition-transform group-data-[state=open]:rotate-180"
-            aria-hidden
-          />
+          <span className="flex items-center gap-1">
+            {location && (
+              <XIcon
+                className="size-5 text-neutral_50 hover:text-neutral_20"
+                aria-label="지역 필터 해제"
+                onPointerDown={stopTrigger}
+                onClick={clearLocation}
+              />
+            )}
+            <ChevronDownIcon
+              className="size-6 transition-transform group-data-[state=open]:rotate-180"
+              aria-hidden
+            />
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="flex h-82 w-132.5 overflow-hidden rounded-[10px] border-neutral_95 bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
@@ -58,10 +101,12 @@ export function LocationDropdown({ location, setLocation, triggerClassName }: Pr
             {CITIES.map(city => (
               <li
                 key={city.id}
-                onClick={() => setSelectedCity(city)}
+                onClick={() => handleCitySelect(city)}
                 className={cn(
                   'shrink-0 cursor-pointer transition hover:text-red_40',
-                  selectedCity.id === city.id ? 'font-bold text-red_50' : 'text-neutral_70'
+                  location === city.name || selectedCity.id === city.id
+                    ? 'font-bold text-red_50'
+                    : 'text-neutral_70'
                 )}
               >
                 {city.name}
