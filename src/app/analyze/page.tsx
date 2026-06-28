@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 import { useCallback, useState } from 'react'
 
-import { blogAnalysisService } from '@/service'
+import { blogAnalysisService, userService } from '@/service'
 
 import type { BlogAnalysisResponse } from '@/entities/blog-analysis'
 
@@ -26,7 +26,11 @@ export default function Page() {
     setErrorMessage('')
 
     try {
-      const job = await blogAnalysisService.analyze({ blogUrl: nextBlogUrl })
+      const blog = await userService.linkBlog({ blogUrl: nextBlogUrl, platform: 'NAVER' })
+      const job = await blogAnalysisService.analyze({
+        blogId: blog.id,
+        analysisMode: 'FULL_BLOG',
+      })
       setBlogUrl(nextBlogUrl)
       setDocumentId(job.documentId)
       setStep(2)

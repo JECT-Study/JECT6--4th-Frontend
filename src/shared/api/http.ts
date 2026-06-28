@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { keysToCamel, keysToSnake } from './case-converter'
+import { keysToCamel } from './case-converter'
 
 const isWrappedResponse = (value: unknown): value is { success: unknown; data: unknown } =>
   value !== null && typeof value === 'object' && 'success' in value && 'data' in value
@@ -11,13 +11,15 @@ const baseURL =
     : process.env.NEXT_PUBLIC_API_BASE_URL
 
 export const http = axios.create({
-  baseURL,
+  baseURL:
+    typeof window === 'undefined'
+      ? (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL)
+      : process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// 요청 바디·쿼리를 snake_case로 변환해 서버로 보낸다.
 http.interceptors.request.use(config => {
   if (typeof window !== 'undefined') {
     const storedAuth = window.localStorage.getItem('auth')
@@ -38,12 +40,6 @@ http.interceptors.request.use(config => {
     }
   }
 
-  if (config.data) {
-    config.data = keysToSnake(config.data)
-  }
-  if (config.params) {
-    config.params = keysToSnake(config.params)
-  }
   return config
 })
 

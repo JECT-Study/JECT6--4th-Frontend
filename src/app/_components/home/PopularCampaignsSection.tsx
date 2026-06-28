@@ -16,9 +16,9 @@ const CATEGORY_OPTIONS: { label: string; value: CampaignCategory }[] = [
   { label: '뷰티', value: 'BEAUTY' },
   { label: '패션', value: 'FASHION' },
   { label: '여행', value: 'TRAVEL' },
-  { label: '라이프스타일', value: 'LIFESTYLE' },
-  { label: '테크/IT', value: 'IT' },
-  { label: '스포츠', value: 'SPORTS' },
+  { label: '라이프스타일', value: 'LIVING' },
+  { label: '테크/IT', value: 'TECH_IT' },
+  { label: '반려동물', value: 'PET' },
   { label: '문화', value: 'CULTURE' },
 ]
 

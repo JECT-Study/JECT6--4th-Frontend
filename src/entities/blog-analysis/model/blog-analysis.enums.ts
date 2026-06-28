@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const AnalysisStatus = z.enum(['pending', 'in_progress', 'completed', 'failed'])
+export const AnalysisStatus = z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'FAILED'])
 export type AnalysisStatus = z.infer<typeof AnalysisStatus>
 
 export const ReasonType = z.enum([

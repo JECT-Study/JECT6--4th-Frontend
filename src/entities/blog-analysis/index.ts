@@ -14,6 +14,9 @@ export {
   popularBloggersResponseSchema,
   chatRequestSchema,
   chatResponseSchema,
+  diagnoseRequestSchema,
+  diagnoseResponseSchema,
+  quotaResponseSchema,
   type AnalyzeRequest,
   type AnalyzeJobResponse,
   type AnalysisMetric,
@@ -29,5 +32,8 @@ export {
   type PopularBloggersResponse,
   type ChatRequest,
   type ChatResponse,
+  type DiagnoseRequest,
+  type DiagnoseResponse,
+  type QuotaResponse,
 } from './model/blog-analysis.schema'
 export { AnalysisStatus, BlogMetricKey, InsightType, ReasonType } from './model/blog-analysis.enums'

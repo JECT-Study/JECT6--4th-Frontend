@@ -10,23 +10,38 @@ import {
 
 // 공통 페이지네이션 응답
 export const paginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
-  z.object({
-    content: z.array(itemSchema),
-    number: z.number().optional(),
-    page: z.number().optional(),
-    size: z.number().optional(),
-    totalElements: z.number(),
-    totalPages: z.number().optional(),
-    hasNext: z.boolean().optional(),
-  })
+  z
+    .object({
+      content: z.array(itemSchema),
+      number: z.number().optional(),
+      size: z.number().optional(),
+      totalElements: z.number(),
+      totalPages: z.number().optional(),
+      sort: z.unknown().optional(),
+      pageable: z.unknown().optional(),
+      first: z.boolean().optional(),
+      numberOfElements: z.number().optional(),
+      last: z.boolean().optional(),
+      empty: z.boolean().optional(),
+      hasNext: z.boolean().optional(),
+    })
+    .transform(page => ({
+      ...page,
+      hasNext: page.hasNext ?? (typeof page.last === 'boolean' ? !page.last : undefined),
+    }))
 
 export type Paginated<T> = {
   content: T[]
   number?: number
-  page?: number
   size?: number
   totalElements: number
   totalPages?: number
+  sort?: unknown
+  pageable?: unknown
+  first?: boolean
+  numberOfElements?: number
+  last?: boolean
+  empty?: boolean
   hasNext?: boolean
 }
 
@@ -38,20 +53,33 @@ export const campaignImageSchema = z.object({
 export type CampaignImage = z.infer<typeof campaignImageSchema>
 
 // 위치 정보
-export const campaignLocationSchema = z.object({
-  regionDepth1: z.string().nullable(),
-  regionDepth2: z.string().nullable(),
-  address: z.string().nullable(),
-  latitude: z.number().nullable(),
-  longitude: z.number().nullable(),
-})
+export const campaignLocationSchema = z
+  .object({
+    regionDepth1: z.string().nullable().optional(),
+    regionDepth2: z.string().nullable().optional(),
+    address: z.string().nullable(),
+    lat: z.number().nullable().optional(),
+    lng: z.number().nullable().optional(),
+    latitude: z.number().nullable().optional(),
+    longitude: z.number().nullable().optional(),
+  })
+  .transform(location => ({
+    ...location,
+    latitude: location.latitude ?? location.lat ?? null,
+    longitude: location.longitude ?? location.lng ?? null,
+  }))
 export type CampaignLocation = z.infer<typeof campaignLocationSchema>
 
 // 링크
-export const campaignLinkSchema = z.object({
-  title: z.string().optional(),
-  url: z.string(),
-})
+export const campaignLinkSchema = z
+  .union([
+    z.string(),
+    z.object({
+      title: z.string().optional(),
+      url: z.string(),
+    }),
+  ])
+  .transform(link => (typeof link === 'string' ? { url: link } : link))
 
 // 체험단 상세 정보
 export const campaignDetailInfoSchema = z.object({
@@ -75,9 +103,12 @@ export const campaignSchema = z.object({
   images: z.array(campaignImageSchema).optional(),
   providedContent: z.string().optional(),
   recruitCount: z.number().optional(),
+  applyCount: z.number().optional(),
   applyEndDate: z.string().optional(),
   isGuaranteed: z.boolean().optional(),
-  region: z.string().nullable().optional(),
+  region: z.string().optional(),
+  parentRegionId: z.number().optional(),
+  childRegionId: z.number().optional(),
   status: CampaignStatus.optional(),
   viewCount: z.number().optional(),
   sourcePlatform: z.string().optional(),
@@ -88,19 +119,27 @@ export type Campaign = z.infer<typeof campaignSchema>
 // 공고 상세
 export const campaignDetailSchema = campaignSchema.extend({
   applyStartDate: z.string().optional(),
+  announceDate: z.string().optional(),
+  purchaseStartDate: z.string().optional(),
+  purchaseEndDate: z.string().optional(),
+  reviewDeadline: z.string().optional(),
   mission: z.string().optional(),
+  searchKeywords: z.string().optional(),
   sourceUrl: z.string().optional(),
   location: campaignLocationSchema.nullable().optional(),
   campaignDetail: campaignDetailInfoSchema.nullable().optional(),
-  status: CampaignStatus,
+  status: CampaignStatus.optional(),
 })
 export type CampaignDetail = z.infer<typeof campaignDetailSchema>
 
 // GET /campaigns 쿼리 파라미터
 export const campaignListParamsSchema = z.object({
+  categories: z.array(CampaignCategory).optional(),
   category: CampaignCategory.optional(),
   type: CampaignType.optional(),
   region: z.string().optional(),
+  parentRegionId: z.number().optional(),
+  childRegionId: z.number().optional(),
   channel: CampaignChannel.optional(),
   sort: CampaignSort.optional(),
   page: z.number().optional(),

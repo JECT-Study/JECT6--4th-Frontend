@@ -9,12 +9,16 @@ import { useAnalysisRecommendations } from '@/app/hooks/useAnalysisRecommendatio
 
 import { isLoggedInAtom } from '@/entities/auth'
 import type { RecommendedCampaign } from '@/entities/blog-analysis'
+import type { Campaign } from '@/entities/campaign'
 
-import { aiCampaigns } from './home.mock'
 import { HomeCampaignCard } from './HomeCampaignCard'
 import { SectionHeader } from './SectionHeader'
 
-export function AnalysisSectionContent() {
+interface AnalysisSectionContentProps {
+  previewCampaigns: Campaign[]
+}
+
+export function AnalysisSectionContent({ previewCampaigns }: AnalysisSectionContentProps) {
   const isLoggedIn = useAtomValue(isLoggedInAtom)
   const { isLoading, recommendations } = useAnalysisRecommendations(isLoggedIn)
 
@@ -48,20 +52,20 @@ export function AnalysisSectionContent() {
           )}
         </div>
       ) : (
-        <LockedAnalysisPreview />
+        <LockedAnalysisPreview campaigns={previewCampaigns} />
       )}
     </section>
   )
 }
 
-function LockedAnalysisPreview() {
+function LockedAnalysisPreview({ campaigns }: { campaigns: Campaign[] }) {
   return (
     <div className="relative min-h-80.5 overflow-hidden rounded-none bg-white">
       <div
         className="grid max-h-80.5 gap-6 overflow-hidden opacity-45 sm:grid-cols-2 lg:grid-cols-4"
         aria-hidden="true"
       >
-        {aiCampaigns.map(campaign => (
+        {campaigns.map(campaign => (
           <HomeCampaignCard key={campaign.id} variant="ai" className="max-w-none" {...campaign} />
         ))}
       </div>

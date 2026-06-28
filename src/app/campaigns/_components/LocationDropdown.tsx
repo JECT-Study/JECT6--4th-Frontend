@@ -1,6 +1,6 @@
 'use client'
 
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 
 import { ChevronDownIcon } from 'lucide-react'
 
@@ -9,24 +9,28 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { REGION_DATA } from '@/constant'
+import { REGION_OPTIONS, type RegionSelection } from '@/constant'
 import { cn } from '@/lib/utils'
 
-const CITIES = Object.keys(REGION_DATA)
+const CITIES = REGION_OPTIONS
 
 interface Props {
   location: string
-  setLocation: Dispatch<SetStateAction<string>>
+  setLocation: (location: RegionSelection) => void
   triggerClassName?: string
 }
 
 export function LocationDropdown({ location, setLocation, triggerClassName }: Props) {
-  const [selectedCity, setSelectedCity] = useState<string>(CITIES[0])
+  const [selectedCity, setSelectedCity] = useState(CITIES[0])
 
-  const districts = REGION_DATA[selectedCity] ?? []
+  const districts = selectedCity.children
 
-  const handleSelect = (district: string) => {
-    setLocation(`${selectedCity} ${district}`)
+  const handleSelect = (district: (typeof districts)[number]) => {
+    setLocation({
+      label: `${selectedCity.name} ${district.name}`,
+      parentRegionId: selectedCity.id,
+      childRegionId: district.id,
+    })
   }
 
   return (
@@ -53,14 +57,14 @@ export function LocationDropdown({ location, setLocation, triggerClassName }: Pr
           <ul className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
             {CITIES.map(city => (
               <li
-                key={city}
+                key={city.id}
                 onClick={() => setSelectedCity(city)}
                 className={cn(
                   'shrink-0 cursor-pointer transition hover:text-red_40',
-                  selectedCity === city ? 'font-bold text-red_50' : 'text-neutral_70'
+                  selectedCity.id === city.id ? 'font-bold text-red_50' : 'text-neutral_70'
                 )}
               >
-                {city}
+                {city.name}
               </li>
             ))}
           </ul>
@@ -71,18 +75,18 @@ export function LocationDropdown({ location, setLocation, triggerClassName }: Pr
           <p className="mb-5 shrink-0 font-bold">전체</p>
           <ul className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
             {districts.map(district => {
-              const key = `${selectedCity} ${district}`
+              const key = `${selectedCity.name} ${district.name}`
               const selected = location === key
               return (
                 <li
-                  key={district}
+                  key={district.id}
                   onClick={() => handleSelect(district)}
                   className={cn(
                     'shrink-0 cursor-pointer transition',
                     selected ? 'font-bold text-red_50' : 'text-neutral_70 hover:text-neutral_50'
                   )}
                 >
-                  {district}
+                  {district.name}
                 </li>
               )
             })}

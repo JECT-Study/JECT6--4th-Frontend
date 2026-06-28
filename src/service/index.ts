@@ -7,11 +7,14 @@ import {
   analysisRecommendationsResponseSchema,
   blogAnalysisResponseSchema,
   chatResponseSchema,
+  diagnoseResponseSchema,
   popularBloggersResponseSchema,
+  quotaResponseSchema,
   type AnalyzeRequest,
   type AnalysisHistoryResponse,
   type AnalysisRecommendationsResponse,
   type ChatRequest,
+  type DiagnoseRequest,
   type PopularBloggersResponse,
 } from '@/entities/blog-analysis'
 import {
@@ -27,7 +30,10 @@ import { feedBodySchema, feedHeroSchema } from '@/entities/feed'
 import {
   myCampaignDetailSchema,
   myCampaignSchema,
+  myCampaignSummarySchema,
+  myRecentAppliedCampaignSchema,
   pointsResponseSchema,
+  simplePageSchema,
   withdrawResponseSchema,
   type WithdrawRequest,
 } from '@/entities/my'
@@ -58,6 +64,10 @@ export const authService = {
       .post(`/api/auth/login/${provider.toLowerCase()}`)
       .then(res => tokenResponseSchema.parse(res.data)),
 
+  /** POST /auth/demo-login — 로컬 테스트용 데모 토큰 발급 */
+  demoLogin: () =>
+    http.post('/api/auth/demo-login').then(res => tokenResponseSchema.parse(res.data)),
+
   /** POST /auth/logout — Redis refresh token 세션 제거 */
   logout: () => http.post<void>('/api/auth/logout').then(res => res.data),
 
@@ -86,11 +96,21 @@ export const userService = {
 
   /** PATCH /users/me — 프로필 부분 수정 */
   updateMe: (data: UpdateUserProfileRequest) =>
-    http.patch('/api/users/me', data).then(res => userProfileSchema.parse(res.data)),
+    http
+      .patch('/api/users/me', {
+        nickname: data.nickname,
+        interest_categories: data.categoryTypes,
+      })
+      .then(res => userProfileSchema.parse(res.data)),
 
   /** POST /users/me/blog — 블로그 연동 */
   linkBlog: (data: { blogUrl: string; platform: string }) =>
-    http.post('/api/users/me/blog', data).then(res => blogSchema.parse(res.data)),
+    http
+      .post('/api/users/me/blog', {
+        blog_url: data.blogUrl,
+        platform: data.platform,
+      })
+      .then(res => blogSchema.parse(res.data)),
 
   /** GET /users/nickname/check — 닉네임 중복 확인 */
   checkNickname: (nickname: string) =>
@@ -175,9 +195,15 @@ export const campaignService = {
 // ==============================
 
 export const myService = {
-  /** GET /my/campaigns — 내 체험단 목록 */
-  getCampaigns: (params?: { status?: string; page?: number; size?: number }) =>
-    http.get('/my/campaigns', { params }).then(res => z.array(myCampaignSchema).parse(res.data)),
+  /** GET /my/campaigns — 최근 조회/좋아요/최근 지원 요약 */
+  getCampaigns: () =>
+    http.get('/my/campaigns').then(res => myCampaignSummarySchema.parse(res.data)),
+
+  /** GET /my/campaigns/applies — 내 체험단 지원 목록 */
+  getApplies: (params?: { status?: string }) =>
+    http
+      .get('/my/campaigns/applies', { params })
+      .then(res => z.array(myCampaignSchema).parse(res.data)),
 
   /** GET /my/campaigns/{id} — 내 체험단 상세 (user_campaign_id 기준) */
   getCampaign: (id: number) =>
@@ -198,6 +224,24 @@ export const myService = {
   /** GET /my/likes — 찜한 공고 목록 */
   getLikes: (params?: { page?: number; size?: number }) =>
     http.get('/my/likes', { params }).then(res => z.array(campaignSchema).parse(res.data)),
+
+  /** GET /my/campaigns/recent-views — 최근 조회 공고 페이지 */
+  getRecentViewCampaigns: (params?: { page?: number; size?: number }) =>
+    http
+      .get('/my/campaigns/recent-views', { params })
+      .then(res => simplePageSchema(campaignSchema).parse(res.data)),
+
+  /** GET /my/campaigns/recent-applies — 최근 지원 공고 페이지 */
+  getRecentApplies: (params?: { page?: number; size?: number }) =>
+    http
+      .get('/my/campaigns/recent-applies', { params })
+      .then(res => simplePageSchema(myRecentAppliedCampaignSchema).parse(res.data)),
+
+  /** GET /my/campaigns/likes — 좋아요한 공고 페이지 */
+  getLikedCampaigns: (params?: { page?: number; size?: number }) =>
+    http
+      .get('/my/campaigns/likes', { params })
+      .then(res => simplePageSchema(campaignSchema).parse(res.data)),
 }
 
 // ==============================
@@ -254,6 +298,14 @@ export const blogAnalysisService = {
   /** POST /blog/chat — AI 챗봇 메시지 */
   chat: (data: ChatRequest) =>
     http.post('/blog/chat', data).then(res => chatResponseSchema.parse(res.data)),
+
+  /** POST /blog/diagnosis — 6지표 블로그 진단 */
+  diagnose: (data: DiagnoseRequest) =>
+    http.post('/blog/diagnosis', data).then(res => diagnoseResponseSchema.parse(res.data)),
+
+  /** GET /blog/diagnosis/quota — 무료 진단 쿼터 */
+  getQuota: () =>
+    http.get('/blog/diagnosis/quota').then(res => quotaResponseSchema.parse(res.data)),
 
   /** DELETE /blog/chat/{sessionId} — 챗 세션 초기화 */
   deleteChat: (sessionId: string) =>
