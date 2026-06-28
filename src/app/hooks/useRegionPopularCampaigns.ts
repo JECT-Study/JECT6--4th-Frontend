@@ -8,21 +8,24 @@ import { campaignService } from '@/service'
 
 import type { Campaign } from '@/entities/campaign'
 
-async function getPopularCampaignsByRegion(region: string): Promise<Campaign[]> {
+import type { RegionSelection } from '@/constant'
+
+async function getPopularCampaignsByRegion(region: RegionSelection): Promise<Campaign[]> {
   const response = await campaignService.getCampaigns({
-    region,
+    parentRegionId: region.parentRegionId,
+    childRegionId: region.childRegionId,
     page: 0,
     size: 6,
-    sort: 'popular',
+    sort: 'POPULAR',
   })
 
   return response.content
 }
 
 export function useRegionPopularCampaigns(initialCampaigns: Campaign[]) {
-  const [region, setRegion] = useState('')
+  const [region, setRegion] = useState<RegionSelection | null>(null)
   const { data, isFetching } = useQuery({
-    queryKey: ['region-popular-campaigns', region],
+    queryKey: ['region-popular-campaigns', region?.parentRegionId, region?.childRegionId],
     queryFn: () => getPopularCampaignsByRegion(region),
     enabled: Boolean(region),
     placeholderData: previousData => previousData ?? initialCampaigns,
@@ -31,7 +34,7 @@ export function useRegionPopularCampaigns(initialCampaigns: Campaign[]) {
   return {
     campaigns: region ? (data ?? initialCampaigns) : initialCampaigns,
     isLoading: isFetching,
-    region,
+    region: region?.label ?? '',
     setRegion,
   }
 }

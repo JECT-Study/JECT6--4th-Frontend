@@ -2,6 +2,26 @@ import { z } from 'zod'
 
 import { PointTransactionType, UserCampaignStatus, WithdrawStatus } from './my.enums'
 
+// 마이페이지 공고 요약의 최근 지원 아이템
+export const myRecentAppliedCampaignSummarySchema = z.object({
+  id: z.number(),
+  campaignId: z.number(),
+  title: z.string(),
+  brandName: z.string(),
+  status: UserCampaignStatus,
+  appliedAt: z.string(),
+  applyEndDate: z.string(),
+})
+export type MyRecentAppliedCampaignSummary = z.infer<typeof myRecentAppliedCampaignSummarySchema>
+
+// GET /my/campaigns 응답
+export const myCampaignSummarySchema = z.object({
+  recentViewCount: z.number(),
+  likedCount: z.number(),
+  recentAppliedCampaign: z.array(myRecentAppliedCampaignSummarySchema),
+})
+export type MyCampaignSummary = z.infer<typeof myCampaignSummarySchema>
+
 // GET /my/campaigns 목록 아이템
 export const myCampaignSchema = z.object({
   id: z.number(),
@@ -20,6 +40,34 @@ export type MyCampaign = z.infer<typeof myCampaignSchema>
 // GET /my/campaigns/{id} 상세
 export const myCampaignDetailSchema = myCampaignSchema
 export type MyCampaignDetail = z.infer<typeof myCampaignDetailSchema>
+
+// GET /my/campaigns/recent-applies 목록 아이템
+export const myRecentAppliedCampaignSchema = z.object({
+  id: z.number(),
+  campaignId: z.number(),
+  campaignTitle: z.string(),
+  brandName: z.string(),
+  appliedAt: z.string(),
+  applyEndDate: z.string(),
+})
+export type MyRecentAppliedCampaign = z.infer<typeof myRecentAppliedCampaignSchema>
+
+export const simplePageSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
+  z.object({
+    content: z.array(itemSchema),
+    totalElements: z.number(),
+    totalPages: z.number(),
+    size: z.number(),
+    number: z.number(),
+  })
+
+export type SimplePage<T> = {
+  content: T[]
+  totalElements: number
+  totalPages: number
+  size: number
+  number: number
+}
 
 // 포인트 거래 내역 아이템
 export const pointTransactionSchema = z.object({

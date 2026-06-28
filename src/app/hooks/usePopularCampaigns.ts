@@ -13,7 +13,7 @@ async function getPopularCampaignsByCategory(category: CampaignCategory): Promis
     category,
     page: 0,
     size: 6,
-    sort: 'popular',
+    sort: 'POPULAR',
   })
 
   return response.content

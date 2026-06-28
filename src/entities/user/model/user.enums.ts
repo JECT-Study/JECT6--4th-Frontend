@@ -9,7 +9,7 @@ export type Provider = z.infer<typeof Provider>
 export const UserGrade = z.enum(['BEGINNER', 'INTERMEDIATE', 'EXPERT'])
 export type UserGrade = z.infer<typeof UserGrade>
 
-export const SubscriptionType = z.enum(['FREE', 'BASIC', 'PRO'])
+export const SubscriptionType = z.enum(['FREE', 'PREMIUM'])
 export type SubscriptionType = z.infer<typeof SubscriptionType>
 
 export const InterestCategory = z.enum([
