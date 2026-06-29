@@ -28,6 +28,7 @@ import {
 } from '@/entities/campaign'
 import { feedBodySchema, feedHeroSchema } from '@/entities/feed'
 import {
+  aiHistorySchema,
   myCampaignDetailSchema,
   myCampaignSchema,
   myCampaignSummarySchema,
@@ -242,6 +243,9 @@ export const myService = {
     http
       .get('/my/campaigns/likes', { params })
       .then(res => simplePageSchema(campaignSchema).parse(res.data)),
+
+  /** GET /my/ai-history — 지난 AI 진단 이력 */
+  getAiHistory: () => http.get('/my/ai-history').then(res => aiHistorySchema.parse(res.data)),
 }
 
 // ==============================
