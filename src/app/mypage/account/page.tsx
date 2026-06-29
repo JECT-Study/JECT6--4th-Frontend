@@ -1,6 +1,5 @@
 'use client'
 
-import { AccountNavCard } from '../_components/AccountNavCard'
 import { BlogLinkSection } from '../_components/BlogLinkSection'
 import { CategorySection } from '../_components/CategorySection'
 import { ProfileHeader } from '../_components/ProfileHeader'
@@ -52,30 +51,6 @@ export default function AccountPage() {
         isSaving={updateProfile.isPending}
         onSave={categoryTypes => updateProfile.mutateAsync({ categoryTypes })}
       />
-
-      <section className="mt-16">
-        <h2 className="text-24 font-bold text-neutral_20">개인 정보 관리</h2>
-        <div className="mt-6 flex flex-col gap-4">
-          <AccountNavCard
-            title="회원 정보 수정"
-            description="닉네임 등 내 프로필 정보를 변경할 수 있어요. (이메일 변경은 준비 중이에요.)"
-            badge="일부 준비 중"
-            disabled
-          />
-          <AccountNavCard
-            title="내 결제 수단"
-            description="자주 쓰는 결제 수단을 관리하고, 더 빠르고 간편하게 결제해 보세요."
-            badge="준비 중"
-            disabled
-          />
-          <AccountNavCard
-            title="비밀번호 및 계정"
-            description="로그인 비밀번호와 연동 계정을 변경할 수 있어요."
-            badge="준비 중"
-            disabled
-          />
-        </div>
-      </section>
     </div>
   )
 }
