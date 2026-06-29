@@ -9,6 +9,8 @@ export {
   pointsResponseSchema,
   withdrawRequestSchema,
   withdrawResponseSchema,
+  aiHistoryItemSchema,
+  aiHistorySchema,
   type MyCampaign,
   type MyCampaignSummary,
   type MyCampaignDetail,
@@ -19,5 +21,7 @@ export {
   type PointsResponse,
   type WithdrawRequest,
   type WithdrawResponse,
+  type AiHistoryItem,
+  type AiHistory,
 } from './model/my.schema'
 export { UserCampaignStatus, PointTransactionType, WithdrawStatus } from './model/my.enums'

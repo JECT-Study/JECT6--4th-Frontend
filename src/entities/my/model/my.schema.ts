@@ -107,3 +107,17 @@ export const withdrawResponseSchema = z.object({
   requestedAt: z.string(),
 })
 export type WithdrawResponse = z.infer<typeof withdrawResponseSchema>
+
+// GET /my/ai-history 응답
+export const aiHistoryItemSchema = z.object({
+  historyId: z.number(),
+  diagnosisDate: z.string(),
+})
+export const aiHistorySchema = z.object({
+  aiHistory: z
+    .array(aiHistoryItemSchema)
+    .nullish()
+    .transform(v => v ?? []),
+})
+export type AiHistoryItem = z.infer<typeof aiHistoryItemSchema>
+export type AiHistory = z.infer<typeof aiHistorySchema>
