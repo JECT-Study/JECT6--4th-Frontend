@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 interface Props {
-  used: number
   limit: number
   remaining: number
 }

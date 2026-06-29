@@ -65,7 +65,7 @@ export default function AiHistoryPage() {
             </div>
           )}
           {quota && (
-            <QuotaBanner used={quota.used} limit={quota.limit} remaining={quota.remaining} />
+            <QuotaBanner limit={quota.limit} remaining={quota.remaining} />
           )}
         </div>
       </section>
