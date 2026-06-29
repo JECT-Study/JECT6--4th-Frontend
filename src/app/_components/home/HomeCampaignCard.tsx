@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { Heart, User } from 'lucide-react'
 
 import { TYPE_LABEL } from '@/constant'
@@ -46,6 +47,7 @@ export function HomeCampaignCard({
 }: HomeCampaignCardProps) {
   const [isLiked, setIsLiked] = useState(liked)
   const [isLikeSubmitting, setIsLikeSubmitting] = useState(false)
+  const queryClient = useQueryClient()
   const isHorizontal = variant === 'horizontal'
   const isBlogCampaign = !channel || channel === 'BLOG'
   const dday = formatDday(applyEndDate)
@@ -74,6 +76,8 @@ export function HomeCampaignCard({
     try {
       await campaignService.toggleLike(id)
       setIsLiked(prev => !prev)
+      // 마이페이지 관심공고(좋아요 수·목록)가 즉시 갱신되도록 무효화
+      void queryClient.invalidateQueries({ queryKey: ['my'] })
     } finally {
       setIsLikeSubmitting(false)
     }

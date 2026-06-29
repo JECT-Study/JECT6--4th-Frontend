@@ -14,8 +14,7 @@ function formatDate(d: string): string {
   return d
 }
 
-const CARD_CLASS =
-  'flex min-w-0 flex-1 flex-col gap-8 rounded-[16px] border border-[#dcdcdc] px-6 py-8'
+const CARD_CLASS = 'flex flex-col gap-8 rounded-[16px] border border-[#dcdcdc] px-6 py-8'
 
 export function AiDiagnosisCard({ diagnosisDate, documentId }: Props) {
   const content = (

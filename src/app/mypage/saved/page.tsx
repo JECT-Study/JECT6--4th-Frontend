@@ -1,5 +1,7 @@
 'use client'
 
+import { useRecentViews } from '@/shared/hooks/useRecentViews'
+
 import { SectionShell } from '../_components/SectionShell'
 
 import { AppliedCampaignCard } from './_components/AppliedCampaignCard'
@@ -8,6 +10,8 @@ import { useMyCampaignsSummary } from './hooks/useMyCampaigns'
 
 export default function SavedPage() {
   const { data, isLoading, isError, refetch } = useMyCampaignsSummary()
+  // 최근 조회는 백엔드가 추적하지 않으므로 클라이언트(localStorage) 기록 개수를 쓴다.
+  const recentViewCount = useRecentViews().length
 
   if (isLoading) {
     return <p className="pt-12 text-16 text-neutral_60">불러오는 중...</p>
@@ -38,7 +42,7 @@ export default function SavedPage() {
         <div className="mt-6 flex gap-8">
           <SavedSummaryCard
             label="최근 조회 공고"
-            count={data.recentViewCount}
+            count={recentViewCount}
             href="/mypage/saved/recent-views"
           />
           <SavedSummaryCard
