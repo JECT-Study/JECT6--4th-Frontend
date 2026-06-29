@@ -1,7 +1,16 @@
 import type { AnalysisMetric } from '@/entities/blog-analysis'
 
-// [Figma 기준 컴포넌트] 현재 백엔드 명세 GET /blog/analysis/{id}는 metrics를 제공하지 않아
-// BlogAnalysisDashboard에서 데이터가 있을 때만 렌더된다. 백엔드 응답에 metrics가 추가되면 자동 노출.
+// 백엔드 metrics에는 색이 없으므로 지표 순서대로 팔레트를 부여한다.
+const METRIC_COLORS = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCB77', '#4D96FF', '#9B5DE5', '#FF9F45']
+
+function metricLabel(metric: AnalysisMetric): string {
+  return metric.label ?? metric.name ?? ''
+}
+
+function metricColor(metric: AnalysisMetric, index: number): string {
+  return metric.color ?? METRIC_COLORS[index % METRIC_COLORS.length]
+}
+
 export function OverallAnalysisCard({ metrics }: { metrics: AnalysisMetric[] }) {
   return (
     <article className="rounded-lg border border-neutral_95 bg-white p-7 shadow-sm">
@@ -10,15 +19,15 @@ export function OverallAnalysisCard({ metrics }: { metrics: AnalysisMetric[] }) 
         <MetricDonut metrics={metrics} />
       </div>
       <dl className="mt-10 grid gap-3">
-        {metrics.map(metric => (
-          <div key={metric.key} className="grid grid-cols-[1fr_auto] items-center gap-4">
+        {metrics.map((metric, index) => (
+          <div key={metric.key ?? index} className="grid grid-cols-[1fr_auto] items-center gap-4">
             <dt className="flex min-w-0 items-center gap-2 text-14 leading-20 text-neutral_20">
               <span
                 className="size-2.5 shrink-0 rounded-full"
-                style={{ backgroundColor: metric.color }}
+                style={{ backgroundColor: metricColor(metric, index) }}
                 aria-hidden
               />
-              <span className="truncate">{metric.label}</span>
+              <span className="truncate">{metricLabel(metric)}</span>
             </dt>
             <dd className="text-14 font-semibold leading-20 text-neutral_20">{metric.score}%</dd>
           </div>
@@ -36,7 +45,7 @@ function MetricDonut({ metrics }: { metrics: AnalysisMetric[] }) {
       .reduce((sum, currentMetric) => sum + (currentMetric.score / total) * 100, 0)
     const end = start + (metric.score / total) * 100
 
-    return [...nextSegments, `${metric.color} ${start}% ${end}%`]
+    return [...nextSegments, `${metricColor(metric, index)} ${start}% ${end}%`]
   }, [])
 
   return (

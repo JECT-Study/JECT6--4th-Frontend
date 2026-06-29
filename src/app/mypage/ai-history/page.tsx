@@ -62,7 +62,11 @@ export default function AiHistoryPage() {
           ) : (
             <div className="flex gap-8">
               {history.aiHistory.map(h => (
-                <AiDiagnosisCard key={h.historyId} diagnosisDate={h.diagnosisDate} />
+                <AiDiagnosisCard
+                  key={h.historyId}
+                  diagnosisDate={h.diagnosisDate}
+                  documentId={h.documentId}
+                />
               ))}
             </div>
           )}

@@ -112,6 +112,7 @@ export type WithdrawResponse = z.infer<typeof withdrawResponseSchema>
 export const aiHistoryItemSchema = z.object({
   historyId: z.number(),
   diagnosisDate: z.string(),
+  documentId: z.number().nullish(),
 })
 export const aiHistorySchema = z.object({
   aiHistory: z
