@@ -13,6 +13,8 @@ import { TYPE_LABEL } from '@/constant'
 import { cn } from '@/lib/utils'
 import { campaignService } from '@/service'
 
+import { useLikedCampaignIds } from '@/app/hooks/useLikedCampaignIds'
+
 import type { Campaign } from '@/entities/campaign'
 
 import BlogThumbnailImage from '@/shared/assets/icons/thumbnail.jpeg'
@@ -45,6 +47,7 @@ export function HomeCampaignCard({
   type,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
+  const likedIds = useLikedCampaignIds()
   const [isLiked, setIsLiked] = useState(liked)
   const [isLikeSubmitting, setIsLikeSubmitting] = useState(false)
   const queryClient = useQueryClient()
@@ -65,8 +68,8 @@ export function HomeCampaignCard({
   }
 
   useEffect(() => {
-    setIsLiked(liked)
-  }, [liked])
+    setIsLiked(liked || likedIds.has(id))
+  }, [liked, likedIds, id])
 
   async function handleLike() {
     if (isLikeSubmitting) return

@@ -60,7 +60,7 @@ export function HomeCarouselSection({
           <HomeCampaignCard key={`${title}-${campaign.id}`} className="max-w-none" {...campaign} />
         ))}
       </div>
-      <Link href="/campaigns">
+      <Link href="/campaigns" className="mt-6">
         <Button variant="tertiary" className="w-full border-[#8A8A8A] py-6">
           전체 보기
         </Button>
