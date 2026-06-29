@@ -23,13 +23,13 @@ export function MyPageTabs() {
             key={tab.href}
             href={tab.href}
             className={cn(
-              'relative px-4 pt-6 pb-4 text-18 font-semibold leading-9 transition-colors',
-              active ? 'text-neutral_20' : 'text-neutral_60 hover:text-neutral_30'
+              'relative px-4 py-6 text-[24px] font-semibold leading-9 transition-colors',
+              active ? 'text-[#e72731]' : 'text-neutral_60 hover:text-neutral_30'
             )}
           >
             {tab.label}
             {active && (
-              <span className="absolute inset-x-0 bottom-0 h-[3px] rounded-full bg-neutral_20" />
+              <span className="absolute inset-x-0 bottom-0 h-[3px] rounded-full bg-[#e72731]" />
             )}
           </Link>
         )

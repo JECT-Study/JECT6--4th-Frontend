@@ -30,7 +30,7 @@ export default function LikesPage() {
 
   return (
     <div className="pb-20">
-      <h1 className="pb-10 pt-13 text-28 font-bold leading-40 tracking-tight text-neutral_20">
+      <h1 className="pb-10 pt-13 text-28 font-bold leading-40 tracking-tight text-[#303030]">
         내 관심 공고
       </h1>
       <SavedCampaignGrid campaigns={data.content} />

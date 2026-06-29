@@ -33,8 +33,8 @@ export default function SavedPage() {
   return (
     <div className="pb-20">
       {/* 내 관심 공고 요약 카드 */}
-      <section className="mt-6">
-        <h2 className="text-22 font-semibold text-neutral_20">내 관심 공고</h2>
+      <section className="mt-[62px]">
+        <h2 className="text-[22px] font-semibold text-[#303030]">내 관심 공고</h2>
         <div className="mt-6 flex gap-8">
           <SavedSummaryCard
             label="최근 조회 공고"
@@ -50,7 +50,7 @@ export default function SavedPage() {
       </section>
 
       {/* 최근 지원한 공고 */}
-      <SectionShell title="최근 지원한 공고">
+      <SectionShell title="최근 지원한 공고" className="mt-[104px]">
         {data.recentAppliedCampaign.length === 0 ? (
           <p className="text-16 text-neutral_60">최근 지원한 공고가 없습니다.</p>
         ) : (

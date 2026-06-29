@@ -50,7 +50,7 @@ export function BlogLinkSection({
               setError(undefined)
               setEditing(true)
             }}
-            className="text-16 font-medium text-neutral_60 hover:text-neutral_30"
+            className="text-[18px] font-medium text-[#9b9b9b] hover:text-neutral_30"
           >
             편집
           </button>
@@ -83,11 +83,11 @@ export function BlogLinkSection({
           {error && <p className="mt-2 text-12 font-normal leading-16 text-red_50">{error}</p>}
         </div>
       ) : (
-        <div className="flex items-center gap-6 rounded-2xl border border-neutral_95 px-6 py-6">
-          <span className="size-[62px] shrink-0 rounded-full bg-neutral_95" aria-hidden />
+        <div className="flex items-center gap-6 rounded-[16px] border border-[#dcdcdc] px-6 py-8">
+          <span className="size-[62px] shrink-0 rounded-[12px] bg-neutral_95" aria-hidden />
           <div className="flex flex-col gap-1">
-            <span className="text-16 font-semibold text-neutral_20">네이버 블로그 URL</span>
-            <span className="text-14 text-neutral_60">
+            <span className="text-[22px] font-semibold text-[#474747]">네이버 블로그 URL</span>
+            <span className="text-[18px] font-medium text-[#008dcf] underline">
               {blogUrl ?? '연동된 블로그가 없습니다.'}
             </span>
           </div>

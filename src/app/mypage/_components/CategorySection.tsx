@@ -67,33 +67,35 @@ export function CategorySection({
               setSaveError(undefined)
               setEditing(true)
             }}
-            className="text-16 font-medium text-neutral_60 hover:text-neutral_30"
+            className="text-[18px] font-medium text-[#9b9b9b] hover:text-neutral_30"
           >
             편집
           </button>
         )
       }
     >
-      <div className="flex flex-wrap gap-4">
-        {(editing ? ALL_CATEGORIES : selected).map(c => {
-          const active = editing ? draft.includes(c) : true
-          return (
-            <button
-              key={c}
-              type="button"
-              disabled={!editing}
-              onClick={() => editing && toggle(c)}
-              className={cn(
-                'rounded-xl px-4 py-2 text-16 font-medium transition-colors',
-                active
-                  ? 'bg-neutral_20 text-white'
-                  : 'bg-neutral_99 text-neutral_60 hover:bg-neutral_95'
-              )}
-            >
-              {CATEGORY_LABELS[c]}
-            </button>
-          )
-        })}
+      <div className="rounded-[16px] border border-[#dcdcdc] px-6 py-8">
+        <div className="flex flex-wrap gap-4">
+          {(editing ? ALL_CATEGORIES : selected).map(c => {
+            const active = editing ? draft.includes(c) : true
+            return (
+              <button
+                key={c}
+                type="button"
+                disabled={!editing}
+                onClick={() => editing && toggle(c)}
+                className={cn(
+                  'rounded-[10px] px-4 py-2 text-[20px] font-medium tracking-[0.8px] transition-colors',
+                  active
+                    ? 'bg-neutral_20 text-white'
+                    : 'bg-[#f7f7f7] text-[#474747] hover:bg-neutral_95'
+                )}
+              >
+                {CATEGORY_LABELS[c]}
+              </button>
+            )
+          })}
+        </div>
       </div>
       {editing && saveError && <p className="mt-2 text-12 text-red_50">{saveError}</p>}
       {!editing && selected.length === 0 && (

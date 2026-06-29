@@ -34,15 +34,17 @@ export default function AiHistoryPage() {
   }
 
   return (
-    <div className="flex flex-col gap-[104px] pb-20">
+    <div className="flex flex-col gap-[104px] pb-20 pt-[62px]">
       <section className="flex flex-col gap-6">
-        <h2 className="text-22 font-semibold leading-32 text-neutral_20">내 블로그 AI 상세 분석</h2>
-        <div className="flex flex-col gap-12 rounded-2xl border border-neutral_95 px-6 py-8">
+        <h2 className="text-[22px] font-semibold leading-32 text-[#303030]">
+          내 블로그 AI 상세 분석
+        </h2>
+        <div className="flex flex-col gap-[48px] rounded-[16px] border border-[#dcdcdc] px-6 py-8">
           <div className="flex flex-col gap-4">
-            <p className="text-24 font-semibold leading-36 text-neutral_30">
+            <p className="text-24 font-semibold leading-36 text-[#474747]">
               내 블로그 분석하고 합격율을 100%로 높히기
             </p>
-            <p className="text-22 font-medium leading-20 text-neutral_50">
+            <p className="text-[22px] font-medium leading-20 text-[#737373]">
               내 블로그를 분석하고 합격율을 높혀보세요 !
             </p>
           </div>
@@ -53,7 +55,7 @@ export default function AiHistoryPage() {
       </section>
 
       <section className="flex flex-col gap-10">
-        <h2 className="text-22 font-semibold leading-32 text-neutral_20">지난 분석 결과</h2>
+        <h2 className="text-[22px] font-semibold leading-32 text-[#303030]">지난 분석 결과</h2>
         <div className="flex flex-col gap-6">
           {history.aiHistory.length === 0 ? (
             <p className="text-16 text-neutral_60">아직 분석 이력이 없어요.</p>

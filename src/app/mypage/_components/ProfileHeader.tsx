@@ -57,8 +57,8 @@ export function ProfileHeader({
 
   if (!editing) {
     return (
-      <div className="flex items-end gap-4 pt-12">
-        <h1 className="text-40 font-bold leading-12 text-neutral_20">{nickname}</h1>
+      <div className="flex items-end gap-4 pt-[62px]">
+        <h1 className="text-[36px] font-semibold leading-[48px] text-neutral_20">{nickname}</h1>
         <button
           type="button"
           onClick={() => {
@@ -66,7 +66,7 @@ export function ProfileHeader({
             setError(undefined)
             setEditing(true)
           }}
-          className="pb-2 text-16 font-medium text-neutral_60 hover:text-neutral_30"
+          className="pb-2 text-[24px] font-medium text-[#9b9b9b] hover:text-neutral_30"
         >
           편집
         </button>
@@ -75,7 +75,7 @@ export function ProfileHeader({
   }
 
   return (
-    <div className="pt-12">
+    <div className="pt-[62px]">
       <div className="flex items-end gap-3">
         <Input
           label="닉네임"
