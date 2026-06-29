@@ -10,7 +10,7 @@ export const REGION_DATA: Record<string, string[]> = Object.fromEntries(
 export type RegionSelection = {
   label: string
   parentRegionId: number
-  childRegionId: number
+  childRegionId?: number
 }
 
 export const REGION_OPTIONS = regionsJson.map(region => ({
@@ -26,14 +26,23 @@ export function getRegionLabel(params: {
   parentRegionId?: number
   childRegionId?: number
 }): string {
-  if (!params.parentRegionId || !params.childRegionId) {
+  if (!params.parentRegionId) {
     return ''
   }
 
   const parent = REGION_OPTIONS.find(region => region.id === params.parentRegionId)
-  const child = parent?.children.find(region => region.id === params.childRegionId)
 
-  return parent && child ? `${parent.name} ${child.name}` : ''
+  if (!parent) {
+    return ''
+  }
+
+  if (!params.childRegionId) {
+    return parent.name
+  }
+
+  const child = parent.children.find(region => region.id === params.childRegionId)
+
+  return child ? `${parent.name} ${child.name}` : parent.name
 }
 
 export type SelectableCategory = InterestCategory

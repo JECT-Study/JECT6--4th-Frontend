@@ -15,12 +15,12 @@ interface Props {
 }
 
 export default function Filter({ params, setParams }: Props) {
-  const handleLocationChange = (region: RegionSelection) =>
+  const handleLocationChange = (region: RegionSelection | null) =>
     setParams(prev => ({
       ...prev,
       region: undefined,
-      parentRegionId: region.parentRegionId,
-      childRegionId: region.childRegionId,
+      parentRegionId: region?.parentRegionId,
+      childRegionId: region?.childRegionId,
       page: 0,
     }))
 

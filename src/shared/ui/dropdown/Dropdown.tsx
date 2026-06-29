@@ -1,8 +1,8 @@
 'use client'
 
-import type { ButtonHTMLAttributes } from 'react'
+import type { ButtonHTMLAttributes, MouseEvent, PointerEvent } from 'react'
 
-import { ChevronDownIcon } from 'lucide-react'
+import { ChevronDownIcon, XIcon } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ interface DropdownOption {
 
 interface DropdownProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
   label?: string
-  onChange?: (value: string) => void
+  onChange?: (value: string | undefined) => void
   options: DropdownOption[]
   placeholder?: string
   value?: string
@@ -42,6 +42,16 @@ export function Dropdown({
   ...props
 }: DropdownProps) {
   const selectedOption = options.find(option => option.value === value)
+  const clearValue = (event: MouseEvent<SVGSVGElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    onChange?.(undefined)
+  }
+
+  const stopTrigger = (event: PointerEvent<SVGSVGElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
 
   return (
     <div className={['inline-flex min-w-55 flex-col gap-2', className].filter(Boolean).join(' ')}>
@@ -58,10 +68,20 @@ export function Dropdown({
             {...props}
           >
             <span>{selectedOption?.label ?? placeholder}</span>
-            <ChevronDownIcon
-              className="size-4 text-neutral_50 transition-transform group-data-[state=open]:rotate-180"
-              aria-hidden
-            />
+            <span className="flex items-center gap-1">
+              {selectedOption && (
+                <XIcon
+                  className="size-4 text-neutral_50 hover:text-neutral_20"
+                  aria-label={`${selectedOption.label} 필터 해제`}
+                  onPointerDown={stopTrigger}
+                  onClick={clearValue}
+                />
+              )}
+              <ChevronDownIcon
+                className="size-4 text-neutral_50 transition-transform group-data-[state=open]:rotate-180"
+                aria-hidden
+              />
+            </span>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="rounded-[10px] border-neutral_95 bg-white p-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
@@ -78,7 +98,7 @@ export function Dropdown({
                     )
                   : ''
               )}
-              onSelect={() => onChange?.(option.value)}
+              onSelect={() => onChange?.(option.value === value ? undefined : option.value)}
             >
               {option.label}
             </DropdownMenuItem>

@@ -44,7 +44,7 @@ function filterTriggerClass(selected: boolean) {
 }
 
 export function DetailFilterGroup({ params, setParams }: Props) {
-  const update = (key: keyof CampaignListParams) => (value: string) =>
+  const update = (key: keyof CampaignListParams) => (value: string | undefined) =>
     setParams(prev => ({ ...prev, [key]: value, page: 0 }))
 
   return (
