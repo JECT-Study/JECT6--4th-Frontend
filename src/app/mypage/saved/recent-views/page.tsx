@@ -1,0 +1,38 @@
+'use client'
+
+import { SavedCampaignGrid } from '../_components/SavedCampaignGrid'
+import { useRecentViewCampaigns } from '../hooks/useMyCampaigns'
+
+export default function RecentViewsPage() {
+  const { data, isLoading, isError, refetch } = useRecentViewCampaigns()
+
+  if (isLoading) {
+    return <p className="pt-12 text-16 text-neutral_60">불러오는 중...</p>
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="flex flex-col items-start gap-3 pt-12">
+        <p className="text-16 text-neutral_60">정보를 불러오지 못했습니다.</p>
+        <button
+          type="button"
+          onClick={() => {
+            void refetch()
+          }}
+          className="text-16 font-medium text-violet_80"
+        >
+          다시 시도
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="pb-20">
+      <h1 className="pb-10 pt-13 text-28 font-bold leading-40 tracking-tight text-neutral_20">
+        최근 조회한 공고
+      </h1>
+      <SavedCampaignGrid campaigns={data.content} />
+    </div>
+  )
+}
