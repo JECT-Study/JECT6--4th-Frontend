@@ -61,8 +61,8 @@ export default function AiHistoryPage() {
             <p className="text-16 text-neutral_60">아직 분석 이력이 없어요.</p>
           ) : (
             <div className="flex gap-8">
-              {history.aiHistory.map((h, i) => (
-                <AiDiagnosisCard key={h.historyId} index={i + 1} diagnosisDate={h.diagnosisDate} />
+              {history.aiHistory.map(h => (
+                <AiDiagnosisCard key={h.historyId} diagnosisDate={h.diagnosisDate} />
               ))}
             </div>
           )}
