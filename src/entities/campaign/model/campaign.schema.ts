@@ -118,14 +118,14 @@ export type Campaign = z.infer<typeof campaignSchema>
 
 // 공고 상세
 export const campaignDetailSchema = campaignSchema.extend({
-  applyStartDate: z.string().optional(),
-  announceDate: z.string().optional(),
-  purchaseStartDate: z.string().optional(),
-  purchaseEndDate: z.string().optional(),
-  reviewDeadline: z.string().optional(),
-  mission: z.string().optional(),
-  searchKeywords: z.string().optional(),
-  sourceUrl: z.string().optional(),
+  applyStartDate: z.string().nullish(),
+  announceDate: z.string().nullish(),
+  purchaseStartDate: z.string().nullish(),
+  purchaseEndDate: z.string().nullish(),
+  reviewDeadline: z.string().nullish(),
+  mission: z.string().nullish(),
+  searchKeywords: z.string().nullish(),
+  sourceUrl: z.string().nullish(),
   location: campaignLocationSchema.nullable().optional(),
   campaignDetail: campaignDetailInfoSchema.nullable().optional(),
   status: CampaignStatus.optional(),
