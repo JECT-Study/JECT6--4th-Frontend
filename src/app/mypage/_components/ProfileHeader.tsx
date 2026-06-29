@@ -14,12 +14,12 @@ export function ProfileHeader({
   onSave,
   isSaving = false,
 }: {
-  nickname: string
+  nickname: string | null
   onSave?: (nickname: string) => Promise<unknown>
   isSaving?: boolean
 }) {
   const [editing, setEditing] = useState(false)
-  const [value, setValue] = useState(nickname)
+  const [value, setValue] = useState(nickname ?? '')
   const [error, setError] = useState<string>()
   const [checking, setChecking] = useState(false)
 
@@ -29,7 +29,7 @@ export function ProfileHeader({
       setError('닉네임을 입력해 주세요.')
       return
     }
-    if (next === nickname) {
+    if (next === (nickname ?? '')) {
       setEditing(false)
       return
     }
@@ -58,11 +58,13 @@ export function ProfileHeader({
   if (!editing) {
     return (
       <div className="flex items-end gap-4 pt-[62px]">
-        <h1 className="text-[36px] font-semibold leading-[48px] text-neutral_20">{nickname}</h1>
+        <h1 className="text-[36px] font-semibold leading-[48px] text-neutral_20">
+          {nickname ?? '닉네임 미설정'}
+        </h1>
         <button
           type="button"
           onClick={() => {
-            setValue(nickname)
+            setValue(nickname ?? '')
             setError(undefined)
             setEditing(true)
           }}

@@ -5,7 +5,8 @@ import { SavedCampaignGrid } from '../_components/SavedCampaignGrid'
 import { useLikedCampaigns } from '../hooks/useMyCampaigns'
 
 export default function LikesPage() {
-  const { data, isLoading, isError, refetch } = useLikedCampaigns()
+  // TODO: 페이지네이션/무한스크롤은 후속. 현재는 충분히 큰 페이지로 한 번에 조회해 잘림 방지.
+  const { data, isLoading, isError, refetch } = useLikedCampaigns({ size: 100 })
 
   if (isLoading) {
     return <p className="pt-12 text-16 text-neutral_60">불러오는 중...</p>

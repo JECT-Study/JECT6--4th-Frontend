@@ -48,12 +48,12 @@ src/app/mypage/
 | 구독/결제 | `/mypage/subscription` |
 
 - `/mypage` 진입 시 `/mypage/account`로 리다이렉트.
-- `layout.tsx`에서 로그인 가드: `authAtom`이 없으면 `/auth/login`으로 리다이렉트.
+- `layout.tsx`에서 로그인 가드: `isLoggedInAtom`이 false면 `/auth/login`으로 리다이렉트.
 
 **재사용 자산** (이미 존재):
 - API 호출: `src/service/index.ts` (`userService`, `myService`)
 - 스키마/타입: `src/entities/{user,my,auth}/model/*`
-- 인증 상태: `src/entities/auth/model/auth.store.ts` (`authAtom`)
+- 인증 상태: `src/entities/auth/model/auth.store.ts` (`isLoggedInAtom`)
 - HTTP 클라이언트: `src/shared/api/http.ts` (토큰 주입 + snake/camel 변환 자동)
 - 공용 UI: `src/components/ui/button.tsx`, `src/shared/ui/input/Input.tsx`, `src/shared/ui/dropdown/Dropdown.tsx`
 - 데이터 패칭: `@tanstack/react-query` (훅으로 래핑)

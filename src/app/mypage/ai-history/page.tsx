@@ -42,10 +42,10 @@ export default function AiHistoryPage() {
         <div className="flex flex-col gap-[48px] rounded-[16px] border border-[#dcdcdc] px-6 py-8">
           <div className="flex flex-col gap-4">
             <p className="text-24 font-semibold leading-36 text-[#474747]">
-              내 블로그 분석하고 합격율을 100%로 높히기
+              내 블로그 분석하고 합격률을 100%로 높이기
             </p>
             <p className="text-[22px] font-medium leading-20 text-[#737373]">
-              내 블로그를 분석하고 합격율을 높혀보세요 !
+              내 블로그를 분석하고 합격률을 높여보세요 !
             </p>
           </div>
           <Button variant="secondary" size="lg" fullWidth asChild>

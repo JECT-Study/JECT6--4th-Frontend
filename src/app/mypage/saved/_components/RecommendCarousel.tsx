@@ -23,7 +23,7 @@ export function RecommendCarousel() {
     <section className="mt-16 w-full">
       <div className="mb-10 flex items-center justify-between">
         <h2 className="text-25 font-semibold tracking-wider text-neutral_20">
-          00님에게 맞춰 추천하는 맞춤 체험단
+          지금 인기 있는 추천 체험단
         </h2>
       </div>
       <Carousel opts={{ align: 'start' }} className="w-full">

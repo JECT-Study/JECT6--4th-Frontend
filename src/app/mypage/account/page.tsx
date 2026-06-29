@@ -32,12 +32,12 @@ export default function AccountPage() {
     )
   }
 
-  const blogUrl = profile.blogs[0]?.blogUrl ?? null
+  const blogUrl = profile.blogs.find(blog => blog.platform === 'NAVER')?.blogUrl ?? null
 
   return (
     <div className="pb-20">
       <ProfileHeader
-        nickname={profile.nickname ?? '닉네임 미설정'}
+        nickname={profile.nickname}
         isSaving={updateProfile.isPending}
         onSave={nickname => updateProfile.mutateAsync({ nickname })}
       />
