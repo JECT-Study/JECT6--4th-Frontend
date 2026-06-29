@@ -2,8 +2,20 @@ import Link from 'next/link'
 
 import type { MyRecentAppliedCampaignSummary } from '@/entities/my'
 
+// 달력 일자 기준으로 D-day 계산(시/분 단위 타임존 오차 방지).
 function computeDDay(applyEndDate: string): string {
-  const d = Math.ceil((new Date(applyEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(applyEndDate)
+  let endUtc: number
+  if (match) {
+    endUtc = Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+  } else {
+    const parsed = new Date(applyEndDate)
+    if (Number.isNaN(parsed.getTime())) return ''
+    endUtc = Date.UTC(parsed.getFullYear(), parsed.getMonth(), parsed.getDate())
+  }
+  const now = new Date()
+  const todayUtc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+  const d = Math.round((endUtc - todayUtc) / (1000 * 60 * 60 * 24))
   if (d > 0) return `D-${d}`
   if (d === 0) return 'D-Day'
   return '마감'
