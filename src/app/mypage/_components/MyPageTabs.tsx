@@ -9,7 +9,6 @@ const TABS = [
   { href: '/mypage/account', label: '내 계정 관리' },
   { href: '/mypage/saved', label: '관심 공고' },
   { href: '/mypage/ai-history', label: 'AI 히스토리' },
-  { href: '/mypage/subscription', label: '구독/결제' },
 ] as const
 
 export function MyPageTabs() {

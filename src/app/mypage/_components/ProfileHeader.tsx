@@ -75,27 +75,29 @@ export function ProfileHeader({
   }
 
   return (
-    <div className="flex items-end gap-3 pt-12">
-      <Input
-        label="닉네임"
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        errorMessage={error}
-        maxLength={12}
-        className="w-80"
-      />
-      <Button
-        size="md"
-        disabled={isSaving || checking}
-        onClick={() => {
-          void handleSave()
-        }}
-      >
-        저장
-      </Button>
-      <Button size="md" variant="tertiary" onClick={() => setEditing(false)}>
-        취소
-      </Button>
+    <div className="pt-12">
+      <div className="flex items-end gap-3">
+        <Input
+          label="닉네임"
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          maxLength={12}
+          className="w-80"
+        />
+        <Button
+          size="md"
+          disabled={isSaving || checking}
+          onClick={() => {
+            void handleSave()
+          }}
+        >
+          저장
+        </Button>
+        <Button size="md" variant="tertiary" onClick={() => setEditing(false)}>
+          취소
+        </Button>
+      </div>
+      {error && <p className="mt-2 text-12 font-normal leading-16 text-red_50">{error}</p>}
     </div>
   )
 }

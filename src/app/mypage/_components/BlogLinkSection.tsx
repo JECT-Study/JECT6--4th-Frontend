@@ -58,27 +58,29 @@ export function BlogLinkSection({
       }
     >
       {editing ? (
-        <div className="flex items-end gap-3">
-          <Input
-            variant="url"
-            label="네이버 블로그 URL"
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            errorMessage={error}
-            placeholder="https://blog.naver.com/..."
-            className="flex-1"
-          />
-          <Button
-            disabled={isSaving}
-            onClick={() => {
-              void handleSave()
-            }}
-          >
-            저장
-          </Button>
-          <Button variant="tertiary" onClick={() => setEditing(false)}>
-            취소
-          </Button>
+        <div>
+          <div className="flex items-end gap-3">
+            <Input
+              variant="url"
+              label="네이버 블로그 URL"
+              value={value}
+              onChange={e => setValue(e.target.value)}
+              placeholder="https://blog.naver.com/..."
+              className="flex-1"
+            />
+            <Button
+              disabled={isSaving}
+              onClick={() => {
+                void handleSave()
+              }}
+            >
+              저장
+            </Button>
+            <Button variant="tertiary" onClick={() => setEditing(false)}>
+              취소
+            </Button>
+          </div>
+          {error && <p className="mt-2 text-12 font-normal leading-16 text-red_50">{error}</p>}
         </div>
       ) : (
         <div className="flex items-center gap-6 rounded-2xl border border-neutral_95 px-6 py-6">
