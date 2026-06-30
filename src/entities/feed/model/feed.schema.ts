@@ -35,14 +35,22 @@ export const aiRecommendationsSchema = z.object({
 export type AiRecommendations = z.infer<typeof aiRecommendationsSchema>
 
 // 블로거 성공 사례 아이템 (GET /feed/blogger-stories)
-export const bloggerStorySchema = z.object({
-  bloggerNickname: z.string(),
-  campaignTitle: z.string(),
-  story: z.string(),
-})
+export const bloggerStorySchema = z
+  .object({
+    bloggerNickname: z.string().optional(),
+    nickname: z.string().optional(),
+    campaignTitle: z.string().optional(),
+    category: z.string().optional(),
+    profileUrl: z.string().optional(),
+    story: z.string(),
+  })
+  .transform(({ bloggerNickname, nickname, ...story }) => ({
+    ...story,
+    bloggerNickname: bloggerNickname ?? nickname ?? '익명 블로거',
+  }))
 export type BloggerStory = z.infer<typeof bloggerStorySchema>
 
-export const bloggerStoriesSchema = z.object({
-  stories: z.array(bloggerStorySchema),
-})
+export const bloggerStoriesSchema = z
+  .union([z.array(bloggerStorySchema), z.object({ stories: z.array(bloggerStorySchema) })])
+  .transform(value => (Array.isArray(value) ? { stories: value } : value))
 export type BloggerStories = z.infer<typeof bloggerStoriesSchema>

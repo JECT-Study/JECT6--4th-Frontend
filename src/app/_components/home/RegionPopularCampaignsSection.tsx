@@ -10,6 +10,7 @@ import type { Campaign } from '@/entities/campaign'
 import { Button } from '@/shared/ui'
 
 import { HomeCampaignCard } from './HomeCampaignCard'
+import { HomeEmptyState } from './HomeEmptyState'
 
 export default function RegionPopularCampaignsSection({ campaigns }: { campaigns: Campaign[] }) {
   const {
@@ -36,20 +37,24 @@ export default function RegionPopularCampaignsSection({ campaigns }: { campaigns
           </h2>
         </div>
       </div>
-      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
-        {[0, 1].map(column => (
-          <div key={column} className="flex flex-col gap-6">
-            {displayedCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
-              <HomeCampaignCard
-                key={`region-${campaign.id}`}
-                variant="horizontal"
-                className="max-w-none"
-                {...campaign}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      {displayedCampaigns.length > 0 ? (
+        <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+          {[0, 1].map(column => (
+            <div key={column} className="flex flex-col gap-6">
+              {displayedCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+                <HomeCampaignCard
+                  key={`region-${campaign.id}`}
+                  variant="horizontal"
+                  className="max-w-none"
+                  {...campaign}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <HomeEmptyState />
+      )}
       {isLoading && (
         <p className="m-0 text-center text-14 font-medium leading-20 text-neutral_60">
           불러오는 중...

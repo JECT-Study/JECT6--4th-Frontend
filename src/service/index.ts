@@ -28,7 +28,7 @@ import {
   paginatedSchema,
   type CampaignListParams,
 } from '@/entities/campaign'
-import { feedBodySchema, feedHeroSchema } from '@/entities/feed'
+import { bloggerStoriesSchema, feedBodySchema, feedHeroSchema } from '@/entities/feed'
 import {
   aiHistorySchema,
   myCampaignDetailSchema,
@@ -144,6 +144,10 @@ export const feedService = {
 
   /** GET /feed/body — 메인 바디 (인기·마감임박·100%당첨) */
   getBody: () => http.get('/feed/body').then(res => feedBodySchema.parse(res.data)),
+
+  /** GET /feed/blogger-stories — 블로거 성공 사례 */
+  getBloggerStories: () =>
+    http.get('/feed/blogger-stories').then(res => bloggerStoriesSchema.parse(res.data)),
 }
 
 // ==============================

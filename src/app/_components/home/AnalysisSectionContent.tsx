@@ -12,6 +12,7 @@ import type { RecommendedCampaign } from '@/entities/blog-analysis'
 import type { Campaign } from '@/entities/campaign'
 
 import { HomeCampaignCard } from './HomeCampaignCard'
+import { HomeEmptyState } from './HomeEmptyState'
 import { SectionHeader } from './SectionHeader'
 
 interface AnalysisSectionContentProps {
@@ -59,6 +60,8 @@ export function AnalysisSectionContent({ previewCampaigns }: AnalysisSectionCont
 }
 
 function LockedAnalysisPreview({ campaigns }: { campaigns: Campaign[] }) {
+  if (campaigns.length === 0) return <HomeEmptyState />
+
   return (
     <div className="relative min-h-80.5 overflow-hidden rounded-none bg-white">
       <div
