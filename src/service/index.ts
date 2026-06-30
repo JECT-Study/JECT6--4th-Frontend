@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { tokenResponseSchema } from '@/entities/auth'
+import type { LoginRequest } from '@/entities/auth'
 import {
   analyzeJobResponseSchema,
   analysisHistoryResponseSchema,
@@ -19,6 +20,7 @@ import {
 } from '@/entities/blog-analysis'
 import {
   campaignDetailSchema,
+  campaignApplySchema,
   campaignLikeSchema,
   campaignLikesAnalysisSchema,
   campaignSchema,
@@ -60,9 +62,12 @@ import { http } from '@/shared/api'
 
 export const authService = {
   /** POST /auth/login/{provider} — OAuth 코드로 서비스 토큰 발급 */
-  login: (provider: Provider) =>
+  login: (provider: Provider, data: LoginRequest) =>
     http
-      .post(`/api/auth/login/${provider.toLowerCase()}`)
+      .post(`/api/auth/login/${provider.toLowerCase()}`, {
+        code: data.code,
+        redirect_uri: data.redirectUri,
+      })
       .then(res => tokenResponseSchema.parse(res.data)),
 
   /** POST /auth/demo-login — 로컬 테스트용 데모 토큰 발급 */
@@ -183,6 +188,10 @@ export const campaignService = {
   /** POST /campaigns/{id}/like — 좋아요 토글 */
   toggleLike: (id: number) =>
     http.post(`/campaigns/${id}/like`).then(res => campaignLikeSchema.parse(res.data)),
+
+  /** POST /campaigns/{id}/apply — 공고 지원 */
+  apply: (id: number) =>
+    http.post(`/campaigns/${id}/apply`).then(res => campaignApplySchema.parse(res.data)),
 
   /** GET /campaigns/{id}/likes/analysis — 좋아요 사용자 특성 분석 */
   getLikesAnalysis: (id: number) =>

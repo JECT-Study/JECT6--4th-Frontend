@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { campaignSchema } from '@/entities/campaign'
 
 // 히어로 배너 타입
-export const HeroType = z.enum(['POPULAR', 'ACTIVITY_BASED', 'AI_MATCHED', 'ANONYMOUS', 'BANNER'])
+export const HeroType = z.enum(['ANONYMOUS', 'LOGGED_IN', 'BLOG_LINKED', 'BANNER'])
 export type HeroType = z.infer<typeof HeroType>
 
 // GET /feed/hero 응답
