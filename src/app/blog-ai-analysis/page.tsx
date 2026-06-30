@@ -23,10 +23,11 @@ interface BlogAnalysisData {
 }
 
 // documentId 파라미터가 있으면 해당 분석을, 없으면 가장 최근 분석을 대상으로 한다.
+// 파라미터가 있지만 유효하지 않으면(예: ?documentId=abc) 최신으로 폴백하지 않고 null을 반환한다.
 async function resolveTargetId(documentIdParam: string | null): Promise<number | null> {
   if (documentIdParam) {
     const parsed = Number(documentIdParam)
-    if (Number.isFinite(parsed)) return parsed
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : null
   }
   const history = await blogAnalysisService.getHistory()
   return history.content[0]?.id ?? null

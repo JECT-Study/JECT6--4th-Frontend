@@ -13,7 +13,7 @@ export default function RecentViewsPage() {
       <h1 className="pb-10 pt-13 text-28 font-bold leading-40 tracking-tight text-[#303030]">
         최근 조회한 공고
       </h1>
-      <SavedCampaignGrid campaigns={campaigns} />
+      <SavedCampaignGrid campaigns={campaigns} emptyText="최근 조회한 공고가 없습니다." />
     </div>
   )
 }
