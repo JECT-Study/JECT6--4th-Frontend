@@ -19,29 +19,23 @@ import { Button } from '@/shared/ui'
 const HERO_CONTENT: Partial<
   Record<HeroType, { title: string; description: string; cta: string; href: string }>
 > = {
-  AI_MATCHED: {
-    title: '내 블로그 진단하고 더 정확한 공고 추천받기',
-    description: 'AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.',
-    cta: 'AI 맞춤 체험단 보기 >',
-    href: '#ai-campaigns',
-  },
-  POPULAR: {
-    title: '지금 가장 인기 있는 체험단을 확인해보세요',
-    description: '수백 개의 체험단 중 지금 가장 많이 신청받고 있는 공고를 모았어요.',
-    cta: '인기 체험단 보기 >',
-    href: '#popular-campaigns',
-  },
-  ACTIVITY_BASED: {
-    title: '내 근처 체험단, 한눈에 찾아보기',
-    description: '지역별로 분류된 체험단을 통해 가까운 공고를 빠르게 찾아보세요.',
-    cta: '지역별 체험단 보기 >',
-    href: '#region-popular-campaigns',
-  },
   ANONYMOUS: {
     title: '나에게 딱 맞는 체험단을 찾아보세요',
     description: 'AI가 내 블로그를 분석하여 상황에 딱 맞는 체험단을 추천해드려요.',
     cta: '지금 시작하기 >',
     href: '/campaigns',
+  },
+  LOGGED_IN: {
+    title: '블로그를 연동하고 AI 맞춤 추천을 받아보세요',
+    description: '내 블로그를 분석하면 상황에 딱 맞는 체험단을 더 빠르게 찾을 수 있어요.',
+    cta: '블로그 연동하기 >',
+    href: '/mypage/account',
+  },
+  BLOG_LINKED: {
+    title: 'AI가 분석한 나만의 맞춤 체험단',
+    description: '블로그 관심사와 활동에 맞춘 추천 공고를 확인해보세요.',
+    cta: '추천 공고 보기 >',
+    href: '#ai-campaigns',
   },
 }
 

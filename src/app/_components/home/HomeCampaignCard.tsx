@@ -43,6 +43,7 @@ export function HomeCampaignCard({
   id,
   liked = false,
   recruitCount,
+  thumbnailUrl,
   title,
   type,
   variant = 'vertical',
@@ -63,6 +64,7 @@ export function HomeCampaignCard({
     id,
     liked: isLiked,
     recruitCount,
+    thumbnailUrl,
     title,
     type,
   }
@@ -103,7 +105,12 @@ export function HomeCampaignCard({
         )}
       >
         <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
-          <HomeCardImage className="h-full w-full" showBlogThumbnail={isBlogCampaign}>
+          <HomeCardImage
+            alt={title}
+            className="h-full w-full"
+            showBlogThumbnail={isBlogCampaign}
+            thumbnailUrl={thumbnailUrl}
+          >
             {variant === 'ai' && fitLabel && (
               <span className="absolute left-3 top-4 rounded-sm bg-red_95 px-3 py-1 text-12 font-semibold leading-16 text-red_40">
                 {fitLabel}
@@ -166,19 +173,23 @@ export function HomeCampaignCard({
 }
 
 function HomeCardImage({
+  alt,
   children,
   className = '',
   showBlogThumbnail,
+  thumbnailUrl,
 }: {
+  alt: string
   children?: ReactNode
   className?: string
   showBlogThumbnail: boolean
+  thumbnailUrl?: string
 }) {
+  const imageSrc = thumbnailUrl || (showBlogThumbnail ? BlogThumbnailImage : null)
+
   return (
     <div className={cn('relative shrink-0 overflow-hidden rounded-md bg-neutral_99', className)}>
-      {showBlogThumbnail && (
-        <Image src={BlogThumbnailImage} alt="" fill className="object-cover" sizes="282px" />
-      )}
+      {imageSrc && <Image src={imageSrc} alt={alt} fill className="object-cover" sizes="282px" />}
       {children}
     </div>
   )

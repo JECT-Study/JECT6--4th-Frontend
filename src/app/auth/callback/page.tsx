@@ -41,7 +41,7 @@ function AuthCallbackContent() {
           return
         }
 
-        router.replace(user.profileCompleted ? '/' : '/auth/register')
+        router.replace(user.profileCompleted ? '/' : '/onboarding')
       } catch {
         if (!isMounted) {
           return
