@@ -1,0 +1,98 @@
+import type { CampaignDetail } from '@/entities/campaign'
+
+export const mockCampaignDetail: CampaignDetail = {
+  id: 1,
+  title: '[서울] 샐러드 정기배송 체험단',
+  brandName: '프레시테이블',
+  category: 'FOOD',
+  type: 'DELIVERY',
+  channel: 'BLOG',
+  images: [
+    {
+      url: 'https://media.bunjang.co.kr/product/410221229_2_1779701101_w360.jpg',
+    },
+    {
+      url: 'https://media.bunjang.co.kr/product/410221229_2_1779701101_w360.jpg',
+    },
+  ],
+  providedContent: '샐러드 정기배송 1개월 무료 체험',
+  recruitCount: 20,
+  applyEndDate: '2026-06-30',
+  isGuaranteed: false,
+  location: {
+    regionDepth1: '서울',
+    regionDepth2: '마포구',
+    address: '서울특별시 마포구 합정동 123-4',
+    latitude: 37.5497,
+    longitude: 126.9143,
+  },
+  campaignDetail: {
+    searchKeywords: ['샐러드', '정기배송', '건강식', '신선', '제철채소', '다이어트', '비건'],
+    links: [
+      { title: '브랜드 공식 홈페이지', url: 'https://freshtable.co.kr' },
+      { title: '구매 페이지', url: 'https://freshtable.co.kr/shop' },
+    ],
+    additionalNotice: '배송은 주 2회 화/금 진행되며, 첫 배송일은 선정 후 안내드립니다.',
+    caution: '리뷰 작성 시 제품 사진 최소 3장 이상 포함 필수입니다.',
+    mission: '블로그 포스팅 1건 (사진 5장 이상, 500자 이상 본문 작성)',
+  },
+  applyStartDate: '2026-06-01',
+  status: 'ACTIVE',
+}
+
+export const mockCampaignDetails: CampaignDetail[] = [
+  mockCampaignDetail,
+  {
+    id: 2,
+    title: '[성수] 피부 관리 프로그램',
+    brandName: '오브제스킨',
+    category: 'BEAUTY',
+    type: 'VISIT',
+    channel: 'BLOG',
+    images: [{ url: '' }],
+    providedContent: '프리미엄 피부 관리 1회 무료 체험',
+    recruitCount: 15,
+    applyEndDate: '2026-06-20',
+    isGuaranteed: false,
+    location: {
+      regionDepth1: '서울',
+      regionDepth2: '성동구',
+      address: null,
+      latitude: null,
+      longitude: null,
+    },
+    campaignDetail: {
+      searchKeywords: [],
+      links: [],
+      additionalNotice: null,
+      caution: null,
+      mission: null,
+    },
+    applyStartDate: '2026-06-01',
+    status: 'ACTIVE',
+  },
+  {
+    id: 3,
+    title: '[전국] 홈카페 키트 리뷰어',
+    brandName: '그린하우스',
+    category: 'LIVING',
+    type: 'DELIVERY',
+    channel: 'BLOG',
+    images: [{ url: '' }],
+    providedContent: '홈카페 키트 1세트 제공',
+    recruitCount: 30,
+    applyEndDate: '2026-06-25',
+    isGuaranteed: false,
+    location: null,
+    campaignDetail: {
+      searchKeywords: [],
+      links: [],
+      additionalNotice: null,
+      caution: null,
+      mission: null,
+    },
+    applyStartDate: '2026-06-01',
+    status: 'ACTIVE',
+    sourcePlatform: 'INVIEW',
+  },
+]

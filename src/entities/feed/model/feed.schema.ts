@@ -40,13 +40,19 @@ export const bloggerStorySchema = z
     bloggerNickname: z.string().optional(),
     nickname: z.string().optional(),
     campaignTitle: z.string().optional(),
+    title: z.string().optional(),       // Spring API: 포스팅 제목 → campaignTitle로 매핑
     category: z.string().optional(),
     profileUrl: z.string().optional(),
-    story: z.string(),
+    blogUrl: z.string().optional(),     // Spring API: 블로그 URL → profileUrl로 매핑
+    story: z.string().optional(),
+    blogName: z.string().optional(),    // Spring API: 블로그명 → story로 매핑
   })
-  .transform(({ bloggerNickname, nickname, ...story }) => ({
-    ...story,
+  .transform(({ bloggerNickname, nickname, blogUrl, title, blogName, story, campaignTitle, ...rest }) => ({
+    ...rest,
     bloggerNickname: bloggerNickname ?? nickname ?? '익명 블로거',
+    campaignTitle: campaignTitle ?? title,
+    profileUrl: rest.profileUrl ?? blogUrl,
+    story: story ?? blogName ?? '',
   }))
 export type BloggerStory = z.infer<typeof bloggerStorySchema>
 
