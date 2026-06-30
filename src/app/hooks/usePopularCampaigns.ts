@@ -8,6 +8,8 @@ import { campaignService } from '@/service'
 
 import type { Campaign, CampaignCategory } from '@/entities/campaign'
 
+type PopularCampaignCategory = CampaignCategory | 'ALL'
+
 async function getPopularCampaignsByCategory(category: CampaignCategory): Promise<Campaign[]> {
   const response = await campaignService.getCampaigns({
     category,
@@ -20,10 +22,11 @@ async function getPopularCampaignsByCategory(category: CampaignCategory): Promis
 }
 
 export function usePopularCampaigns(initialCampaigns: Campaign[]) {
-  const [category, setCategory] = useState<CampaignCategory>('FOOD')
+  const [category, setCategory] = useState<PopularCampaignCategory>('ALL')
   const { data, isFetching } = useQuery({
     queryKey: ['popular-campaigns', category],
-    queryFn: () => getPopularCampaignsByCategory(category),
+    queryFn: () =>
+      category === 'ALL' ? initialCampaigns : getPopularCampaignsByCategory(category),
     placeholderData: previousData => previousData ?? initialCampaigns,
   })
 

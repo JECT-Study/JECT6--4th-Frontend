@@ -30,6 +30,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <div className="flex gap-11.25">
         <Details data={data} viewerCount={viewers.count} />
         <AdditionalContent
+          url={data.sourceUrl}
           campaignId={campaignId}
           isLiked={false}
           related={related}

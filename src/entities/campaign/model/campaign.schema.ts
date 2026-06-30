@@ -8,6 +8,19 @@ import {
   CampaignType,
 } from './campaign.enums'
 
+const nullishString = z
+  .string()
+  .nullish()
+  .transform(value => value ?? undefined)
+const nullishNumber = z
+  .number()
+  .nullish()
+  .transform(value => value ?? undefined)
+const nullishBoolean = z
+  .boolean()
+  .nullish()
+  .transform(value => value ?? undefined)
+
 // 공통 페이지네이션 응답
 export const paginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z
@@ -95,24 +108,24 @@ export type CampaignDetailInfo = z.infer<typeof campaignDetailInfoSchema>
 export const campaignSchema = z.object({
   id: z.number(),
   title: z.string(),
-  brandName: z.string().optional(),
+  brandName: nullishString,
   category: CampaignCategory.optional(),
   type: CampaignType.optional(),
   channel: CampaignChannel.optional(),
-  thumbnailUrl: z.string().optional(),
+  thumbnailUrl: nullishString,
   images: z.array(campaignImageSchema).optional(),
-  providedContent: z.string().optional(),
-  recruitCount: z.number().optional(),
-  applyCount: z.number().optional(),
-  applyEndDate: z.string().optional(),
-  isGuaranteed: z.boolean().optional(),
+  providedContent: nullishString,
+  recruitCount: nullishNumber,
+  applyCount: nullishNumber,
+  applyEndDate: nullishString,
+  isGuaranteed: nullishBoolean,
   region: z.string().nullish(),
   parentRegionId: z.number().nullish(),
   childRegionId: z.number().nullish(),
   status: CampaignStatus.optional(),
-  viewCount: z.number().optional(),
-  sourcePlatform: z.string().optional(),
-  liked: z.boolean().optional(),
+  viewCount: nullishNumber,
+  sourcePlatform: nullishString,
+  liked: nullishBoolean,
 })
 export type Campaign = z.infer<typeof campaignSchema>
 
@@ -152,6 +165,15 @@ export const campaignViewersSchema = z.object({
   count: z.number(),
 })
 export type CampaignViewers = z.infer<typeof campaignViewersSchema>
+
+// POST /campaigns/{id}/apply 응답
+export const campaignApplySchema = z.object({
+  id: z.number(),
+  campaignId: z.number(),
+  status: z.enum(['APPLIED', 'REVIEWING', 'SELECTED', 'COMPLETED']),
+  appliedAt: z.string(),
+})
+export type CampaignApply = z.infer<typeof campaignApplySchema>
 
 // GET /campaigns/{id}/likes/analysis 응답
 export const campaignLikesAnalysisSchema = z.object({

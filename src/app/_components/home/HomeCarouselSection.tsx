@@ -11,6 +11,7 @@ import type { Campaign } from '@/entities/campaign'
 import { Button } from '@/shared/ui'
 
 import { HomeCampaignCard } from './HomeCampaignCard'
+import { HomeEmptyState } from './HomeEmptyState'
 import { SectionHeader } from './SectionHeader'
 
 interface HomeCarouselSectionProps {
@@ -50,16 +51,24 @@ export function HomeCarouselSection({
             : undefined
         }
       />
-      <div
-        className={cn(
-          'grid gap-6 sm:grid-cols-2',
-          columns === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4'
-        )}
-      >
-        {visibleCampaigns.map(campaign => (
-          <HomeCampaignCard key={`${title}-${campaign.id}`} className="max-w-none" {...campaign} />
-        ))}
-      </div>
+      {campaigns.length > 0 ? (
+        <div
+          className={cn(
+            'grid gap-6 sm:grid-cols-2',
+            columns === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4'
+          )}
+        >
+          {visibleCampaigns.map(campaign => (
+            <HomeCampaignCard
+              key={`${title}-${campaign.id}`}
+              className="max-w-none"
+              {...campaign}
+            />
+          ))}
+        </div>
+      ) : (
+        <HomeEmptyState />
+      )}
       <Link href="/campaigns" className="mt-6">
         <Button variant="tertiary" className="w-full border-[#8A8A8A] py-6">
           전체 보기

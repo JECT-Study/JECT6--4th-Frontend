@@ -2,24 +2,24 @@
 
 import Link from 'next/link'
 
+import { CAMPAIGN_CATEGORY_LABEL } from '@/constant'
+
 import { usePopularCampaigns } from '@/app/hooks/usePopularCampaigns'
 
-import type { Campaign, CampaignCategory } from '@/entities/campaign'
+import { CampaignCategory, type Campaign } from '@/entities/campaign'
 
 import { Button } from '@/shared/ui'
 
 import { HomeCampaignCard } from './HomeCampaignCard'
+import { HomeEmptyState } from './HomeEmptyState'
 import { SectionHeader } from './SectionHeader'
 
-const CATEGORY_OPTIONS: { label: string; value: CampaignCategory }[] = [
-  { label: '음식', value: 'FOOD' },
-  { label: '뷰티', value: 'BEAUTY' },
-  { label: '패션', value: 'FASHION' },
-  { label: '여행', value: 'TRAVEL' },
-  { label: '라이프스타일', value: 'LIVING' },
-  { label: '테크/IT', value: 'TECH_IT' },
-  { label: '반려동물', value: 'PET' },
-  { label: '문화', value: 'CULTURE' },
+const CATEGORY_OPTIONS: { label: string; value: CampaignCategory | 'ALL' }[] = [
+  { label: '전체', value: 'ALL' },
+  ...CampaignCategory.options.map(value => ({
+    label: CAMPAIGN_CATEGORY_LABEL[value],
+    value,
+  })),
 ]
 
 export default function PopularCampaignsSection({
@@ -47,24 +47,28 @@ export default function PopularCampaignsSection({
           filter={{
             value: category,
             options: CATEGORY_OPTIONS,
-            onChange: value => setCategory(value as CampaignCategory),
+            onChange: value => setCategory(value as CampaignCategory | 'ALL'),
           }}
         />
       )}
-      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
-        {[0, 1].map(column => (
-          <div key={column} className="flex flex-col gap-6">
-            {displayedCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
-              <HomeCampaignCard
-                key={`popular-${campaign.id}`}
-                variant="horizontal"
-                className="max-w-none"
-                {...campaign}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      {displayedCampaigns.length > 0 ? (
+        <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+          {[0, 1].map(column => (
+            <div key={column} className="flex flex-col gap-6">
+              {displayedCampaigns.slice(column * 3, column * 3 + 3).map(campaign => (
+                <HomeCampaignCard
+                  key={`popular-${campaign.id}`}
+                  variant="horizontal"
+                  className="max-w-none"
+                  {...campaign}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <HomeEmptyState />
+      )}
       {isLoading && (
         <p className="m-0 text-center text-14 font-medium leading-20 text-neutral_60">
           불러오는 중...

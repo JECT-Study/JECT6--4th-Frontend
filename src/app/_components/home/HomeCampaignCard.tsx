@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { useQueryClient } from '@tanstack/react-query'
+import { useAtomValue } from 'jotai'
 import { Heart, User } from 'lucide-react'
 
 import { TYPE_LABEL } from '@/constant'
@@ -15,6 +16,7 @@ import { campaignService } from '@/service'
 
 import { useLikedCampaignIds } from '@/app/hooks/useLikedCampaignIds'
 
+import { isLoggedInAtom } from '@/entities/auth'
 import type { Campaign } from '@/entities/campaign'
 
 import BlogThumbnailImage from '@/shared/assets/icons/thumbnail.jpeg'
@@ -43,10 +45,12 @@ export function HomeCampaignCard({
   id,
   liked = false,
   recruitCount,
+  thumbnailUrl,
   title,
   type,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
+  const isLoggedIn = useAtomValue(isLoggedInAtom)
   const likedIds = useLikedCampaignIds()
   const [isLiked, setIsLiked] = useState(liked)
   const [isLikeSubmitting, setIsLikeSubmitting] = useState(false)
@@ -63,6 +67,7 @@ export function HomeCampaignCard({
     id,
     liked: isLiked,
     recruitCount,
+    thumbnailUrl,
     title,
     type,
   }
@@ -103,7 +108,12 @@ export function HomeCampaignCard({
         )}
       >
         <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
-          <HomeCardImage className="h-full w-full" showBlogThumbnail={isBlogCampaign}>
+          <HomeCardImage
+            alt={title}
+            className="h-full w-full"
+            showBlogThumbnail={isBlogCampaign}
+            thumbnailUrl={thumbnailUrl}
+          >
             {variant === 'ai' && fitLabel && (
               <span className="absolute left-3 top-4 rounded-sm bg-red_95 px-3 py-1 text-12 font-semibold leading-16 text-red_40">
                 {fitLabel}
@@ -111,18 +121,20 @@ export function HomeCampaignCard({
             )}
           </HomeCardImage>
         </Link>
-        <button
-          type="button"
-          disabled={isLikeSubmitting}
-          className="absolute right-4 top-4 flex size-8.5 cursor-pointer items-center justify-center rounded-full bg-white text-neutral_20 disabled:cursor-not-allowed disabled:opacity-70"
-          onClick={() => void handleLike()}
-        >
-          <Heart
-            className={`size-5 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-neutral_20'}`}
-            aria-hidden
-          />
-          <span className="sr-only">{isLiked ? '관심공고 취소' : '관심공고 담기'}</span>
-        </button>
+        {isLoggedIn && (
+          <button
+            type="button"
+            disabled={isLikeSubmitting}
+            className="absolute right-4 top-4 flex size-8.5 cursor-pointer items-center justify-center rounded-full bg-white text-neutral_20 disabled:cursor-not-allowed disabled:opacity-70"
+            onClick={() => void handleLike()}
+          >
+            <Heart
+              className={`size-5 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-neutral_20'}`}
+              aria-hidden
+            />
+            <span className="sr-only">{isLiked ? '관심공고 취소' : '관심공고 담기'}</span>
+          </button>
+        )}
       </div>
 
       <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>
@@ -166,19 +178,23 @@ export function HomeCampaignCard({
 }
 
 function HomeCardImage({
+  alt,
   children,
   className = '',
   showBlogThumbnail,
+  thumbnailUrl,
 }: {
+  alt: string
   children?: ReactNode
   className?: string
   showBlogThumbnail: boolean
+  thumbnailUrl?: string
 }) {
+  const imageSrc = thumbnailUrl || (showBlogThumbnail ? BlogThumbnailImage : null)
+
   return (
     <div className={cn('relative shrink-0 overflow-hidden rounded-md bg-neutral_99', className)}>
-      {showBlogThumbnail && (
-        <Image src={BlogThumbnailImage} alt="" fill className="object-cover" sizes="282px" />
-      )}
+      {imageSrc && <Image src={imageSrc} alt={alt} fill className="object-cover" sizes="282px" />}
       {children}
     </div>
   )
