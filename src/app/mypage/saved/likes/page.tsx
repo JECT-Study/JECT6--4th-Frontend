@@ -34,7 +34,8 @@ export default function LikesPage() {
       <h1 className="pb-10 pt-13 text-28 font-bold leading-40 tracking-tight text-[#303030]">
         내 관심 공고
       </h1>
-      <SavedCampaignGrid campaigns={data.content} />
+      {/* 좋아요 목록이므로 하트가 채워지도록 liked=true 보정 */}
+      <SavedCampaignGrid campaigns={data.content.map(campaign => ({ ...campaign, liked: true }))} />
       <RecommendCarousel />
     </div>
   )

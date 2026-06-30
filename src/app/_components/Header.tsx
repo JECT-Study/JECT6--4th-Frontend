@@ -75,14 +75,24 @@ export function Header() {
           />
           <div className="flex gap-3">
             {isLoggedIn ? (
-              <Button
-                variant="tertiary"
-                className="border border-[#E0E0E0] text-16 leading-20 text-[#666666] font-medium px-3 py-3.5"
-                disabled={isLoggingOut}
-                onClick={() => void logout()}
-              >
-                로그아웃
-              </Button>
+              <>
+                <Link href="/mypage">
+                  <Button
+                    variant="tertiary"
+                    className="border border-[#E0E0E0] text-16 leading-20 text-[#666666] font-medium px-3 py-3.5"
+                  >
+                    마이페이지
+                  </Button>
+                </Link>
+                <Button
+                  variant="tertiary"
+                  className="border border-[#E0E0E0] text-16 leading-20 text-[#666666] font-medium px-3 py-3.5"
+                  disabled={isLoggingOut}
+                  onClick={() => void logout()}
+                >
+                  로그아웃
+                </Button>
+              </>
             ) : (
               <Link href="/auth/login">
                 <Button

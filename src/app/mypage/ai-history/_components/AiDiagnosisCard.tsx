@@ -1,7 +1,10 @@
+import Link from 'next/link'
+
 import { Sparkles } from 'lucide-react'
 
 interface Props {
   diagnosisDate: string
+  documentId?: number | null
 }
 
 function formatDate(d: string): string {
@@ -11,9 +14,11 @@ function formatDate(d: string): string {
   return d
 }
 
-export function AiDiagnosisCard({ diagnosisDate }: Props) {
-  return (
-    <div className="flex min-w-0 flex-1 flex-col gap-8 rounded-[16px] border border-[#dcdcdc] px-6 py-8">
+const CARD_CLASS = 'flex flex-col gap-8 rounded-[16px] border border-[#dcdcdc] px-6 py-8'
+
+export function AiDiagnosisCard({ diagnosisDate, documentId }: Props) {
+  const content = (
+    <>
       <div className="flex size-[62px] shrink-0 items-center justify-center rounded-full bg-neutral_99">
         <Sparkles className="size-8 text-neutral_50" />
       </div>
@@ -23,6 +28,19 @@ export function AiDiagnosisCard({ diagnosisDate }: Props) {
           {formatDate(diagnosisDate)}
         </p>
       </div>
-    </div>
+    </>
   )
+
+  if (documentId != null) {
+    return (
+      <Link
+        href={`/blog-ai-analysis?documentId=${documentId}`}
+        className={`${CARD_CLASS} transition-colors hover:bg-neutral_99`}
+      >
+        {content}
+      </Link>
+    )
+  }
+
+  return <div className={CARD_CLASS}>{content}</div>
 }

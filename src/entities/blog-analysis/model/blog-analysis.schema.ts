@@ -28,11 +28,13 @@ export const analyzeJobResponseSchema = z.object({
 })
 export type AnalyzeJobResponse = z.infer<typeof analyzeJobResponseSchema>
 
+// 백엔드 metrics는 { name, score } 형태로 내려온다(레거시 { key, label, color } 도 허용).
 export const analysisMetricSchema = z.object({
-  key: BlogMetricKey,
-  label: z.string(),
+  key: BlogMetricKey.optional(),
+  label: z.string().optional(),
+  name: z.string().optional(),
   score: z.number().min(0).max(100),
-  color: z.string(),
+  color: z.string().optional(),
 })
 export type AnalysisMetric = z.infer<typeof analysisMetricSchema>
 
@@ -79,7 +81,8 @@ export type AnalysisResult = z.infer<typeof analysisResultSchema>
 // GET /blog/analysis/{documentId} 응답
 export const blogAnalysisResponseSchema = z.object({
   documentId: z.number(),
-  status: AnalysisStatus,
+  // 백엔드는 소문자(예: 'completed')로 내려주기도 하므로 대문자로 정규화한다.
+  status: z.preprocess(v => (typeof v === 'string' ? v.toUpperCase() : v), AnalysisStatus),
   analysis: analysisResultSchema.nullable().optional(),
   analyzedAt: z.string().nullable().optional(),
   analysisId: z.number().optional(),
