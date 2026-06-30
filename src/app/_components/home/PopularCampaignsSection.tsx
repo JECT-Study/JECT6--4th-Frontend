@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 
+import { CAMPAIGN_CATEGORY_LABEL } from '@/constant'
+
 import { usePopularCampaigns } from '@/app/hooks/usePopularCampaigns'
 
-import type { Campaign, CampaignCategory } from '@/entities/campaign'
+import { CampaignCategory, type Campaign } from '@/entities/campaign'
 
 import { Button } from '@/shared/ui'
 
@@ -14,14 +16,10 @@ import { SectionHeader } from './SectionHeader'
 
 const CATEGORY_OPTIONS: { label: string; value: CampaignCategory | 'ALL' }[] = [
   { label: '전체', value: 'ALL' },
-  { label: '음식', value: 'FOOD' },
-  { label: '뷰티', value: 'BEAUTY' },
-  { label: '패션', value: 'FASHION' },
-  { label: '여행', value: 'TRAVEL' },
-  { label: '라이프스타일', value: 'LIVING' },
-  { label: '테크/IT', value: 'TECH_IT' },
-  { label: '반려동물', value: 'PET' },
-  { label: '문화', value: 'CULTURE' },
+  ...CampaignCategory.options.map(value => ({
+    label: CAMPAIGN_CATEGORY_LABEL[value],
+    value,
+  })),
 ]
 
 export default function PopularCampaignsSection({

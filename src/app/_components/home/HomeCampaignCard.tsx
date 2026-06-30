@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { useQueryClient } from '@tanstack/react-query'
+import { useAtomValue } from 'jotai'
 import { Heart, User } from 'lucide-react'
 
 import { TYPE_LABEL } from '@/constant'
@@ -15,6 +16,7 @@ import { campaignService } from '@/service'
 
 import { useLikedCampaignIds } from '@/app/hooks/useLikedCampaignIds'
 
+import { isLoggedInAtom } from '@/entities/auth'
 import type { Campaign } from '@/entities/campaign'
 
 import BlogThumbnailImage from '@/shared/assets/icons/thumbnail.jpeg'
@@ -48,6 +50,7 @@ export function HomeCampaignCard({
   type,
   variant = 'vertical',
 }: HomeCampaignCardProps) {
+  const isLoggedIn = useAtomValue(isLoggedInAtom)
   const likedIds = useLikedCampaignIds()
   const [isLiked, setIsLiked] = useState(liked)
   const [isLikeSubmitting, setIsLikeSubmitting] = useState(false)
@@ -118,18 +121,20 @@ export function HomeCampaignCard({
             )}
           </HomeCardImage>
         </Link>
-        <button
-          type="button"
-          disabled={isLikeSubmitting}
-          className="absolute right-4 top-4 flex size-8.5 cursor-pointer items-center justify-center rounded-full bg-white text-neutral_20 disabled:cursor-not-allowed disabled:opacity-70"
-          onClick={() => void handleLike()}
-        >
-          <Heart
-            className={`size-5 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-neutral_20'}`}
-            aria-hidden
-          />
-          <span className="sr-only">{isLiked ? '관심공고 취소' : '관심공고 담기'}</span>
-        </button>
+        {isLoggedIn && (
+          <button
+            type="button"
+            disabled={isLikeSubmitting}
+            className="absolute right-4 top-4 flex size-8.5 cursor-pointer items-center justify-center rounded-full bg-white text-neutral_20 disabled:cursor-not-allowed disabled:opacity-70"
+            onClick={() => void handleLike()}
+          >
+            <Heart
+              className={`size-5 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-neutral_20'}`}
+              aria-hidden
+            />
+            <span className="sr-only">{isLiked ? '관심공고 취소' : '관심공고 담기'}</span>
+          </button>
+        )}
       </div>
 
       <Link href={`/campaigns/${id}`} onClick={() => saveRecentView(campaign)}>

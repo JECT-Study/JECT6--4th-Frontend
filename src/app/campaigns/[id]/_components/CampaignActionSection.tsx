@@ -1,11 +1,15 @@
 'use client'
 
+import Link from 'next/link'
+
 import { useState } from 'react'
 
+import { useAtomValue } from 'jotai'
 import { User } from 'lucide-react'
 
 import { campaignService } from '@/service'
 
+import { isLoggedInAtom } from '@/entities/auth'
 import type { CampaignLikesAnalysis } from '@/entities/campaign'
 
 import HeartIcon from '@/shared/assets/icons/heart.svg'
@@ -15,9 +19,11 @@ interface Props {
   campaignId: number
   initialIsLiked: boolean
   likesAnalysis: CampaignLikesAnalysis
+  url: string
 }
 
-export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysis }: Props) {
+export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysis, url }: Props) {
+  const isLoggedIn = useAtomValue(isLoggedInAtom)
   const [isLiked, setIsLiked] = useState(initialIsLiked)
 
   async function handleLike() {
@@ -29,7 +35,9 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
 
   return (
     <div className="flex flex-col gap-3.5">
-      <Button>지원하러 가기</Button>
+      <Link href={url} className="w-full">
+        <Button className="w-full">지원하러 가기</Button>
+      </Link>
       <div className="py-6 px-8.75 rounded-[8px] flex gap-4.25 items-center bg-neutral_99">
         <div className="flex">
           {Array.from({ length: 3 }, (_, i) => (
@@ -56,14 +64,16 @@ export function CampaignActionSection({ campaignId, initialIsLiked, likesAnalysi
           </p>
         )}
       </div>
-      <Button variant="tertiary" onClick={() => void handleLike()}>
-        <div className="flex items-center gap-3.5">
-          <HeartIcon
-            className={`size-8 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-black'}`}
-          />
-          {isLiked ? '관심공고 취소' : '관심공고 담기'}
-        </div>
-      </Button>
+      {isLoggedIn && (
+        <Button variant="tertiary" onClick={() => void handleLike()}>
+          <div className="flex items-center gap-3.5">
+            <HeartIcon
+              className={`size-8 ${isLiked ? 'fill-red_50 stroke-red_50' : 'stroke-black'}`}
+            />
+            {isLiked ? '관심공고 취소' : '관심공고 담기'}
+          </div>
+        </Button>
+      )}
     </div>
   )
 }
